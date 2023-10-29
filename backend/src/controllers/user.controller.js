@@ -2,7 +2,7 @@
 
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const UserService = require("../services/user.service");
-const { userBodySchema, userIdSchema } = require("../schema/user.schema");
+const { userBodySchema, userIdSchema, usernameSchema } = require("../schema/user.schema");
 const { handleError } = require("../utils/errorHandler");
 
 /**
@@ -72,6 +72,28 @@ async function getUserById(req, res) {
 }
 
 /**
+ * Obtiene un usuario por su nombre de usuario
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+async function getUserByUsername(req, res) {
+  try {
+    const { params } = req;
+    const { error: paramsError } = usernameSchema.validate(params);
+    if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+    const [user, errorUser] = await UserService.getUserByUsername(params.username);
+
+    if (errorUser) return respondError(req, res, 404, errorUser);
+
+    respondSuccess(req, res, 200, user);
+  } catch (error) {
+    handleError(error, "user.controller -> getUserByUsername");
+    respondError(req, res, 500, "No se pudo obtener el usuario");
+  }
+}
+
+/**
  * Actualiza un usuario por su id
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
@@ -127,6 +149,7 @@ module.exports = {
   getUsers,
   createUser,
   getUserById,
+  getUserByUsername,
   updateUser,
   deleteUser,
 };

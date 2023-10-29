@@ -21,6 +21,8 @@ router.use(authenticationMiddleware);
 router.get("/", usuarioController.getUsers);
 router.post("/", authorizationMiddleware.isAdmin, usuarioController.createUser);
 router.get("/:id", usuarioController.getUserById);
+router.get("/:username", usuarioController.getUserByUsername);
+
 router.put(
   "/:id",
   authorizationMiddleware.isAdmin,

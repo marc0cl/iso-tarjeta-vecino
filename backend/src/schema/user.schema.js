@@ -76,4 +76,17 @@ const userIdSchema = Joi.object({
     }),
 });
 
-module.exports = { userBodySchema, userIdSchema };
+const usernameSchema = Joi.object({
+    username: Joi.string()
+        .required()
+        .min(3)
+        .max(30) 
+        .messages({
+            "string.empty": "El username no puede estar vacío.",
+            "any.required": "El username es obligatorio.",
+            "string.base": "El username debe ser de tipo string.",
+            "string.min": "El username debe tener al menos 3 caracteres.",
+            "string.max": "El username no debe tener más de 30 caracteres.",
+        }),
+});
+module.exports = { userBodySchema, userIdSchema, usernameSchema };

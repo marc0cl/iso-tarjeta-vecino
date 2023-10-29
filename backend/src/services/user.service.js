@@ -75,7 +75,7 @@ async function createUser(user) {
 
 /**
  * Obtiene un usuario por su id de la base de datos
- * @param {string} Id del usuario
+ * @param {string} id del usuario
  * @returns {Promise} Promesa con el objeto de usuario
  */
 async function getUserById(id) {
@@ -90,6 +90,26 @@ async function getUserById(id) {
     return [user, null];
   } catch (error) {
     handleError(error, "user.service -> getUserById");
+  }
+}
+
+/**
+ * Obtiene un usuario por su id de la base de datos
+ * @param {string} username nombre del usuario
+ * @returns {Promise} Promesa con el objeto de usuario
+ */
+async function getUserByUsername(username) {
+  try {
+    const user = await User.findOne({ username: username })
+        .select("-password")
+        .populate("roles")
+        .exec();
+
+    if (!user) return [null, "El usuario no existe"];
+
+    return [user, null];
+  } catch (error) {
+    handleError(error, "user.service -> getUserByUsername");
   }
 }
 
@@ -154,6 +174,7 @@ module.exports = {
   getUsers,
   createUser,
   getUserById,
+  getUserByUsername,
   updateUser,
   deleteUser,
 };
