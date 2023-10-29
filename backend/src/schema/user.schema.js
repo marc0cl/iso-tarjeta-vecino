@@ -1,6 +1,7 @@
 "use strict";
 
 const Joi = require("joi");
+const ROLES = require ( "../constants/roles.constants" );
 /**
  * Esquema de validación para el cuerpo de la solicitud de usuario.
  * @constant {Object}
@@ -46,10 +47,15 @@ const userBodySchema = Joi.object({
         "string.base": "La ubicación debe ser de tipo string.",
     }),
     residenceCertificate: Joi.string().optional(),
-    userType: Joi.string().valid("residente", "visita", "administrador").messages({
-        "string.base": "El tipo de usuario debe ser de tipo string.",
-        "any.only": "El tipo de usuario proporcionado no es válido.",
-    }),
+    roles: Joi.array()
+        .items(Joi.string().valid(...ROLES))
+        .required()
+        .messages({
+            "array.base": "El rol debe ser de tipo array.",
+            "any.required": "El rol es obligatorio.",
+            "string.base": "El rol debe ser de tipo string.",
+            "any.only": "El rol proporcionado no es válido.",
+        }),
     documentImage: Joi.string().optional(),
     applicationStatus: Joi.string().valid("aprobado", "rechazado", "apelacion").messages({
         "string.base": "El estado de la solicitud debe ser de tipo string.",

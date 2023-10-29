@@ -132,7 +132,7 @@ async function updateUserByUsername(req, res) {
     const { error: bodyError } = userBodySchema.validate(body);
     if (bodyError) return respondError(req, res, 400, bodyError.message);
 
-    const [user, userError] = await UserService.updateUser(params.username, body);
+    const [user, userError] = await UserService.updateUserByUsername(params.username, body);
 
     if (userError) return respondError(req, res, 400, userError);
 
