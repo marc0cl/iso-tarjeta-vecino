@@ -1,0 +1,5 @@
+# Cosas generadas por el intellij
+*.idea
+
+# Depedencias (Si dejas esto agregas peso extra al repo)
+*node_modules
