@@ -31,6 +31,8 @@ router.delete(
   authorizationMiddleware.isAdmin,
   usuarioController.deleteUser,
 );
+router.put(
+  "/:id/:idBenefit", usuarioController.linkBenefitToUser);
 
 // Exporta el enrutador
 module.exports = router;
