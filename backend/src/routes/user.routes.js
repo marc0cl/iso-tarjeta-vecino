@@ -26,7 +26,12 @@ router.get("/:username", usuarioController.getUserByUsername);
 router.put(
   "/:id",
   authorizationMiddleware.isAdmin,
-  usuarioController.updateUser,
+  usuarioController.updateUserById,
+);
+router.put(
+    "/:id",
+    authorizationMiddleware.isAdmin,
+    usuarioController.updateUserByUsername,
 );
 router.delete(
   "/:id",

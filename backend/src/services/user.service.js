@@ -119,7 +119,7 @@ async function getUserByUsername(username) {
  * @param {Object} user Objeto de usuario
  * @returns {Promise} Promesa con el objeto de usuario actualizado
  */
-async function updateUser(id, user) {
+async function updateUserById(id, user) {
   try {
     const userFound = await User.findById(id);
     if (!userFound) return [null, "El usuario no existe"];
@@ -158,6 +158,50 @@ async function updateUser(id, user) {
 }
 
 /**
+ * Actualiza un usuario por su id en la base de datos
+ * @param {string} username Id del usuario
+ * @param {Object} user Objeto de usuario
+ * @returns {Promise} Promesa con el objeto de usuario actualizado
+ */
+async function updateUserByUsername(username, user) {
+  try {
+    const userFound = await User.findOne({ username: username });
+    if (!userFound) return [null, "El usuario no existe"];
+
+    const { username: newUsername, email, password, newPassword, roles } = user;
+
+    const matchPassword = await User.comparePassword(
+        password,
+        userFound.password,
+    );
+
+    if (!matchPassword) {
+      return [null, "La contraseña no coincide"];
+    }
+
+    const rolesFound = await Role.find({ name: { $in: roles } });
+    if (rolesFound.length === 0) return [null, "El rol no existe"];
+
+    const myRole = rolesFound.map((role) => role._id);
+
+    const userUpdated = await User.findOneAndUpdate(
+        { username: username },
+        {
+          username: newUsername || username,
+          email,
+          password: await User.encryptPassword(newPassword || password),
+          roles: myRole,
+        },
+        { new: true },
+    );
+
+    return [userUpdated, null];
+  } catch (error) {
+    handleError(error, "user.service -> updateUserByUsername");
+  }
+}
+
+/**
  * Elimina un usuario por su id de la base de datos
  * @param {string} Id del usuario
  * @returns {Promise} Promesa con el objeto de usuario eliminado
@@ -175,6 +219,7 @@ module.exports = {
   createUser,
   getUserById,
   getUserByUsername,
-  updateUser,
+  updateUserById,
+  updateUserByUsername,
   deleteUser,
 };

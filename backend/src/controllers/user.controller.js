@@ -98,7 +98,7 @@ async function getUserByUsername(req, res) {
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-async function updateUser(req, res) {
+async function updateUserById(req, res) {
   try {
     const { params, body } = req;
     const { error: paramsError } = userIdSchema.validate(params);
@@ -107,13 +107,38 @@ async function updateUser(req, res) {
     const { error: bodyError } = userBodySchema.validate(body);
     if (bodyError) return respondError(req, res, 400, bodyError.message);
 
-    const [user, userError] = await UserService.updateUser(params.id, body);
+    const [user, userError] = await UserService.updateUserById(params.id, body);
 
     if (userError) return respondError(req, res, 400, userError);
 
     respondSuccess(req, res, 200, user);
   } catch (error) {
     handleError(error, "user.controller -> updateUser");
+    respondError(req, res, 500, "No se pudo actualizar el usuario");
+  }
+}
+
+/**
+ * Actualiza un usuario por su id
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+async function updateUserByUsername(req, res) {
+  try {
+    const { params, body } = req;
+    const { error: paramsError } = usernameSchema.validate(params);
+    if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+    const { error: bodyError } = userBodySchema.validate(body);
+    if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+    const [user, userError] = await UserService.updateUser(params.username, body);
+
+    if (userError) return respondError(req, res, 400, userError);
+
+    respondSuccess(req, res, 200, user);
+  } catch (error) {
+    handleError(error, "user.controller -> updateUserByUsername");
     respondError(req, res, 500, "No se pudo actualizar el usuario");
   }
 }
@@ -150,6 +175,7 @@ module.exports = {
   createUser,
   getUserById,
   getUserByUsername,
-  updateUser,
+  updateUserById,
+  updateUserByUsername,
   deleteUser,
 };
