@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema(
         ref: "Role",
       },
     ],
+    benefits: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Benefit",
+      },
+    ],
   },
   {
     versionKey: false,
@@ -41,6 +47,10 @@ userSchema.statics.encryptPassword = async (password) => {
 userSchema.statics.comparePassword = async (password, receivedPassword) => {
   return await bcrypt.compare(password, receivedPassword);
 };
+
+userSchema.path('benefits').validate(function (value) {
+  return value.length <= 5;
+}, 'No se pueden tener más de 5 beneficios asociados en un mes');
 
 /** Modelo de datos 'User' */
 const User = mongoose.model("User", userSchema);
