@@ -20,9 +20,12 @@ const userSchema = new mongoose.Schema({
         type: String, required: true,
     }, residenceCertificate: {
         type: String,
-    }, userType: {
-        type: String, enum: ["residente", "visita", "administrador"],
-    }, documentImage: {
+    }, roles: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Role",
+        },
+    ], documentImage: {
         type: String,
     }, applicationStatus: {
         type: String, enum: ["aprobado", "rechazado", "apelacion"],
