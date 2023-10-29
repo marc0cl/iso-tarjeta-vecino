@@ -29,7 +29,20 @@ async function getUsers() {
  */
 async function createUser(user) {
   try {
-    const { username, email, password, roles } = user;
+    const {
+      username,
+      password,
+      firstName,
+      lastName,
+      gender,
+      email,
+      location,
+      residenceCertificate,
+      userType,
+      documentImage,
+      applicationStatus,
+      roles,
+    } = user;
 
     const userFound = await User.findOne({ email: user.email });
     if (userFound) return [null, "El usuario ya existe"];
@@ -40,8 +53,16 @@ async function createUser(user) {
 
     const newUser = new User({
       username,
-      email,
       password: await User.encryptPassword(password),
+      firstName,
+      lastName,
+      gender,
+      email,
+      location,
+      residenceCertificate,
+      userType,
+      documentImage,
+      applicationStatus,
       roles: myRole,
     });
     await newUser.save();
