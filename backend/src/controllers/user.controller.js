@@ -111,12 +111,12 @@ async function deleteUser(req, res) {
     const user = await UserService.deleteUser(params.id);
     !user
       ? respondError(
-          req,
-          res,
-          404,
-          "No se encontro el usuario solicitado",
-          "Verifique el id ingresado",
-        )
+        req,
+        res,
+        404,
+        "No se encontro el usuario solicitado",
+        "Verifique el id ingresado",
+      )
       : respondSuccess(req, res, 200, user);
   } catch (error) {
     handleError(error, "user.controller -> deleteUser");
@@ -131,9 +131,11 @@ async function linkFormToUser(req, res) {
     const { id, idForm } = params;
     const [user, userError] = await UserService.linkFormToUser(id, idForm);
 
-    if (userError) return respondError(req, res, 400, userError);
+    if (!user) {
+      return respondError(req, res, 404, message);
+    }
 
-    respondSuccess(req, res, 200, user);
+    respondSuccess(req, res, 200, "Formulario asociado al usuario");
   } catch (error) {
     handleError(error, "user.controller -> linkFormToUser");
     respondError(req, res, 500, "No se pudo asociar el formulario al usuario");
@@ -144,7 +146,6 @@ async function unlinkFormFromUser(req, res) {
   try {
     const { params } = req;
     const { userId, formId } = params;
-
     const [user, message] = await UserService.unlinkFormFromUser(userId, formId);
 
     if (!user) {

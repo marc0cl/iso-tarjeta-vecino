@@ -141,16 +141,16 @@ async function linkFormToUser(userId, formId) {
     const formFound = user.form.find((b) => b._id == formId);
     if (formFound) return [null, "El formulario ya está vinculado al usuario"];
 
-
-
     user.form.push(form);
     await user.save();
 
-    return [user, "formulario asociado al usuario"];
+    return [user, "Formulario asociado al usuario"];
   } catch (error) {
     handleError(error, "user.service -> linkFormToUser");
+    return [null, "Error al asociar el formulario al usuario"];
   }
 }
+
 
 async function unlinkFormFromUser(userId, formId) {
   try {
