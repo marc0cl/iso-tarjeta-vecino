@@ -228,7 +228,7 @@ async function updateApplicationStatusByUsername(username, user) {
         { new: true },
     );
 
-    notificationChangeStatus(userUpdated);
+    await notificationChangeStatus(userUpdated);
 
     return [userUpdated, null];
   } catch (error) {
