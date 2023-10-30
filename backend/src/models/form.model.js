@@ -7,15 +7,18 @@ const questionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    answer: String, // Espacio para la respuesta del usuario
+    answer: {
+        type: String,
+        required: false
+    }, // Espacio para la respuesta del usuario
 });
 
 const formSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
-    }//,
-   // questions: [questionSchema],
+    },
+    questions: [questionSchema],
 });
 
 const Form = mongoose.model("Form", formSchema);

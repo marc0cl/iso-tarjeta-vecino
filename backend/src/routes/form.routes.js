@@ -12,13 +12,13 @@ router.post("/", formController.createForm);
 router.get("/", formController.getForms);
 
 // Ruta para obtener un formulario por su ID
-router.get("/:formId", formController.getFormById);
+router.get("/:id", formController.getFormById);
 
 // Ruta para actualizar un formulario por su ID
-router.put("/:formId", formController.updateForm);
+router.put("/:id", formController.updateForm);
 
 // Ruta para eliminar un formulario por su ID
-router.delete("/:formId", formController.deleteForm);
+router.delete("/:id", formController.deleteForm);
 
 module.exports = router;
 

@@ -2,7 +2,7 @@
 
 const Form = require("../models/form.model");
 const FormService = require("../services/form.service");
-const { formSchema } = require("../schema/form.schema");
+const { formSchema, formIdSchema } = require("../schema/form.schema");
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const { handleError } = require("../utils/errorHandler");
 
@@ -47,7 +47,7 @@ async function getFormById(req, res) {
     const { error: paramsError } = formIdSchema.validate(params);
     if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-    const [form, errorForm] = await FormService.getFormById(params.formId);
+    const [form, errorForm] = await FormService.getFormById(params.id);
     if (errorForm) return respondError(req, res, 404, errorForm);
 
     respondSuccess(req, res, 200, form);
@@ -66,7 +66,7 @@ async function updateForm(req, res) {
     const { error: bodyError } = formSchema.validate(body);
     if (bodyError) return respondError(req, res, 400, bodyError.message);
 
-    const [form, errorForm] = await FormService.updateForm(params.formId, body);
+    const [form, errorForm] = await FormService.updateForm(params.id, body);
     if (errorForm) return respondError(req, res, 404, errorForm);
 
     respondSuccess(req, res, 200, form);
@@ -82,7 +82,7 @@ async function deleteForm(req, res) {
     const { error: paramsError } = formIdSchema.validate(params);
     if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-    const [form, errorForm] = await FormService.deleteForm(params.formId);
+    const [form, errorForm] = await FormService.deleteForm(params.id);
     if (errorForm) return respondError(req, res, 404, errorForm);
 
     respondSuccess(req, res, 200, form);
@@ -100,7 +100,7 @@ async function addQuestionToForm(req, res) {
 
     const { text, answer } = body;
 
-    const [form, errorForm] = await FormService.addQuestionToForm(params.formId, { text, answer });
+    const [form, errorForm] = await FormService.addQuestionToForm(params.id, { text, answer });
 
     if (errorForm) return respondError(req, res, 404, errorForm);
 
@@ -119,7 +119,7 @@ async function removeQuestionFromForm(req, res) {
 
     const { questionId } = params;
 
-    const [form, errorForm] = await FormService.removeQuestionFromForm(params.formId, questionId);
+    const [form, errorForm] = await FormService.removeQuestionFromForm(params.id, questionId);
 
     if (errorForm) return respondError(req, res, 404, errorForm);
 

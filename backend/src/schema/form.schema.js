@@ -10,9 +10,6 @@ const questionSchema = Joi.object({
             "any.required": "El texto de la pregunta es obligatorio.",
             "string.base": "El texto de la pregunta debe ser de tipo string.",
         }),
-    answer: Joi.string().messages({
-        "string.base": "La respuesta a la pregunta debe ser de tipo string.",
-    }),
 });
 
 const formSchema = Joi.object({
@@ -26,7 +23,22 @@ const formSchema = Joi.object({
     questions: Joi.array().items(questionSchema),
 });
 
+const formIdSchema = Joi.object({
+  id: Joi.string()
+      .required()
+      .pattern(/^(?:[0-9a-fA-F]{24}|[0-9a-fA-F]{12})$/)
+      .messages({
+          "string.empty": "El id no puede estar vacío.",
+          "any.required": "El id es obligatorio.",
+          "string.base": "El id debe ser de tipo string.",
+          "string.pattern.base": "El id proporcionado no es un ObjectId válido.",
+      }),
+});
+
+
 module.exports = {
     formSchema,
+    questionSchema,
+    formIdSchema
 };
 
