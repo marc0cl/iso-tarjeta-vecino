@@ -36,4 +36,18 @@ const verifyJWT = (req, res, next) => {
   }
 };
 
-module.exports = verifyJWT;
+const verifyJWT2 = (req, res) => {
+  const token = req.header('Authorization');
+
+  if (!token) {
+    return res.status(401).send('No estás autenticado.');
+  }
+
+  jwt.verify(token, ACCESS_JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).send('Token no válido.');
+    }
+    res.send(user.id);
+  });
+};
+module.exports = {verifyJWT, verifyJWT2};

@@ -5,6 +5,7 @@ const Role = require("../models/role.model.js");
 const Benefit = require("../models/benefit.model.js");
 const { handleError } = require("../utils/errorHandler");
 const cron = require("node-cron");
+const { verifyJWT2 } = require("../middlewares/authentication.middleware.js");
 
 /**
  * Obtiene todos los usuarios de la base de datos
@@ -216,8 +217,9 @@ async function deleteUser(id) {
   }
 }
 
-async function linkBenefitToUser(userId, benefitId) {
+async function linkBenefitToUser(benefitId) {
   try {
+    let userId = verifyJWT2();
     const user = await User.findById(userId);
     if (!user) return [null, "El usuario no existe"];
 
@@ -233,7 +235,7 @@ async function linkBenefitToUser(userId, benefitId) {
     user.benefits.push(benefit);
     await user.save();
 
-    return [user, "Beneficio asociado al usuario, recuerde que el beneficio vence en 1 mes"];
+    return [user, null];
   } catch (error) {
     handleError(error, "user.service -> linkBenefitToUser");
   }
