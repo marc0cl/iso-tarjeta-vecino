@@ -4,7 +4,7 @@ const { respondSuccess, respondError } = require("../utils/resHandler");
 const UserService = require("../services/user.service");
 const { userBodySchema, userIdSchema } = require("../schema/user.schema");
 const { handleError } = require("../utils/errorHandler");
-const User = require("../models/user.model");
+
 
 /**
  * Obtiene todos los usuarios
@@ -137,8 +137,26 @@ async function linkFormToUser(req, res) {
   } catch (error) {
     handleError(error, "user.controller -> linkFormToUser");
     respondError(req, res, 500, "No se pudo asociar el formulario al usuario");
-  };
-};
+  }
+}
+
+async function unlinkFormFromUser(req, res) {
+  try {
+    const { params } = req;
+    const { userId, formId } = params;
+
+    const result = await UserService.unlinkFormFromUser(userId, formId);
+
+    if (result.error) {
+      return respondError(req, res, 404, result.message);
+    }
+
+    return respondSuccess(req, res, 200, "Formulario desvinculado del usuario con éxito");
+  } catch (error) {
+    handleError(error, "user.controller -> unlinkFormFromUser");
+    respondError(req, res, 500, "No se pudo desvincular el formulario del usuario");
+  }
+}
 
 
 module.exports = {
@@ -148,4 +166,5 @@ module.exports = {
   updateUser,
   deleteUser,
   linkFormToUser,
+  unlinkFormFromUser,
 };
