@@ -204,6 +204,36 @@ async function updateUserByUsername(username, user) {
 }
 
 /**
+ * Actualiza un estado de usuario por su username en la base de datos
+ * @param {string} username Id del usuario
+ * @param {Object} user Objeto de usuario
+ * @returns {Promise} Promesa con el objeto de usuario actualizado
+ */
+async function updateApplicationStatusByUsername(username, user) {
+  try {
+    const userFound = await User.findOne({ username: username });
+    if (!userFound) return [null, "El usuario no existe"];
+
+    const { password, applicationStatus } = user;
+
+    const matchPassword = await User.comparePassword(password, userFound.password);
+    if (!matchPassword) {
+      return [null, "La contraseña no coincide"];
+    }
+
+    const userUpdated = await User.findOneAndUpdate(
+        { username: username },
+        { applicationStatus },
+        { new: true },
+    );
+
+    return [userUpdated, null];
+  } catch (error) {
+    handleError(error, "user.service -> updateApplicationStatusByUsername");
+  }
+}
+
+/**
  * Elimina un usuario por su id de la base de datos
  * @param {string} Id del usuario
  * @returns {Promise} Promesa con el objeto de usuario eliminado
@@ -239,7 +269,7 @@ async function linkBenefitToUser(userId, benefitId) {
   }
 }
 
-cron.schedule('0 0 * * *', async () => {
+cron.schedule("0 0 * * *", async () => {
   try {
     // Calcula la fecha hace un mes
     const oneMonthAgo = new Date();
@@ -261,6 +291,7 @@ module.exports = {
   getUserByUsername,
   updateUserById,
   updateUserByUsername,
+  updateApplicationStatusByUsername,
   deleteUser,
   linkBenefitToUser,
 };
