@@ -2,6 +2,7 @@
 
 const Benefit = require("../models/benefit.model");
 const { handleError } = require("../utils/errorHandler");
+const { notificationNewBenefit } = require("./notification.service");
 
 async function getBenefits() {
   try {
@@ -28,6 +29,7 @@ async function createBenefit(benefit) {
       company,
     });
     await newBenefit.save();
+    await notificationNewBenefit(newBenefit);
 
     return [newBenefit, null];
   } catch (error) {
