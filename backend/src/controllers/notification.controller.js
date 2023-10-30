@@ -1,9 +1,9 @@
 const nodemailer = require('nodemailer');
-const { TOKEN } = require('../config/configEnv')
+const { MAIL_TOKEN } = require('../config/configEnv')
 
 const sendMail = (mailOptions) => {
 
-    const token = TOKEN;
+    const token = MAIL_TOKEN;
     const mail = 'miguel.castillo1901@alumnos.ubiobio.cl'
     if (!token || token === undefined || token === null){
         console.log('No se ha encontrado el token')
