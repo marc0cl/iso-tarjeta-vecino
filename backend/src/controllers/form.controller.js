@@ -5,7 +5,7 @@ const FormService = require("../services/form.service");
 const { formSchema, formIdSchema } = require("../schema/form.schema");
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const { handleError } = require("../utils/errorHandler");
-
+//const {updateUser} = require("../controller.");
 async function getForms(req, res) {
   try {
     const [forms, errorForms] = await FormService.getForms();
@@ -112,23 +112,21 @@ async function addQuestionToForm(req, res) {
 }
 
 async function removeQuestionFromForm(req, res) {
-  try {
-    const { params } = req;
-    const { error: paramsError } = formIdSchema.validate(params);
-    if (paramsError) return respondError(req, res, 400, paramsError.message);
-
-    const { questionId } = params;
-
-    const [form, errorForm] = await FormService.removeQuestionFromForm(params.id, questionId);
-
-    if (errorForm) return respondError(req, res, 404, errorForm);
-
-    respondSuccess(req, res, 200, form);
-  } catch (error) {
-    handleError(error, "form.controller -> removeQuestionFromForm");
-    respondError(req, res, 400, error.message);
+    try {
+      const { params } = req;
+      const { formId, questionId } = params;
+  
+      // Llama a tu servicio para eliminar la pregunta
+      const [form, errorForm] = await FormService.removeQuestionFromForm(formId, questionId);
+  
+      if (errorForm) return respondError(req, res, 404, errorForm);
+  
+      respondSuccess(req, res, 200, form);
+    } catch (error) {
+      handleError(error, "form.controller -> removeQuestionFromForm");
+      respondError(req, res, 400, error.message);
+    }
   }
-}
 
 module.exports = {
   getForms,
