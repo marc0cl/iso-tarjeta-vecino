@@ -33,6 +33,11 @@ router.put(
     authorizationMiddleware.isAdmin,
     usuarioController.updateUserByUsername,
 );
+router.put(
+    "/username/application/:username",
+    authorizationMiddleware.isAdmin,
+    usuarioController.updateApplicationStatus,
+);
 router.delete(
   "/:id",
   authorizationMiddleware.isAdmin,
