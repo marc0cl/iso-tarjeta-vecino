@@ -20,17 +20,31 @@ router.use(authenticationMiddleware);
 // Define las rutas para los usuarios
 router.get("/", usuarioController.getUsers);
 router.post("/", authorizationMiddleware.isAdmin, usuarioController.createUser);
-router.get("/:id", usuarioController.getUserById);
+router.get("/id/:id", usuarioController.getUserById);
+router.get("/username/:username", usuarioController.getUserByUsername);
+
 router.put(
-  "/:id",
+  "/id/:id",
   authorizationMiddleware.isAdmin,
-  usuarioController.updateUser,
+  usuarioController.updateUserById,
+);
+router.put(
+    "/username/:username",
+    authorizationMiddleware.isAdmin,
+    usuarioController.updateUserByUsername,
+);
+router.put(
+    "/username/application/:username",
+    authorizationMiddleware.isAdmin,
+    usuarioController.updateApplicationStatus,
 );
 router.delete(
   "/:id",
   authorizationMiddleware.isAdmin,
   usuarioController.deleteUser,
 );
+router.put(
+  "/:id/:idBenefit", usuarioController.linkBenefitToUser);
 
 // Ruta para vincular un formulario a un usuario
 router.put("/:id/:idForm", usuarioController.linkFormToUser);
