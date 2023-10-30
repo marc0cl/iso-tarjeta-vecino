@@ -170,6 +170,28 @@ async function deleteUser(req, res) {
   }
 }
 
+/**
+ * Asocia un beneficio a un usuario
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+
+async function linkBenefitToUser(req, res) {
+  try {
+    const { params } = req;
+    const { id, idBenefit } = params;
+    const [user, userError] = await UserService.linkBenefitToUser(id, idBenefit);
+
+    if (userError) return respondError(req, res, 400, userError);
+
+    respondSuccess(req, res, 200, user);
+  } catch (error) {
+    handleError(error, "user.controller -> linkBenefitToUser");
+    respondError(req, res, 500, "No se pudo asociar el beneficio al usuario");
+  };
+};
+
+
 module.exports = {
   getUsers,
   createUser,
@@ -178,4 +200,5 @@ module.exports = {
   updateUserById,
   updateUserByUsername,
   deleteUser,
+  linkBenefitToUser,
 };

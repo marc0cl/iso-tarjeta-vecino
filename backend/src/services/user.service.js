@@ -2,7 +2,9 @@
 // Importa el modelo de datos 'User'
 const User = require("../models/user.model.js");
 const Role = require("../models/role.model.js");
+const Benefit = require("../models/benefit.model.js");
 const { handleError } = require("../utils/errorHandler");
+const cron = require("node-cron");
 
 /**
  * Obtiene todos los usuarios de la base de datos
@@ -214,6 +216,44 @@ async function deleteUser(id) {
   }
 }
 
+async function linkBenefitToUser(userId, benefitId) {
+  try {
+    const user = await User.findById(userId);
+    if (!user) return [null, "El usuario no existe"];
+
+    const benefit = await Benefit.findById(benefitId);
+    if (!benefit) return [null, "El beneficio no existe"];
+
+    const benefitFound = user.benefits.find((b) => b._id == benefitId);
+    if (benefitFound) return [null, "El beneficio ya está vinculado al usuario"];
+
+    const NdeBeneficios = user.benefits.length;
+    if (NdeBeneficios == 5) return [null, "No se pueden asociar más de 5 beneficios al mes"];
+
+    user.benefits.push(benefit);
+    await user.save();
+
+    return [user, "Beneficio asociado al usuario, recuerde que el beneficio vence en 1 mes"];
+  } catch (error) {
+    handleError(error, "user.service -> linkBenefitToUser");
+  }
+}
+
+cron.schedule('0 0 * * *', async () => {
+  try {
+    // Calcula la fecha hace un mes
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+    // Encuentra y elimina los beneficios creados hace más de un mes
+    const result = await Benefit.deleteMany({ createdAt: { $lt: oneMonthAgo } });
+
+    console.log(`Se eliminaron ${result.deletedCount} beneficios vencidos.`);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 module.exports = {
   getUsers,
   createUser,
@@ -222,4 +262,5 @@ module.exports = {
   updateUserById,
   updateUserByUsername,
   deleteUser,
+  linkBenefitToUser,
 };
