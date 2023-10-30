@@ -2,6 +2,7 @@
 // Importa el modelo de datos 'User'
 const User = require("../models/user.model.js");
 const Role = require("../models/role.model.js");
+const Form = require("../models/form.model.js");
 const { handleError } = require("../utils/errorHandler");
 
 /**
@@ -129,10 +130,33 @@ async function deleteUser(id) {
   }
 }
 
+async function linkFormToUser(userId, formId) {
+  try {
+    const user = await User.findById(userId);
+    if (!user) return [null, "El usuario no existe"];
+
+    const form = await Form.findById(formId);
+    if (!form) return [null, "El formulario no existe"];
+
+    const formFound = user.form.find((b) => b._id == formId);
+    if (formFound) return [null, "El formulario ya está vinculado al usuario"];
+
+
+
+    user.form.push(form);
+    await user.save();
+
+    return [user, "formulario asociado al usuario"];
+  } catch (error) {
+    handleError(error, "user.service -> linkFormToUser");
+  }
+}
+
 module.exports = {
   getUsers,
   createUser,
   getUserById,
   updateUser,
   deleteUser,
+  linkFormToUser,
 };

@@ -24,9 +24,13 @@ const userSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Role",
       },
-    ],formAnswers: [{
-      type: mongoose.Schema.Types.ObjectId, ref: "FormAnswers",
-  }],
+    ],
+    form: [
+      {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Form",
+    },
+  ], 
 
   },
   {

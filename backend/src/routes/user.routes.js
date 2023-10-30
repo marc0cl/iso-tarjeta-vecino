@@ -32,5 +32,9 @@ router.delete(
   usuarioController.deleteUser,
 );
 
+// Ruta para vincular un formulario a un usuario
+router.put("/:id/:idForm", usuarioController.linkFormToUser);
+
+
 // Exporta el enrutador
 module.exports = router;

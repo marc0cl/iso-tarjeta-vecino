@@ -4,6 +4,7 @@ const { respondSuccess, respondError } = require("../utils/resHandler");
 const UserService = require("../services/user.service");
 const { userBodySchema, userIdSchema } = require("../schema/user.schema");
 const { handleError } = require("../utils/errorHandler");
+const User = require("../models/user.model");
 
 /**
  * Obtiene todos los usuarios
@@ -123,10 +124,28 @@ async function deleteUser(req, res) {
   }
 }
 
+
+async function linkFormToUser(req, res) {
+  try {
+    const { params } = req;
+    const { id, idForm } = params;
+    const [user, userError] = await UserService.linkFormToUser(id, idForm);
+
+    if (userError) return respondError(req, res, 400, userError);
+
+    respondSuccess(req, res, 200, user);
+  } catch (error) {
+    handleError(error, "user.controller -> linkFormToUser");
+    respondError(req, res, 500, "No se pudo asociar el formulario al usuario");
+  };
+};
+
+
 module.exports = {
   getUsers,
   createUser,
   getUserById,
   updateUser,
   deleteUser,
+  linkFormToUser,
 };
