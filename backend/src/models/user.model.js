@@ -55,4 +55,5 @@ userSchema.path("benefits").validate(function(value) {
 const User = mongoose.model("User", userSchema);
 
 // Exporta el modelo de datos
+
 module.exports = User;

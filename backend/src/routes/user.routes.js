@@ -33,11 +33,18 @@ router.put(
     authorizationMiddleware.isAdmin,
     usuarioController.updateUserByUsername,
 );
+router.put(
+    "/username/application/:username",
+    authorizationMiddleware.isAdmin,
+    usuarioController.updateApplicationStatus,
+);
 router.delete(
   "/:id",
   authorizationMiddleware.isAdmin,
   usuarioController.deleteUser,
 );
+router.put(
+  "/:id/:idBenefit", usuarioController.linkBenefitToUser);
 
 // Exporta el enrutador
 module.exports = router;

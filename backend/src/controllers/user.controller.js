@@ -144,6 +144,32 @@ async function updateUserByUsername(req, res) {
 }
 
 /**
+ * Actualiza un estado de aplicación de un usuario por su username
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+async function updateApplicationStatus(req, res) {
+  try {
+    const { params, body } = req;
+    const { error: paramsError } = usernameSchema.validate(params);
+    if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+    const { error: bodyError } = userBodySchema.validate(body);
+    if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+    const [user, userError] =
+        await UserService.updateApplicationStatusByUsername(params.username, body);
+
+    if (userError) return respondError(req, res, 400, userError);
+
+    respondSuccess(req, res, 200, user);
+  } catch (error) {
+    handleError(error, "user.controller -> updateApplicationStatus");
+    respondError(req, res, 500, "No se pudo actualizar el estado de aplicación");
+  }
+}
+
+/**
  * Elimina un usuario por su id
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
@@ -170,6 +196,28 @@ async function deleteUser(req, res) {
   }
 }
 
+/**
+ * Asocia un beneficio a un usuario
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+
+async function linkBenefitToUser(req, res) {
+  try {
+    const { params } = req;
+    const { id, idBenefit } = params;
+    const [user, userError] = await UserService.linkBenefitToUser(id, idBenefit);
+
+    if (userError) return respondError(req, res, 400, userError);
+
+    respondSuccess(req, res, 200, user);
+  } catch (error) {
+    handleError(error, "user.controller -> linkBenefitToUser");
+    respondError(req, res, 500, "No se pudo asociar el beneficio al usuario");
+  };
+};
+
+
 module.exports = {
   getUsers,
   createUser,
@@ -177,5 +225,7 @@ module.exports = {
   getUserByUsername,
   updateUserById,
   updateUserByUsername,
+  updateApplicationStatus,
   deleteUser,
+  linkBenefitToUser,
 };
