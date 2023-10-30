@@ -145,18 +145,19 @@ async function unlinkFormFromUser(req, res) {
     const { params } = req;
     const { userId, formId } = params;
 
-    const result = await UserService.unlinkFormFromUser(userId, formId);
+    const [user, message] = await UserService.unlinkFormFromUser(userId, formId);
 
-    if (result.error) {
-      return respondError(req, res, 404, result.message);
+    if (!user) {
+      return respondError(req, res, 404, message);
     }
 
-    return respondSuccess(req, res, 200, "Formulario desvinculado del usuario con éxito");
+    return respondSuccess(req, res, 200, message);
   } catch (error) {
     handleError(error, "user.controller -> unlinkFormFromUser");
     respondError(req, res, 500, "No se pudo desvincular el formulario del usuario");
   }
 }
+
 
 
 module.exports = {

@@ -157,19 +157,23 @@ async function unlinkFormFromUser(userId, formId) {
     const user = await User.findById(userId);
     if (!user) return [null, "El usuario no existe"];
 
-    const formIndex = user.form.findIndex(form => form._id.toString() === formId);
+    const formIndex = user.form.findIndex(form => form.toString() === formId);
 
     if (formIndex !== -1) {
       user.form.splice(formIndex, 1);
       await user.save();
+      return [user, "Formulario desvinculado del usuario"];
+    } else {
+      return [null, "El formulario no existe para este usuario"];
     }
-
-    return [user, "Formulario desvinculado del usuario"];
   } catch (error) {
     handleError(error, "user.service -> unlinkFormFromUser");
     return [null, "Error al desvincular el formulario del usuario"];
   }
 }
+
+
+
 
 
 
