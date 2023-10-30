@@ -6,6 +6,7 @@ const Benefit = require("../models/benefit.model.js");
 const Form = require("../models/form.model.js");
 const { handleError } = require("../utils/errorHandler");
 const cron = require("node-cron");
+const { request } = require("express");
 
 /**
  * Obtiene todos los usuarios de la base de datos
@@ -286,6 +287,7 @@ cron.schedule("0 0 * * *", async () => {
 });
 
 async function linkFormToUser(userId, formId) {
+  
   try {
     const user = await User.findById(userId);
     if (!user) return [null, "El usuario no existe"];
