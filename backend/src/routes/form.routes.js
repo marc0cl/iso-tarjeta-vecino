@@ -20,6 +20,9 @@ router.put("/:id", formController.updateForm);
 // Ruta para eliminar un formulario por su ID
 router.delete("/:id", formController.deleteForm);
 
+//Ruta para agregar pregunta a formulario
+router.put("/addQuestion/:id", formController.addQuestionToForm);
+
 module.exports = router;
 
 
