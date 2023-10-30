@@ -2,7 +2,7 @@
 
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const UserService = require("../services/user.service");
-const { userBodySchema, userIdSchema } = require("../schema/user.schema");
+const { userBodySchema, userIdSchema, usernameSchema } = require("../schema/user.schema");
 const { handleError } = require("../utils/errorHandler");
 
 
@@ -73,11 +73,33 @@ async function getUserById(req, res) {
 }
 
 /**
+ * Obtiene un usuario por su nombre de usuario
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+async function getUserByUsername(req, res) {
+  try {
+    const { params } = req;
+    const { error: paramsError } = usernameSchema.validate(params);
+    if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+    const [user, errorUser] = await UserService.getUserByUsername(params.username);
+
+    if (errorUser) return respondError(req, res, 404, errorUser);
+
+    respondSuccess(req, res, 200, user);
+  } catch (error) {
+    handleError(error, "user.controller -> getUserByUsername");
+    respondError(req, res, 500, "No se pudo obtener el usuario");
+  }
+}
+
+/**
  * Actualiza un usuario por su id
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-async function updateUser(req, res) {
+async function updateUserById(req, res) {
   try {
     const { params, body } = req;
     const { error: paramsError } = userIdSchema.validate(params);
@@ -86,7 +108,7 @@ async function updateUser(req, res) {
     const { error: bodyError } = userBodySchema.validate(body);
     if (bodyError) return respondError(req, res, 400, bodyError.message);
 
-    const [user, userError] = await UserService.updateUser(params.id, body);
+    const [user, userError] = await UserService.updateUserById(params.id, body);
 
     if (userError) return respondError(req, res, 400, userError);
 
@@ -94,6 +116,57 @@ async function updateUser(req, res) {
   } catch (error) {
     handleError(error, "user.controller -> updateUser");
     respondError(req, res, 500, "No se pudo actualizar el usuario");
+  }
+}
+
+/**
+ * Actualiza un usuario por su id
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+async function updateUserByUsername(req, res) {
+  try {
+    const { params, body } = req;
+    const { error: paramsError } = usernameSchema.validate(params);
+    if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+    const { error: bodyError } = userBodySchema.validate(body);
+    if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+    const [user, userError] = await UserService.updateUserByUsername(params.username, body);
+
+    if (userError) return respondError(req, res, 400, userError);
+
+    respondSuccess(req, res, 200, user);
+  } catch (error) {
+    handleError(error, "user.controller -> updateUserByUsername");
+    respondError(req, res, 500, "No se pudo actualizar el usuario");
+  }
+}
+
+/**
+ * Actualiza un estado de aplicación de un usuario por su username
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+async function updateApplicationStatus(req, res) {
+  try {
+    const { params, body } = req;
+    const { error: paramsError } = usernameSchema.validate(params);
+    if (paramsError) return respondError(req, res, 400, paramsError.message);
+
+    const { error: bodyError } = userBodySchema.validate(body);
+    if (bodyError) return respondError(req, res, 400, bodyError.message);
+
+    const [user, userError] =
+        await UserService.updateApplicationStatusByUsername(params.username, body);
+
+    if (userError) return respondError(req, res, 400, userError);
+
+    respondSuccess(req, res, 200, user);
+  } catch (error) {
+    handleError(error, "user.controller -> updateApplicationStatus");
+    respondError(req, res, 500, "No se pudo actualizar el estado de aplicación");
   }
 }
 
@@ -123,6 +196,28 @@ async function deleteUser(req, res) {
     respondError(req, res, 500, "No se pudo eliminar el usuario");
   }
 }
+
+/**
+ * Asocia un beneficio a un usuario
+ * @param {Object} req - Objeto de petición
+ * @param {Object} res - Objeto de respuesta
+ */
+
+async function linkBenefitToUser(req, res) {
+  try {
+    const { params } = req;
+    const { id, idBenefit } = params;
+    const [user, userError] = await UserService.linkBenefitToUser(id, idBenefit);
+
+    if (userError) return respondError(req, res, 400, userError);
+
+    respondSuccess(req, res, 200, user);
+  } catch (error) {
+    handleError(error, "user.controller -> linkBenefitToUser");
+    respondError(req, res, 500, "No se pudo asociar el beneficio al usuario");
+  };
+};
+
 
 
 async function linkFormToUser(req, res) {
@@ -165,8 +260,12 @@ module.exports = {
   getUsers,
   createUser,
   getUserById,
-  updateUser,
+  getUserByUsername,
+  updateUserById,
+  updateUserByUsername,
+  updateApplicationStatus,
   deleteUser,
+  linkBenefitToUser,
   linkFormToUser,
   unlinkFormFromUser,
 };

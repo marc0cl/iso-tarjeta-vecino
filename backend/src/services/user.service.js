@@ -2,8 +2,10 @@
 // Importa el modelo de datos 'User'
 const User = require("../models/user.model.js");
 const Role = require("../models/role.model.js");
+const Benefit = require("../models/benefit.model.js");
 const Form = require("../models/form.model.js");
 const { handleError } = require("../utils/errorHandler");
+const cron = require("node-cron");
 
 /**
  * Obtiene todos los usuarios de la base de datos
@@ -30,7 +32,20 @@ async function getUsers() {
  */
 async function createUser(user) {
   try {
-    const { username, email, password, roles } = user;
+    const {
+      username,
+      password,
+      firstName,
+      lastName,
+      gender,
+      email,
+      location,
+      residenceCertificate,
+      userType,
+      documentImage,
+      applicationStatus,
+      roles,
+    } = user;
 
     const userFound = await User.findOne({ email: user.email });
     if (userFound) return [null, "El usuario ya existe"];
@@ -41,8 +56,16 @@ async function createUser(user) {
 
     const newUser = new User({
       username,
-      email,
       password: await User.encryptPassword(password),
+      firstName,
+      lastName,
+      gender,
+      email,
+      location,
+      residenceCertificate,
+      userType,
+      documentImage,
+      applicationStatus,
       roles: myRole,
     });
     await newUser.save();
@@ -55,7 +78,7 @@ async function createUser(user) {
 
 /**
  * Obtiene un usuario por su id de la base de datos
- * @param {string} Id del usuario
+ * @param {string} id del usuario
  * @returns {Promise} Promesa con el objeto de usuario
  */
 async function getUserById(id) {
@@ -74,12 +97,32 @@ async function getUserById(id) {
 }
 
 /**
+ * Obtiene un usuario por su id de la base de datos
+ * @param {string} username nombre del usuario
+ * @returns {Promise} Promesa con el objeto de usuario
+ */
+async function getUserByUsername(username) {
+  try {
+    const user = await User.findOne({ username: username })
+        .select("-password")
+        .populate("roles")
+        .exec();
+
+    if (!user) return [null, "El usuario no existe"];
+
+    return [user, null];
+  } catch (error) {
+    handleError(error, "user.service -> getUserByUsername");
+  }
+}
+
+/**
  * Actualiza un usuario por su id en la base de datos
  * @param {string} id Id del usuario
  * @param {Object} user Objeto de usuario
  * @returns {Promise} Promesa con el objeto de usuario actualizado
  */
-async function updateUser(id, user) {
+async function updateUserById(id, user) {
   try {
     const userFound = await User.findById(id);
     if (!userFound) return [null, "El usuario no existe"];
@@ -118,6 +161,80 @@ async function updateUser(id, user) {
 }
 
 /**
+ * Actualiza un usuario por su id en la base de datos
+ * @param {string} username Id del usuario
+ * @param {Object} user Objeto de usuario
+ * @returns {Promise} Promesa con el objeto de usuario actualizado
+ */
+async function updateUserByUsername(username, user) {
+  try {
+    const userFound = await User.findOne({ username: username });
+    if (!userFound) return [null, "El usuario no existe"];
+
+    const { username: newUsername, email, password, newPassword, roles } = user;
+
+    const matchPassword = await User.comparePassword(
+        password,
+        userFound.password,
+    );
+
+    if (!matchPassword) {
+      return [null, "La contraseña no coincide"];
+    }
+
+    const rolesFound = await Role.find({ name: { $in: roles } });
+    if (rolesFound.length === 0) return [null, "El rol no existe"];
+
+    const myRole = rolesFound.map((role) => role._id);
+
+    const userUpdated = await User.findOneAndUpdate(
+        { username: username },
+        {
+          username: newUsername || username,
+          email,
+          password: await User.encryptPassword(newPassword || password),
+          roles: myRole,
+        },
+        { new: true },
+    );
+
+    return [userUpdated, null];
+  } catch (error) {
+    handleError(error, "user.service -> updateUserByUsername");
+  }
+}
+
+/**
+ * Actualiza un estado de usuario por su username en la base de datos
+ * @param {string} username Id del usuario
+ * @param {Object} user Objeto de usuario
+ * @returns {Promise} Promesa con el objeto de usuario actualizado
+ */
+async function updateApplicationStatusByUsername(username, user) {
+  try {
+    const userFound = await User.findOne({ username: username });
+    if (!userFound) return [null, "El usuario no existe"];
+
+    const { password, applicationStatus } = user;
+
+    const matchPassword = await User.comparePassword(password, userFound.password);
+    if (!matchPassword) {
+      return [null, "La contraseña no coincide"];
+    }
+
+    const userUpdated = await User.findOneAndUpdate(
+        { username: username },
+        { applicationStatus },
+        { new: true },
+    );
+
+    return [userUpdated, null];
+  } catch (error) {
+    handleError(error, "user.service -> updateApplicationStatusByUsername");
+  }
+}
+
+/**
  * Elimina un usuario por su id de la base de datos
  * @param {string} Id del usuario
  * @returns {Promise} Promesa con el objeto de usuario eliminado
@@ -129,6 +246,44 @@ async function deleteUser(id) {
     handleError(error, "user.service -> deleteUser");
   }
 }
+
+async function linkBenefitToUser(userId, benefitId) {
+  try {
+    const user = await User.findById(userId);
+    if (!user) return [null, "El usuario no existe"];
+
+    const benefit = await Benefit.findById(benefitId);
+    if (!benefit) return [null, "El beneficio no existe"];
+
+    const benefitFound = user.benefits.find((b) => b._id == benefitId);
+    if (benefitFound) return [null, "El beneficio ya está vinculado al usuario"];
+
+    const NdeBeneficios = user.benefits.length;
+    if (NdeBeneficios == 5) return [null, "No se pueden asociar más de 5 beneficios al mes"];
+
+    user.benefits.push(benefit);
+    await user.save();
+
+    return [user, "Beneficio asociado al usuario, recuerde que el beneficio vence en 1 mes"];
+  } catch (error) {
+    handleError(error, "user.service -> linkBenefitToUser");
+  }
+}
+
+cron.schedule("0 0 * * *", async () => {
+  try {
+    // Calcula la fecha hace un mes
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+    // Encuentra y elimina los beneficios creados hace más de un mes
+    const result = await Benefit.deleteMany({ createdAt: { $lt: oneMonthAgo } });
+
+    console.log(`Se eliminaron ${result.deletedCount} beneficios vencidos.`);
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 async function linkFormToUser(userId, formId) {
   try {
@@ -182,8 +337,12 @@ module.exports = {
   getUsers,
   createUser,
   getUserById,
-  updateUser,
+  getUserByUsername,
+  updateUserById,
+  updateUserByUsername,
+  updateApplicationStatusByUsername,
   deleteUser,
+  linkBenefitToUser,
   linkFormToUser,
   unlinkFormFromUser,
 };
