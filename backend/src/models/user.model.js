@@ -48,6 +48,9 @@ userSchema.statics.comparePassword = async (password, receivedPassword) => {
   return await bcrypt.compare(password, receivedPassword);
 };
 
+userSchema.path("benefits").validate(function(value) {
+  return value.length <= 5;
+}, "You cannot have more than 5 associated benefits in a month");
 
 /** Modelo de datos 'User' */
 const User = mongoose.model("User", userSchema);
