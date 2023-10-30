@@ -129,7 +129,7 @@ async function linkFormToUser(req, res) {
   try {
     const { params } = req;
     const { id, idForm } = params;
-    const [user, userError] = await UserService.linkFormToUser(id, idForm);
+    const [user, message] = await UserService.linkFormToUser(id, idForm);
 
     if (!user) {
       return respondError(req, res, 404, message);
