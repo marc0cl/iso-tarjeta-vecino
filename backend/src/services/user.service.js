@@ -151,7 +151,6 @@ async function linkFormToUser(userId, formId) {
   }
 }
 
-
 async function unlinkFormFromUser(userId, formId) {
   try {
     const user = await User.findById(userId);
