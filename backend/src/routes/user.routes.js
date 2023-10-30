@@ -46,5 +46,11 @@ router.delete(
 router.put(
   "/:id/:idBenefit", usuarioController.linkBenefitToUser);
 
+// Ruta para vincular un formulario a un usuario
+router.put("/:id/add/:idForm", usuarioController.linkFormToUser);
+
+// Ruta para desvincular un formulario de un usuario
+router.put("/:userId/rmv/:formId", usuarioController.unlinkFormFromUser);
+
 // Exporta el enrutador
 module.exports = router;
