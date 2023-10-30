@@ -19,4 +19,6 @@ const ACCESS_JWT_SECRET = process.env.ACCESS_JWT_SECRET;
 /** Secreto para el token de refresco */
 const REFRESH_JWT_SECRET = process.env.REFRESH_JWT_SECRET;
 
-module.exports = { PORT, HOST, DB_URL, ACCESS_JWT_SECRET, REFRESH_JWT_SECRET };
+const MAIL_TOKEN = process.env.MAIL_TOKEN;
+
+module.exports = { PORT, HOST, DB_URL, ACCESS_JWT_SECRET, REFRESH_JWT_SECRET, MAIL_TOKEN };
