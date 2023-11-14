@@ -3,9 +3,11 @@
 const User = require("../models/user.model.js");
 const Role = require("../models/role.model.js");
 const Benefit = require("../models/benefit.model.js");
+const Form = require("../models/form.model.js");
 const { handleError } = require("../utils/errorHandler");
 const cron = require("node-cron");
-const { verifyJWT2 } = require("../middlewares/authentication.middleware.js");
+const { request } = require("express");
+const { notificationChangeStatus } = require("./notification.service.js");
 
 /**
  * Obtiene todos los usuarios de la base de datos
@@ -205,6 +207,38 @@ async function updateUserByUsername(username, user) {
 }
 
 /**
+ * Actualiza un estado de usuario por su username en la base de datos
+ * @param {string} username Id del usuario
+ * @param {Object} user Objeto de usuario
+ * @returns {Promise} Promesa con el objeto de usuario actualizado
+ */
+async function updateApplicationStatusByUsername(username, user) {
+  try {
+    const userFound = await User.findOne({ username: username });
+    if (!userFound) return [null, "El usuario no existe"];
+
+    const { password, applicationStatus } = user;
+
+    const matchPassword = await User.comparePassword(password, userFound.password);
+    if (!matchPassword) {
+      return [null, "La contraseña no coincide"];
+    }
+
+    const userUpdated = await User.findOneAndUpdate(
+        { username: username },
+        { applicationStatus },
+        { new: true },
+    );
+
+    await notificationChangeStatus(userUpdated);
+
+    return [userUpdated, null];
+  } catch (error) {
+    handleError(error, "user.service -> updateApplicationStatusByUsername");
+  }
+}
+
+/**
  * Elimina un usuario por su id de la base de datos
  * @param {string} Id del usuario
  * @returns {Promise} Promesa con el objeto de usuario eliminado
@@ -241,7 +275,7 @@ async function linkBenefitToUser(benefitId) {
   }
 }
 
-cron.schedule('0 0 * * *', async () => {
+cron.schedule("0 0 * * *", async () => {
   try {
     // Calcula la fecha hace un mes
     const oneMonthAgo = new Date();
@@ -256,6 +290,55 @@ cron.schedule('0 0 * * *', async () => {
   }
 });
 
+async function linkFormToUser(userId, formId) {
+  
+  try {
+    const user = await User.findById(userId);
+    if (!user) return [null, "El usuario no existe"];
+
+    const form = await Form.findById(formId);
+    if (!form) return [null, "El formulario no existe"];
+
+    const formFound = user.form.find((b) => b._id == formId);
+    if (formFound) return [null, "El formulario ya está vinculado al usuario"];
+
+    user.form.push(form);
+    await user.save();
+
+    return [user, "Formulario asociado al usuario"];
+  } catch (error) {
+    handleError(error, "user.service -> linkFormToUser");
+    return [null, "Error al asociar el formulario al usuario"];
+  }
+}
+
+async function unlinkFormFromUser(userId, formId) {
+  try {
+    const user = await User.findById(userId);
+    if (!user) return [null, "El usuario no existe"];
+
+    const formIndex = user.form.findIndex(form => form.toString() === formId);
+
+    if (formIndex !== -1) {
+      user.form.splice(formIndex, 1);
+      await user.save();
+      return [user, "Formulario desvinculado del usuario"];
+    } else {
+      return [null, "El formulario no existe para este usuario"];
+    }
+  } catch (error) {
+    handleError(error, "user.service -> unlinkFormFromUser");
+    return [null, "Error al desvincular el formulario del usuario"];
+  }
+}
+
+
+
+
+
+
+
+
 module.exports = {
   getUsers,
   createUser,
@@ -263,6 +346,9 @@ module.exports = {
   getUserByUsername,
   updateUserById,
   updateUserByUsername,
+  updateApplicationStatusByUsername,
   deleteUser,
   linkBenefitToUser,
+  linkFormToUser,
+  unlinkFormFromUser,
 };

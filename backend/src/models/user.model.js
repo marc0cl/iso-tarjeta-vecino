@@ -9,15 +9,15 @@ const userSchema = new mongoose.Schema({
     }, password: {
         type: String, required: true,
     }, firstName: {
-        type: String, required: true,
+        type: String, required: true, default: "",
     }, lastName: {
-        type: String, required: true,
+        type: String, required: true, default: "",
     }, gender: {
-        type: String, required: true,
+        type: String, required: true, default: "",
     }, email: {
-        type: String, required: true, unique: true,
+        type: String, required: true, default: "", unique: true,
     }, location: {
-        type: String, required: true,
+        type: String, required: true, default: "",
     }, residenceCertificate: {
         type: String,
     }, roles: [
@@ -25,13 +25,21 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role",
         },
-    ], documentImage: {
-        type: String,
-    }, applicationStatus: {
+    ]
+    , documentImage: {
+     type: String,
+    },
+     applicationStatus: {
         type: String, enum: ["aprobado", "rechazado", "apelacion"],
     }, benefits: [{
         type: mongoose.Schema.Types.ObjectId, ref: "Benefit",
     }],
+    form: [
+        {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Form",
+      },
+    ],
 }, {
     versionKey: false,
 });

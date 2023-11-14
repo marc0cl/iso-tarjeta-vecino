@@ -5,6 +5,7 @@ const BenefitService = require("../services/benefit.service");
 const { benefitBodySchema, benefitIdSchema } = require("../schema/benefit.schema");
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const { handleError } = require("../utils/errorHandler");
+const { notificationNewBenefit } = require("../services/notification.service");
 
 async function getBenefits(req, res) {
   try {
@@ -27,6 +28,8 @@ async function createBenefit(req, res) {
     if (bodyError) return respondError(req, res, 400, bodyError.message);
 
     const [newBenefit, benefitError] = await BenefitService.createBenefit(body);
+
+    await notificationNewBenefit(newBenefit);
 
     if (benefitError) return respondError(req, res, 400, benefitError);
     if (!newBenefit) {
