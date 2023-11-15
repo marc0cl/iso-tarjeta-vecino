@@ -251,9 +251,8 @@ async function deleteUser(id) {
   }
 }
 
-async function linkBenefitToUser(benefitId) {
+async function linkBenefitToUser(userId, benefitId) {
   try {
-    let userId = verifyJWT2();
     const user = await User.findById(userId);
     if (!user) return [null, "El usuario no existe"];
 
@@ -275,16 +274,36 @@ async function linkBenefitToUser(benefitId) {
   }
 }
 
-cron.schedule("0 0 * * *", async () => {
+async function unlinkBenefitFromUser(userId, benefitId) {
   try {
-    // Calcula la fecha hace un mes
+    const user = await User.findById(userId);
+    if (!user) return [null, "El usuario no existe"];
+
+    const benefitIndex = user.benefits.findIndex((b) => b._id == benefitId);
+
+    if (benefitIndex !== -1) {
+      user.benefits.splice(benefitIndex, 1);
+      await user.save();
+      return [user, null];
+    } else {
+      return [null, "El beneficio no existe para este usuario"];
+    }
+  } catch (error) {
+    handleError(error, "user.service -> unlinkBenefitFromUser");
+  }
+}
+
+cron.schedule('0 0 1 * *', async () => {
+  try {
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-    // Encuentra y elimina los beneficios creados hace más de un mes
-    const result = await Benefit.deleteMany({ createdAt: { $lt: oneMonthAgo } });
+    const users = await User.find({ 'benefits.linkedAt': { $lt: oneMonthAgo } });
 
-    console.log(`Se eliminaron ${result.deletedCount} beneficios vencidos.`);
+    for (let user of users) {
+      user.benefits = user.benefits.filter(benefit => benefit.linkedAt > oneMonthAgo);
+      await user.save();
+    }
   } catch (error) {
     console.error(error);
   }
@@ -349,6 +368,7 @@ module.exports = {
   updateApplicationStatusByUsername,
   deleteUser,
   linkBenefitToUser,
+  unlinkBenefitFromUser,
   linkFormToUser,
   unlinkFormFromUser,
 };

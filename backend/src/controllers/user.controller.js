@@ -207,17 +207,35 @@ async function linkBenefitToUser(req, res) {
   try {
     const { params } = req;
     const { id, idBenefit } = params;
-    const [user, userError] = await UserService.linkBenefitToUser(id, idBenefit);
+    const [user, message] = await UserService.linkBenefitToUser(id, idBenefit);
 
-    if (userError) return respondError(req, res, 400, userError);
+    if (!user) {
+      return respondError(req, res, 404, message);
+    }
 
-    respondSuccess(req, res, 200, user);
+    respondSuccess(req, res, 200, "Beneficio asociado al usuario, recuerde que este beneficio expira después de 1 mes");
   } catch (error) {
     handleError(error, "user.controller -> linkBenefitToUser");
     respondError(req, res, 500, "No se pudo asociar el beneficio al usuario");
-  };
-};
+  }
+}
 
+async function unlinkBenefitFromUser(req, res) {
+  try {
+    const { params } = req;
+    const { id, idBenefit } = params;
+    const [user, message] = await UserService.unlinkBenefitFromUser(id, idBenefit);
+
+    if (!user) {
+      return respondError(req, res, 404, message);
+    }
+
+    return respondSuccess(req, res, 200, message);
+  } catch (error) {
+    handleError(error, "user.controller -> unlinkBenefitFromUser");
+    respondError(req, res, 500, "No se pudo desvincular el beneficio del usuario");
+  }
+}
 
 
 async function linkFormToUser(req, res) {
@@ -266,6 +284,7 @@ module.exports = {
   updateApplicationStatus,
   deleteUser,
   linkBenefitToUser,
+  unlinkBenefitFromUser,
   linkFormToUser,
   unlinkFormFromUser,
 };

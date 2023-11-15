@@ -3,6 +3,8 @@
 const Benefit = require("../models/benefit.model");
 const { handleError } = require("../utils/errorHandler");
 const { notificationNewBenefit } = require("./notification.service");
+const cron = require("node-cron");
+
 
 async function getBenefits() {
   try {
@@ -36,6 +38,24 @@ async function createBenefit(benefit) {
     handleError(error, "benefit.service -> createBenefit");
   }
 };
+
+cron.schedule('0 0 * * *', async () => {
+  try {
+    // Calcula la fecha hace 3 meses
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+    // Encuentra y actualiza los beneficios creados hace más de 3 meses
+    const result = await Benefit.updateMany(
+      { createdAt: { $lt: threeMonthsAgo }, status: "active" },
+      { $set: { status: "inactive" } }
+    );
+
+    console.log(`Se desactivaron ${result.nModified} beneficios después de 3 meses.`);
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 async function getBenefitById(id) {
   try {

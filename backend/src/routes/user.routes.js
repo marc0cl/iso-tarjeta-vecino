@@ -15,7 +15,7 @@ const authenticationMiddleware = require("../middlewares/authentication.middlewa
 const router = express.Router();
 
 // Define el middleware de autenticación para todas las rutas
-router.use(authenticationMiddleware.verifyJWT);
+router.use(authenticationMiddleware);
 
 // Define las rutas para los usuarios
 router.get("/", usuarioController.getUsers);
@@ -44,7 +44,10 @@ router.delete(
   usuarioController.deleteUser,
 );
 router.put(
-  "/:id", usuarioController.linkBenefitToUser);
+  "/:id/link/:idBenefit", usuarioController.linkBenefitToUser);
+
+router.put(
+  "/:id/unlink/:idBenefit", usuarioController.unlinkBenefitFromUser);
 
 // Ruta para vincular un formulario a un usuario
 router.put("/:id/add/:idForm", usuarioController.linkFormToUser);
