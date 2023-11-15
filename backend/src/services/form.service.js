@@ -59,6 +59,70 @@ async function updateForm(id, data) {
   }
 }
 
+async function updateAnswer(formId, questionId, newAnswer) {
+  try {
+    //busca el id de formulario
+    const form = await Form.findById(formId);
+    if (!form) {
+      return [null, "El formulario no existe"];
+    }
+    //se selecciona la pregunta por su id
+    const questionToUpdate = form.questions.id(questionId);
+
+    if (!questionToUpdate) {
+      return [null, "La pregunta no existe en el formulario"];
+    }
+  //actualizamos la respuesta
+    questionToUpdate.answer = newAnswer;
+
+    await form.save();
+
+    return [form, null];
+  } catch (error) {
+    console.error(error);
+    return [null, "Error al actualizar la respuesta de la pregunta"];
+  }
+}
+
+
+/* //funcion final que verifica que solo el usuario linkeado al formulario puede hacer modificaciones
+//al formulario que tiene asignado.
+async function updateAnswer(userId, formId, questionId, newAnswer) {
+  try {
+    // Verificar si el formulario pertenece al usuario
+    const user = await User.findById(userId);
+    if (!user) {
+      return [null, "Usuario no encontrado"];
+    }
+  //se verifica que el id de formulario este en los formularios linkeados al usuario
+    const isFormBelongsToUser = user.form.some(form => form.toString() === formId);
+    if (!isFormBelongsToUser) {
+      return [null, "El formulario no pertenece al usuario"];
+    }
+
+    // Continuar con la lógica de actualización
+    const form = await Form.findById(formId);
+    if (!form) {
+      return [null, "El formulario no existe"];
+    }
+
+    const questionToUpdate = form.questions.id(questionId);
+    if (!questionToUpdate) {
+      return [null, "La pregunta no existe en el formulario"];
+    }
+
+    questionToUpdate.answer = newAnswer;
+
+    await form.save();
+
+    return [form, null];
+  } catch (error) {
+    console.error(error);
+    return [null, "Error al actualizar la respuesta de la pregunta"];
+  }
+}
+*/
+
 async function deleteForm(id) {
   try {
     const deletedForm = await Form.findByIdAndDelete(id);
@@ -114,4 +178,5 @@ module.exports = {
   deleteForm,
   addQuestionToForm,
   removeQuestionFromForm,
+  updateAnswer,
 };
