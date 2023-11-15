@@ -7,6 +7,7 @@ const Form = require("../models/form.model.js");
 const { handleError } = require("../utils/errorHandler");
 const cron = require("node-cron");
 const { request } = require("express");
+const { notificationChangeStatus } = require("./notification.service.js");
 
 /**
  * Obtiene todos los usuarios de la base de datos
@@ -228,6 +229,8 @@ async function updateApplicationStatusByUsername(username, user) {
         { applicationStatus },
         { new: true },
     );
+
+    await notificationChangeStatus(userUpdated);
 
     return [userUpdated, null];
   } catch (error) {
