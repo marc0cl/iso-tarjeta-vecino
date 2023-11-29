@@ -205,35 +205,33 @@ async function deleteUser(req, res) {
 
 async function linkBenefitToUser(req, res) {
   try {
-    const { params } = req;
-    const { id, idBenefit } = params;
-    const [user, message] = await UserService.linkBenefitToUser(id, idBenefit);
+    const benefitId = req.params.benefitId;
+    const [user, error] = await UserService.linkBenefitToUser(req, benefitId);
 
-    if (!user) {
-      return respondError(req, res, 404, message);
+    if (error) {
+      return res.status(400).json({ message:error });
     }
 
-    respondSuccess(req, res, 200, "Beneficio asociado al usuario, recuerde que este beneficio expira después de 1 mes");
+    return res.status(200).json({ user, message: 'Beneficio vinculado exitosamente al usuario.' });
   } catch (error) {
-    handleError(error, "user.controller -> linkBenefitToUser");
-    respondError(req, res, 500, "No se pudo asociar el beneficio al usuario");
+    console.error(error);
+    return res.status(500).json({ error: 'Error interno del servidor.' });
   }
 }
 
 async function unlinkBenefitFromUser(req, res) {
   try {
-    const { params } = req;
-    const { id, idBenefit } = params;
-    const [user, message] = await UserService.unlinkBenefitFromUser(id, idBenefit);
+    const benefitId = req.params.benefitId;
+    const [user, error] = await UserService.unlinkBenefitFromUser(req, benefitId);
 
-    if (!user) {
-      return respondError(req, res, 404, message);
+    if (error) {
+      return res.status(400).json({ message:error });
     }
 
-    return respondSuccess(req, res, 200, message);
+    return res.status(200).json({ user, message: 'Beneficio desvinculado exitosamente del usuario.' });
   } catch (error) {
-    handleError(error, "user.controller -> unlinkBenefitFromUser");
-    respondError(req, res, 500, "No se pudo desvincular el beneficio del usuario");
+    console.error(error);
+    return res.status(500).json({ error: 'Error interno del servidor.' });
   }
 }
 

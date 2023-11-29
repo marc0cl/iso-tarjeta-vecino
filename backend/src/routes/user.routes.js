@@ -44,11 +44,14 @@ router.delete(
   usuarioController.deleteUser,
 );
 router.put(
-  "/:id/link/:idBenefit", usuarioController.linkBenefitToUser);
+  "/link/:benefitId",
+  authorizationMiddleware.isUser,
+  usuarioController.linkBenefitToUser);
 
 router.put(
-  "/:id/unlink/:idBenefit", usuarioController.unlinkBenefitFromUser);
-
+  "/unlink/:benefitId",
+  authorizationMiddleware.isUser,
+  usuarioController.unlinkBenefitFromUser);
 // Ruta para vincular un formulario a un usuario
 router.put("/:id/add/:idForm", usuarioController.linkFormToUser);
 

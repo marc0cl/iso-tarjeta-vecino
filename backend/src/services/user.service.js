@@ -6,6 +6,7 @@ const Benefit = require("../models/benefit.model.js");
 const Form = require("../models/form.model.js");
 const { handleError } = require("../utils/errorHandler");
 const cron = require("node-cron");
+const jwt = require('jsonwebtoken');
 const { request } = require("express");
 const { notificationChangeStatus } = require("./notification.service.js");
 
@@ -251,16 +252,29 @@ async function deleteUser(id) {
   }
 }
 
-async function linkBenefitToUser(userId, benefitId) {
+async function linkBenefitToUser(req, benefitId) {
   try {
-    const user = await User.findById(userId);
+    const headers = req.headers.authorization.split(' ');
+    if (headers.length !== 2 || headers[0] !== 'Bearer') {
+      return null;
+    }
+    const token = headers[1];
+    const decodedToken = jwt.verify(token, 'secreto1');
+    const userEmail = decodedToken.email;
+    const user = await User.findOne({ email: userEmail })
     if (!user) return [null, "El usuario no existe"];
 
     const benefit = await Benefit.findById(benefitId);
     if (!benefit) return [null, "El beneficio no existe"];
 
-    const benefitFound = user.benefits.find((b) => b._id == benefitId);
-    if (benefitFound) return [null, "El beneficio ya está vinculado al usuario"];
+    if (benefit.status !== 'active') return [null, "El beneficio no está activo"];
+
+    console.log(user);
+    console.log(benefit);
+
+  const benefitFound = user.benefits.find((b) => b._id == benefitId);
+  if (benefitFound) return [null, "El beneficio ya está vinculado al usuario"];
+
 
     const NdeBeneficios = user.benefits.length;
     if (NdeBeneficios == 5) return [null, "No se pueden asociar más de 5 beneficios al mes"];
@@ -274,9 +288,16 @@ async function linkBenefitToUser(userId, benefitId) {
   }
 }
 
-async function unlinkBenefitFromUser(userId, benefitId) {
+async function unlinkBenefitFromUser(req, benefitId) {
   try {
-    const user = await User.findById(userId);
+    const headers = req.headers.authorization.split(' ');
+    if (headers.length !== 2 || headers[0] !== 'Bearer') {
+      return null;
+    }
+    const token = headers[1];
+    const decodedToken = jwt.verify(token, 'secreto1');
+    const userEmail = decodedToken.email;
+    const user = await User.findOne({ email: userEmail })
     if (!user) return [null, "El usuario no existe"];
 
     const benefitIndex = user.benefits.findIndex((b) => b._id == benefitId);
