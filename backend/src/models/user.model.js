@@ -30,10 +30,23 @@ const userSchema = new mongoose.Schema({
     }, applicationStatus: {
         type: String, enum: ["aprobado", "rechazado", "apelacion"],
     }, benefits: [{
-        type: mongoose.Schema.Types.ObjectId, ref: "Benefit",
-    }],
+        benefit: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Benefit'
+        },
+        linkedAt: {
+          type: Date,
+          default: Date.now
+        }
+      }], form: [
+        {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Form",
+      },
+    ],
 }, {
     versionKey: false,
+    timestamps: true,
 });
 
 /** Encripta la contraseña del usuario (si aún es necesario) */

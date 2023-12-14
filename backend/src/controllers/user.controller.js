@@ -204,18 +204,69 @@ async function deleteUser(req, res) {
 
 async function linkBenefitToUser(req, res) {
   try {
-    const { params } = req;
-    const { id, idBenefit } = params;
-    const [user, userError] = await UserService.linkBenefitToUser(id, idBenefit);
+    const benefitId = req.params.benefitId;
+    const [user, error] = await UserService.linkBenefitToUser(req, benefitId);
 
-    if (userError) return respondError(req, res, 400, userError);
+    if (error) {
+      return res.status(400).json({ message:error });
+    }
 
-    respondSuccess(req, res, 200, user);
+    return res.status(200).json({ user, message: 'Beneficio vinculado exitosamente al usuario.' });
   } catch (error) {
-    handleError(error, "user.controller -> linkBenefitToUser");
-    respondError(req, res, 500, "No se pudo asociar el beneficio al usuario");
-  };
-};
+    console.error(error);
+    return res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+}
+
+async function unlinkBenefitFromUser(req, res) {
+  try {
+    const benefitId = req.params.benefitId;
+    const [user, error] = await UserService.unlinkBenefitFromUser(req, benefitId);
+
+    if (error) {
+      return res.status(400).json({ message:error });
+    }
+
+    return res.status(200).json({ user, message: 'Beneficio desvinculado exitosamente del usuario.' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+}
+
+async function linkFormToUser(req, res) {
+  try {
+    const { params } = req;
+    const { id, idForm } = params;
+    const [user, message] = await UserService.linkFormToUser(id, idForm);
+
+    if (!user) {
+      return respondError(req, res, 404, message);
+    }
+
+    respondSuccess(req, res, 200, "Formulario asociado al usuario");
+  } catch (error) {
+    handleError(error, "user.controller -> linkFormToUser");
+    respondError(req, res, 500, "No se pudo asociar el formulario al usuario");
+  }
+}
+
+async function unlinkFormFromUser(req, res) {
+  try {
+    const { params } = req;
+    const { userId, formId } = params;
+    const [user, message] = await UserService.unlinkFormFromUser(userId, formId);
+
+    if (!user) {
+      return respondError(req, res, 404, message);
+    }
+
+    return respondSuccess(req, res, 200, message);
+  } catch (error) {
+    handleError(error, "user.controller -> unlinkFormFromUser");
+    respondError(req, res, 500, "No se pudo desvincular el formulario del usuario");
+  }
+}
 
 
 module.exports = {
@@ -228,4 +279,7 @@ module.exports = {
   updateApplicationStatus,
   deleteUser,
   linkBenefitToUser,
+  unlinkBenefitFromUser,
+  linkFormToUser,
+  unlinkFormFromUser,
 };
