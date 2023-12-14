@@ -2,9 +2,8 @@
 
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const UserService = require("../services/user.service");
-const { userBodySchema, userIdSchema, usernameSchema } = require("../schema/user.schema");
+const { userBodySchema, userIdSchema, rutSchema } = require("../schema/user.schema");
 const { handleError } = require("../utils/errorHandler");
-
 
 /**
  * Obtiene todos los usuarios
@@ -77,19 +76,19 @@ async function getUserById(req, res) {
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-async function getUserByUsername(req, res) {
+async function getUserByRut(req, res) {
   try {
     const { params } = req;
-    const { error: paramsError } = usernameSchema.validate(params);
+    const { error: paramsError } = rutSchema.validate(params);
     if (paramsError) return respondError(req, res, 400, paramsError.message);
 
-    const [user, errorUser] = await UserService.getUserByUsername(params.username);
+    const [user, errorUser] = await UserService.getUserByRut(params.username);
 
     if (errorUser) return respondError(req, res, 404, errorUser);
 
     respondSuccess(req, res, 200, user);
   } catch (error) {
-    handleError(error, "user.controller -> getUserByUsername");
+    handleError(error, "user.controller -> getUserByRut");
     respondError(req, res, 500, "No se pudo obtener el usuario");
   }
 }
@@ -124,22 +123,22 @@ async function updateUserById(req, res) {
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
-async function updateUserByUsername(req, res) {
+async function updateUserByRut(req, res) {
   try {
     const { params, body } = req;
-    const { error: paramsError } = usernameSchema.validate(params);
+    const { error: paramsError } = rutSchema.validate(params);
     if (paramsError) return respondError(req, res, 400, paramsError.message);
 
     const { error: bodyError } = userBodySchema.validate(body);
     if (bodyError) return respondError(req, res, 400, bodyError.message);
 
-    const [user, userError] = await UserService.updateUserByUsername(params.username, body);
+    const [user, userError] = await UserService.updateUserByRut(params.rut, body);
 
     if (userError) return respondError(req, res, 400, userError);
 
     respondSuccess(req, res, 200, user);
   } catch (error) {
-    handleError(error, "user.controller -> updateUserByUsername");
+    handleError(error, "user.controller -> updateUserByRut");
     respondError(req, res, 500, "No se pudo actualizar el usuario");
   }
 }
@@ -152,14 +151,14 @@ async function updateUserByUsername(req, res) {
 async function updateApplicationStatus(req, res) {
   try {
     const { params, body } = req;
-    const { error: paramsError } = usernameSchema.validate(params);
+    const { error: paramsError } = rutSchema.validate(params);
     if (paramsError) return respondError(req, res, 400, paramsError.message);
 
     const { error: bodyError } = userBodySchema.validate(body);
     if (bodyError) return respondError(req, res, 400, bodyError.message);
 
     const [user, userError] =
-        await UserService.updateApplicationStatusByUsername(params.username, body);
+        await UserService.updateApplicationStatusByRut(params.rut, body);
 
     if (userError) return respondError(req, res, 400, userError);
 
@@ -184,12 +183,12 @@ async function deleteUser(req, res) {
     const user = await UserService.deleteUser(params.id);
     !user
       ? respondError(
-        req,
-        res,
-        404,
-        "No se encontro el usuario solicitado",
-        "Verifique el id ingresado",
-      )
+          req,
+          res,
+          404,
+          "No se encontro el usuario solicitado",
+          "Verifique el id ingresado",
+        )
       : respondSuccess(req, res, 200, user);
   } catch (error) {
     handleError(error, "user.controller -> deleteUser");
@@ -219,53 +218,14 @@ async function linkBenefitToUser(req, res) {
 };
 
 
-
-async function linkFormToUser(req, res) {
-  try {
-    const { params } = req;
-    const { id, idForm } = params;
-    const [user, message] = await UserService.linkFormToUser(id, idForm);
-
-    if (!user) {
-      return respondError(req, res, 404, message);
-    }
-
-    respondSuccess(req, res, 200, "Formulario asociado al usuario");
-  } catch (error) {
-    handleError(error, "user.controller -> linkFormToUser");
-    respondError(req, res, 500, "No se pudo asociar el formulario al usuario");
-  }
-}
-
-async function unlinkFormFromUser(req, res) {
-  try {
-    const { params } = req;
-    const { userId, formId } = params;
-    const [user, message] = await UserService.unlinkFormFromUser(userId, formId);
-
-    if (!user) {
-      return respondError(req, res, 404, message);
-    }
-
-    return respondSuccess(req, res, 200, message);
-  } catch (error) {
-    handleError(error, "user.controller -> unlinkFormFromUser");
-    respondError(req, res, 500, "No se pudo desvincular el formulario del usuario");
-  }
-}
-
-
-
 module.exports = {
   getUsers,
   createUser,
   getUserById,
-  getUserByUsername,
+  getUserByRut,
   updateUserById,
-  updateUserByUsername,
+  updateUserByRut,
   updateApplicationStatus,
   deleteUser,
   linkBenefitToUser,
-  linkFormToUser,
-  unlinkFormFromUser,
 };

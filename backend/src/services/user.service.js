@@ -3,11 +3,8 @@
 const User = require("../models/user.model.js");
 const Role = require("../models/role.model.js");
 const Benefit = require("../models/benefit.model.js");
-const Form = require("../models/form.model.js");
 const { handleError } = require("../utils/errorHandler");
 const cron = require("node-cron");
-const { request } = require("express");
-const { notificationChangeStatus } = require("./notification.service.js");
 
 /**
  * Obtiene todos los usuarios de la base de datos
@@ -35,7 +32,7 @@ async function getUsers() {
 async function createUser(user) {
   try {
     const {
-      username,
+      rut,
       password,
       firstName,
       lastName,
@@ -57,7 +54,7 @@ async function createUser(user) {
     const myRole = rolesFound.map((role) => role._id);
 
     const newUser = new User({
-      username,
+      rut,
       password: await User.encryptPassword(password),
       firstName,
       lastName,
@@ -100,12 +97,12 @@ async function getUserById(id) {
 
 /**
  * Obtiene un usuario por su id de la base de datos
- * @param {string} username nombre del usuario
+ * @param {string} rut nombre del usuario
  * @returns {Promise} Promesa con el objeto de usuario
  */
-async function getUserByUsername(username) {
+async function getUserByRut(rut) {
   try {
-    const user = await User.findOne({ username: username })
+    const user = await User.findOne({ rut: rut })
         .select("-password")
         .populate("roles")
         .exec();
@@ -114,7 +111,7 @@ async function getUserByUsername(username) {
 
     return [user, null];
   } catch (error) {
-    handleError(error, "user.service -> getUserByUsername");
+    handleError(error, "user.service -> getUserByRut");
   }
 }
 
@@ -129,7 +126,7 @@ async function updateUserById(id, user) {
     const userFound = await User.findById(id);
     if (!userFound) return [null, "El usuario no existe"];
 
-    const { username, email, password, newPassword, roles } = user;
+    const { rut, email, password, newPassword, roles } = user;
 
     const matchPassword = await User.comparePassword(
       password,
@@ -148,7 +145,7 @@ async function updateUserById(id, user) {
     const userUpdated = await User.findByIdAndUpdate(
       id,
       {
-        username,
+        rut,
         email,
         password: await User.encryptPassword(newPassword || password),
         roles: myRole,
@@ -164,16 +161,16 @@ async function updateUserById(id, user) {
 
 /**
  * Actualiza un usuario por su id en la base de datos
- * @param {string} username Id del usuario
+ * @param {string} rut Id del usuario
  * @param {Object} user Objeto de usuario
  * @returns {Promise} Promesa con el objeto de usuario actualizado
  */
-async function updateUserByUsername(username, user) {
+async function updateUserByRut(rut, user) {
   try {
-    const userFound = await User.findOne({ username: username });
+    const userFound = await User.findOne({ rut: rut });
     if (!userFound) return [null, "El usuario no existe"];
 
-    const { username: newUsername, email, password, newPassword, roles } = user;
+    const { rut: newRut, email, password, newPassword, roles } = user;
 
     const matchPassword = await User.comparePassword(
         password,
@@ -190,9 +187,9 @@ async function updateUserByUsername(username, user) {
     const myRole = rolesFound.map((role) => role._id);
 
     const userUpdated = await User.findOneAndUpdate(
-        { username: username },
+        { rut: rut },
         {
-          username: newUsername || username,
+          rut: newRut || rut,
           email,
           password: await User.encryptPassword(newPassword || password),
           roles: myRole,
@@ -202,19 +199,19 @@ async function updateUserByUsername(username, user) {
 
     return [userUpdated, null];
   } catch (error) {
-    handleError(error, "user.service -> updateUserByUsername");
+    handleError(error, "user.service -> updateUserByRut");
   }
 }
 
 /**
- * Actualiza un estado de usuario por su username en la base de datos
- * @param {string} username Id del usuario
+ * Actualiza un estado de usuario por su rut en la base de datos
+ * @param {string} rut Id del usuario
  * @param {Object} user Objeto de usuario
  * @returns {Promise} Promesa con el objeto de usuario actualizado
  */
-async function updateApplicationStatusByUsername(username, user) {
+async function updateApplicationStatusByRut(rut, user) {
   try {
-    const userFound = await User.findOne({ username: username });
+    const userFound = await User.findOne({ rut: rut });
     if (!userFound) return [null, "El usuario no existe"];
 
     const { password, applicationStatus } = user;
@@ -225,16 +222,14 @@ async function updateApplicationStatusByUsername(username, user) {
     }
 
     const userUpdated = await User.findOneAndUpdate(
-        { username: username },
+        { rut: rut },
         { applicationStatus },
         { new: true },
     );
 
-    await notificationChangeStatus(userUpdated);
-
     return [userUpdated, null];
   } catch (error) {
-    handleError(error, "user.service -> updateApplicationStatusByUsername");
+    handleError(error, "user.service -> updateApplicationStatusByRut");
   }
 }
 
@@ -289,65 +284,14 @@ cron.schedule("0 0 * * *", async () => {
   }
 });
 
-async function linkFormToUser(userId, formId) {
-  
-  try {
-    const user = await User.findById(userId);
-    if (!user) return [null, "El usuario no existe"];
-
-    const form = await Form.findById(formId);
-    if (!form) return [null, "El formulario no existe"];
-
-    const formFound = user.form.find((b) => b._id == formId);
-    if (formFound) return [null, "El formulario ya está vinculado al usuario"];
-
-    user.form.push(form);
-    await user.save();
-
-    return [user, "Formulario asociado al usuario"];
-  } catch (error) {
-    handleError(error, "user.service -> linkFormToUser");
-    return [null, "Error al asociar el formulario al usuario"];
-  }
-}
-
-async function unlinkFormFromUser(userId, formId) {
-  try {
-    const user = await User.findById(userId);
-    if (!user) return [null, "El usuario no existe"];
-
-    const formIndex = user.form.findIndex(form => form.toString() === formId);
-
-    if (formIndex !== -1) {
-      user.form.splice(formIndex, 1);
-      await user.save();
-      return [user, "Formulario desvinculado del usuario"];
-    } else {
-      return [null, "El formulario no existe para este usuario"];
-    }
-  } catch (error) {
-    handleError(error, "user.service -> unlinkFormFromUser");
-    return [null, "Error al desvincular el formulario del usuario"];
-  }
-}
-
-
-
-
-
-
-
-
 module.exports = {
   getUsers,
   createUser,
   getUserById,
-  getUserByUsername,
+  getUserByRut,
   updateUserById,
-  updateUserByUsername,
-  updateApplicationStatusByUsername,
+  updateUserByRut,
+  updateApplicationStatusByRut,
   deleteUser,
   linkBenefitToUser,
-  linkFormToUser,
-  unlinkFormFromUser,
 };
