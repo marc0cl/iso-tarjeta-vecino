@@ -1,16 +1,27 @@
 "use strict";
 
 const Joi = require("joi");
-const ROLES = require ( "../constants/roles.constants" );
+const ROLES = require("../constants/roles.constants");
+const { validate: validateRut } = require("chilean-rut");
+
 /**
  * Esquema de validación para el cuerpo de la solicitud de usuario.
  * @constant {Object}
  */
 const userBodySchema = Joi.object({
-    username: Joi.string().required().messages({
-        "string.empty": "El nombre de usuario no puede estar vacío.",
-        "any.required": "El nombre de usuario es obligatorio.",
-        "string.base": "El nombre de usuario debe ser de tipo string.",
+    rut: Joi.string()
+        .required()
+        .custom((value, helpers) => {
+            if (!validateRut(value)) {
+                return helpers.error("string.invalidRut", { value });
+            }
+            return value;
+        })
+        .messages({
+            "string.empty": "El rut no puede estar vacío.",
+            "any.required": "El rut es obligatorio.",
+            "string.base": "El rut debe ser de tipo string.",
+            "string.invalidRut": "El RUT proporcionado no es válido.",
     }),
     password: Joi.string().required().min(5).messages({
         "string.empty": "La contraseña no puede estar vacía.",
@@ -71,28 +82,31 @@ const userBodySchema = Joi.object({
  * @constant {Object}
  */
 const userIdSchema = Joi.object({
-  id: Joi.string()
-    .required()
-    .pattern(/^(?:[0-9a-fA-F]{24}|[0-9a-fA-F]{12})$/)
-    .messages({
-      "string.empty": "El id no puede estar vacío.",
-      "any.required": "El id es obligatorio.",
-      "string.base": "El id debe ser de tipo string.",
-      "string.pattern.base": "El id proporcionado no es un ObjectId válido.",
-    }),
-});
-
-const usernameSchema = Joi.object({
-    username: Joi.string()
+    id: Joi.string()
         .required()
-        .min(3)
-        .max(30) 
+        .pattern(/^(?:[0-9a-fA-F]{24}|[0-9a-fA-F]{12})$/)
         .messages({
-            "string.empty": "El username no puede estar vacío.",
-            "any.required": "El username es obligatorio.",
-            "string.base": "El username debe ser de tipo string.",
-            "string.min": "El username debe tener al menos 3 caracteres.",
-            "string.max": "El username no debe tener más de 30 caracteres.",
+            "string.empty": "El id no puede estar vacío.",
+            "any.required": "El id es obligatorio.",
+            "string.base": "El id debe ser de tipo string.",
+            "string.pattern.base": "El id proporcionado no es un ObjectId válido.",
         }),
 });
-module.exports = { userBodySchema, userIdSchema, usernameSchema };
+
+const rutSchema = Joi.object({
+    rut: Joi.string()
+        .required()
+        .custom((value, helpers) => {
+            if (!validateRut(value)) {
+                return helpers.error("string.invalidRut", {value});
+            }
+            return value;
+        })
+        .messages({
+            "string.empty": "El rut no puede estar vacío.",
+            "any.required": "El rut es obligatorio.",
+            "string.base": "El rut debe ser de tipo string.",
+            "string.invalidRut": "El RUT proporcionado no es válido.",
+        }),
+});
+module.exports = {userBodySchema, userIdSchema, rutSchema: rutSchema};

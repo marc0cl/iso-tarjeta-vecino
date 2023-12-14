@@ -21,7 +21,7 @@ router.use(authenticationMiddleware);
 router.get("/", usuarioController.getUsers);
 router.post("/", authorizationMiddleware.isAdmin, usuarioController.createUser);
 router.get("/id/:id", usuarioController.getUserById);
-router.get("/username/:username", usuarioController.getUserByUsername);
+router.get("/rut/:rut", usuarioController.getUserByRut);
 
 router.put(
   "/id/:id",
@@ -29,9 +29,9 @@ router.put(
   usuarioController.updateUserById,
 );
 router.put(
-    "/username/:username",
+    "/rut/:rut",
     authorizationMiddleware.isAdmin,
-    usuarioController.updateUserByUsername,
+    usuarioController.updateUserByRut,
 );
 router.put(
     "/username/application/:username",
