@@ -6,6 +6,10 @@ const { notificationNewBenefit } = require("./notification.service");
 const cron = require("node-cron");
 
 
+const soloLetras = /^[a-zA-Z\s]+$/;
+const letrasYNumeros = /^[a-zA-Z0-9\s]+$/;
+const NombreEmpresa = /^(?=.*[a-zA-Z])[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/^-]+$/;
+
 async function getBenefits() {
   try {
     const benefits = await Benefit.find();
@@ -23,6 +27,12 @@ async function createBenefit(benefit) {
 
     const benefitFound = await Benefit.findOne({ name: benefit.name });
     if (benefitFound) return [null, "El beneficio ya existe"];
+
+    if (soloLetras.test(name) === false) return [null, "El nombre solo puede contener letras"];
+    if (letrasYNumeros.test(description) === false) return [null, "La descripción solo puede contener letras y números"];
+    if (discount < 0 || discount > 100) return [null, "El descuento debe ser entre 0 y 100"];
+    if (NombreEmpresa.test(company) === false) return [null, "El nombre de la empresa no es válido"];
+
 
     const newBenefit = new Benefit({
       name,
