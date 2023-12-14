@@ -7,7 +7,7 @@ const cron = require("node-cron");
 
 
 const soloLetras = /^[a-zA-Z\s]+$/;
-const letrasYNumeros = /^[a-zA-Z0-9\s]+$/;
+const letrasYNumeros = /^(?=.*[a-zA-Z])[a-zA-Z0-9\s]+$/;
 const NombreEmpresa = /^(?=.*[a-zA-Z])[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/^-]+$/;
 
 async function getBenefits() {
