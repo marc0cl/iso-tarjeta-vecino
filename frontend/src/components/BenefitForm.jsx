@@ -7,7 +7,7 @@ export default function BenefitForm() {
     const { register, handleSubmit, formState: {errors}, reset } = useForm();
 
     const onSubmit = async (data) => {
-        const res = await updateBenefitBenefit(data);
+        const res = await updateBenefit(data);
         console.log(res);
         reset();
     };

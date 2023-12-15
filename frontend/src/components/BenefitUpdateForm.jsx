@@ -2,6 +2,7 @@ import { Button, Divider, Grid, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { getBenefit, updateBenefit } from '../services/benefit.service';
 import { useEffect, useState } from 'react';
+import React from 'react';
 
 export default function BenefitUpdateForm(id) {
 
@@ -11,11 +12,13 @@ export default function BenefitUpdateForm(id) {
         console.log(id);
         getBenefit(id.id).then((response) => {
             setBenefit(response);
-            console.log(response);
         });
     }, []);
 
-    const { register, handleSubmit, formState: {errors}, reset } = useForm();
+    const { register, handleSubmit, formState: {errors}, reset, setValue } = useForm();
+
+
+
 
     const onSubmit = async (data) => {
         const res = await updateBenefit(benefit._id, data);

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { getBenefits } from "../../services/benefit.service";
+import { deleteBenefit, getBenefits } from "../../services/benefit.service";
 import { Button, Card, CardContent, Divider, Grid, Icon, IconButton, Link, List, ListItem } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
+import Swal from 'sweetalert2';
+import WithReactContent from 'sweetalert2-react-content';
 
 const Beneficios = () => {
 
@@ -14,6 +16,27 @@ const Beneficios = () => {
             setBenefits(response);
         });
     }, []);
+
+    const MySwal = WithReactContent(Swal);
+
+    function handleDeleteBenefit(id) {
+        MySwal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteBenefit(id).then((response) => {
+                    MySwal.fire("Deleted!", "Your file has been deleted.", "success");
+                    setBenefits(benefits.filter((benefit) => benefit._id !== id));
+                });
+            }
+        });
+    }
 
     return (
         <>
@@ -38,7 +61,7 @@ const Beneficios = () => {
                                         <EditIcon />
                                     </IconButton>
                                 </Link>
-                                <IconButton color='error' aria-label="delete">
+                                <IconButton onClick={()=>{handleDeleteBenefit(benefit._id)}} color='error' aria-label="delete">
                                     <DeleteIcon />
                                 </IconButton>
                             </CardContent>
@@ -46,9 +69,8 @@ const Beneficios = () => {
                     </Grid>
                 ))}
             </Grid>
-                </>
-
-    )
+        </>
+    );
 }
 
 export default Beneficios;
