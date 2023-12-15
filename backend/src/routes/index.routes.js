@@ -10,6 +10,8 @@ const authRoutes = require("./auth.routes.js");
 
 const benefitRoutes = require("./benefit.routes.js");
 
+const formRoutes = require("./form.routes.js");
+
 /** Middleware de autenticación */
 const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
 
@@ -23,5 +25,9 @@ router.use("/auth", authRoutes);
 
 router.use("/benefits", authenticationMiddleware, benefitRoutes);
 
+router.use("/forms", authenticationMiddleware, formRoutes);
+
 // Exporta el enrutador
 module.exports = router;
+
+

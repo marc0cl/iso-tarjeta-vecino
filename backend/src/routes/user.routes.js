@@ -21,7 +21,7 @@ router.use(authenticationMiddleware);
 router.get("/", usuarioController.getUsers);
 router.post("/", authorizationMiddleware.isAdmin, usuarioController.createUser);
 router.get("/id/:id", usuarioController.getUserById);
-router.get("/username/:username", usuarioController.getUserByUsername);
+router.get("/rut/:rut", usuarioController.getUserByRut);
 
 router.put(
   "/id/:id",
@@ -29,9 +29,9 @@ router.put(
   usuarioController.updateUserById,
 );
 router.put(
-    "/username/:username",
+    "/rut/:rut",
     authorizationMiddleware.isAdmin,
-    usuarioController.updateUserByUsername,
+    usuarioController.updateUserByRut,
 );
 router.put(
     "/username/application/:username",
@@ -44,7 +44,19 @@ router.delete(
   usuarioController.deleteUser,
 );
 router.put(
-  "/:id/:idBenefit", usuarioController.linkBenefitToUser);
+  "/link/:benefitId",
+  authorizationMiddleware.isUser,
+  usuarioController.linkBenefitToUser);
+
+router.put(
+  "/unlink/:benefitId",
+  authorizationMiddleware.isUser,
+  usuarioController.unlinkBenefitFromUser);
+// Ruta para vincular un formulario a un usuario
+router.put("/:id/add/:idForm", usuarioController.linkFormToUser);
+
+// Ruta para desvincular un formulario de un usuario
+router.put("/:userId/rmv/:formId", usuarioController.unlinkFormFromUser);
 
 // Exporta el enrutador
 module.exports = router;
