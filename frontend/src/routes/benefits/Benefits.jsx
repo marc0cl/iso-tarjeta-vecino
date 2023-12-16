@@ -21,17 +21,20 @@ const Beneficios = () => {
 
     function handleDeleteBenefit(id) {
         MySwal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
+            title: "Quieres borrar este beneficio?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
+            confirmButtonText: "Si, borrarlo"
         }).then((result) => {
             if (result.isConfirmed) {
                 deleteBenefit(id).then((response) => {
-                    MySwal.fire("Deleted!", "Your file has been deleted.", "success");
+                    MySwal.fire({
+                        title: "Beneficio borrado",
+                        icon: "success",
+                    });
+
                     setBenefits(benefits.filter((benefit) => benefit._id !== id));
                 });
             }
