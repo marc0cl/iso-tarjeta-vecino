@@ -2,6 +2,8 @@ import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/auth.service';
 import { AuthProvider, useAuth } from '../context/AuthContext';
+import Navbar from '../components/NavBar';
+import Footer from '../components/Footer';
 
 function Root() {
   return (
@@ -21,16 +23,20 @@ function PageRoot() {
 
   const { user } = useAuth();
 
+  console.log(user);
+
   return (
-    <div>
-      <div>
-        <h1>Aqui deberia ir un header</h1>
-        <p>Estas logeado como: {user.email}</p>
-        <button onClick={handleLogout}>Cerrar sesion</button>
-      </div>
+    <>
+      <Navbar />
       <Outlet />
-    </div>
+      <Footer />
+    </>
   );
 }
 
 export default Root;
+
+/*
+  <p>Estas logeado como: {user.email}</p>
+  <button onClick={handleLogout}>Cerrar sesion</button>
+*/ 

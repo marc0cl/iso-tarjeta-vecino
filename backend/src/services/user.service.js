@@ -341,6 +341,4 @@ module.exports = {
   deleteUser,
   linkBenefitToUser,
   unlinkBenefitFromUser,
-  linkFormToUser,
-  unlinkFormFromUser,
 };
