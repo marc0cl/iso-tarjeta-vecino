@@ -3,6 +3,7 @@
 const User = require("../models/user.model.js");
 const Role = require("../models/role.model.js");
 const Benefit = require("../models/benefit.model.js");
+const Form = require("../models/form.model.js");
 const { handleError } = require("../utils/errorHandler");
 const cron = require("node-cron");
 const jwt = require('jsonwebtoken');
@@ -327,6 +328,48 @@ cron.schedule('0 0 1 * *', async () => {
     console.error(error);
   }
 });
+
+async function linkFormToUser(userId, formId) {
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return [null, "El usuario no existe"];
+
+    const form = await Form.findById(formId);
+    if (!form) return [null, "El formulario no existe"];
+
+    const formFound = user.form.find((b) => b._id == formId);
+    if (formFound) return [null, "El formulario ya está vinculado al usuario"];
+
+    user.form.push(form);
+    await user.save();
+
+    return [user, "Formulario asociado al usuario"];
+  } catch (error) {
+    handleError(error, "user.service -> linkFormToUser");
+    return [null, "Error al asociar el formulario al usuario"];
+  }
+}
+
+async function unlinkFormFromUser(userId, formId) {
+  try {
+    const user = await User.findById(userId);
+    if (!user) return [null, "El usuario no existe"];
+
+    const formIndex = user.form.findIndex(form => form.toString() === formId);
+
+    if (formIndex !== -1) {
+      user.form.splice(formIndex, 1);
+      await user.save();
+      return [user, "Formulario desvinculado del usuario"];
+    } else {
+      return [null, "El formulario no existe para este usuario"];
+    }
+  } catch (error) {
+    handleError(error, "user.service -> unlinkFormFromUser");
+    return [null, "Error al desvincular el formulario del usuario"];
+  }
+}
 
 module.exports = {
   getUsers,
