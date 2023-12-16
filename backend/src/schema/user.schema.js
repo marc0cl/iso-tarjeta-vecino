@@ -2,7 +2,7 @@
 
 const Joi = require("joi");
 const ROLES = require("../constants/roles.constants");
-const { validate: validateRut } = require("chilean-rut");
+const { validate: validateRut } = require("@validatecl/rut");
 
 /**
  * Esquema de validación para el cuerpo de la solicitud de usuario.
@@ -97,10 +97,10 @@ const rutSchema = Joi.object({
     rut: Joi.string()
         .required()
         .custom((value, helpers) => {
-            if (!validateRut(value)) {
-                return helpers.error("string.invalidRut", {value});
+            if (!validateRut(value).valid) {
+                return helpers.error("string.invalidRut", { value });
             }
-            return value;
+            return value; // Retornamos el valor si el RUT es válido
         })
         .messages({
             "string.empty": "El rut no puede estar vacío.",
@@ -109,4 +109,5 @@ const rutSchema = Joi.object({
             "string.invalidRut": "El RUT proporcionado no es válido.",
         }),
 });
+
 module.exports = {userBodySchema, userIdSchema, rutSchema: rutSchema};
