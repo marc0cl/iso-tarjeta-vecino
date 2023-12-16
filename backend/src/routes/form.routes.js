@@ -5,6 +5,9 @@ const express = require("express");
 const router = express.Router();
 const formController = require("../controllers/form.controller.js");
 
+/** Middlewares de autorización */
+const authorizationMiddleware = require("../middlewares/authorization.middleware.js");
+
 // Ruta para crear un nuevo formulario
 router.post("/", formController.createForm);
 
@@ -26,9 +29,10 @@ router.put("/addQuestion/:id", formController.addQuestionToForm);
 // Ruta para eliminar una pregunta de un formulario por su ID
 router.delete("/:formId/deleteQuestion/:questionId", formController.removeQuestionFromForm);
 
+//ruta para responder la pregunta de un formulario
+router.put("/:formId/updateAnswer/:questionId",authorizationMiddleware.isUser, formController.updateAnswer);
+
 module.exports = router;
-
-
 
 
 

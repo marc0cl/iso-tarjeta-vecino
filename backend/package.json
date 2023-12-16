@@ -14,6 +14,10 @@
   "author": "Camilo saez",
   "license": "MIT",
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.0",
+    "@validatecl/rut": "^4.0.7",
     "bcryptjs": "2.4.3",
     "chilean-rut": "^1.0.24",
     "cookie-parser": "1.4.6",
