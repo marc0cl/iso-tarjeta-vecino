@@ -33,9 +33,10 @@ const DetailsBenefit = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 linkBenefitToUser(id).then((response) => {
-                    if (response === 200) {
+                    if (response.message === "Beneficio vinculado exitosamente al usuario.") {
                         MySwal.fire({
                             title: "Beneficio vinculado",
+                            text: "Puedes ver tus beneficios vinculados en tu perfil",
                             icon: "success",
                         });
                     }
