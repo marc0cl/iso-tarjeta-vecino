@@ -9,6 +9,7 @@ import Benefits from './routes/benefits/Benefits.jsx';
 import CreateBenefit from './routes/benefits/CreateBenefit.jsx';
 import DetailsBenefit from './routes/benefits/DetailsBenefit.jsx';
 import UpdateBenefit from './routes/benefits/UpdateBenefit.jsx';
+import Notification from './routes/notifications/Notifications.jsx';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <App />,
+      },
+      {
+        path: '/notificaciones',
+        element: <Notification />,
       },
       {
         path: '/beneficios',

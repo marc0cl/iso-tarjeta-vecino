@@ -43,11 +43,9 @@ const Beneficios = () => {
         });
     }
 
-    const user = JSON.parse(localStorage.getItem('user')) || '';
-    console.log(user.roles[0].name);
+    const user = JSON.parse(localStorage.getItem('user'));
     const isAdmin = () => {
         if (user.roles[0].name === 'admin') {
-
             return true;
         }
     }
