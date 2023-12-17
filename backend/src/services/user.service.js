@@ -232,6 +232,8 @@ async function updateApplicationStatusByRut(rut, user) {
         { new: true },
     );
 
+    notificationChangeStatus(userUpdated);
+
     return [userUpdated, null];
   } catch (error) {
     handleError(error, "user.service -> updateApplicationStatusByRut");
@@ -382,6 +384,4 @@ module.exports = {
   deleteUser,
   linkBenefitToUser,
   unlinkBenefitFromUser,
-  linkFormToUser,
-  unlinkFormFromUser,
 };

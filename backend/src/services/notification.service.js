@@ -14,7 +14,13 @@ async function notificationNewBenefit(benefit) {
                     from: `Tarjeta Vecino`,
                     to: user.email,
                     subject: "Nuevo beneficio",
-                    text: `Hola ${user.username}, desde hoy tienes disponible el nuevo beneficio ${benefit.name}`,
+                    //text: `Hola ${user.username}, desde hoy tienes disponible el nuevo beneficio ${benefit.name}`,
+                    html:`<html>
+                        <body>
+                            <p>Hola ${user.username},<br> 
+                            desde hoy tienes disponible el nuevo beneficio ${benefit.name}</p>
+                        </body>
+                        </html>`
                 };
                 /* Aqui va todo lo del correo*/
                 sendMail(mailOptions);   
@@ -31,7 +37,13 @@ async function notificationChangeStatus(user) {
             from: `Tarjeta Vecino`,
             to: user.email,
             subject: "Cambio en estado de tramite",
-            text: `Hola ${user.username}, tu solicitud de TARJETA VECINO ha cambiado al estado ${user.applicationStatus}`,
+            //text: `Hola ${user.username}, tu solicitud de TARJETA VECINO ha cambiado al estado ${user.applicationStatus}`,
+            html:`<html>
+                <body>
+                    <p>Hola ${user.username},<br> 
+                    tu solicitud de TARJETA VECINO ha cambiado al estado ${user.applicationStatus}</p>
+                </body>
+                </html>`
         };
         /* Aqui va todo lo del correo*/
         sendMail(mailOptions);
