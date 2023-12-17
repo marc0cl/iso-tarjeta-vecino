@@ -83,7 +83,7 @@ async function updateBenefit(id, benefit) {
     const benefitFound = await Benefit.findById(id);
     if (!benefitFound) return [null, "El beneficio no existe"];
 
-    const { name, description, discount, company } = benefit;
+    const { name, description, discount, company, status } = benefit;
 
     const benefitUpdated = await Benefit.findByIdAndUpdate(
       id,
@@ -92,6 +92,7 @@ async function updateBenefit(id, benefit) {
         description,
         discount,
         company,
+        status,
       },
       { new: true }
     );
