@@ -41,6 +41,15 @@ const Beneficios = () => {
         });
     }
 
+    const user = JSON.parse(localStorage.getItem('user')) || '';
+    console.log(user.roles[0].name);
+    const isAdmin = () => {
+        if (user.roles[0].name === 'admin') {
+
+            return true;
+        }
+    }
+
     return (
         <>
             <Link href="/benefits/create" underline="none">
@@ -48,7 +57,7 @@ const Beneficios = () => {
             </Link>
             <h1>Listado de beneficios</h1>
             <Grid container spacing={1} style={{padding: '20px'}}>
-                {benefits?.map((benefit) => (
+                {benefits?.filter(benefit => benefit.status === 'active').map((benefit) => (
                     <Grid item key={benefit._id} xs={2} md={2} alignItems="center">
                         <Card>
                             <CardContent>
@@ -59,14 +68,19 @@ const Beneficios = () => {
                                         <InfoIcon />
                                     </IconButton>
                                 </Link>
-                                <Link href={`/benefits/edit/${benefit._id}`}>
-                                    <IconButton color='info' aria-label="edit">
-                                        <EditIcon />
-                                    </IconButton>
-                                </Link>
-                                <IconButton onClick={()=>{handleDeleteBenefit(benefit._id)}} color='error' aria-label="delete">
-                                    <DeleteIcon />
-                                </IconButton>
+                                {isAdmin() && (
+                                    <>
+                                    <Link href={`/benefits/edit/${benefit._id}`}>
+                                        <IconButton color='info' aria-label="edit">
+                                            <EditIcon />
+                                        </IconButton>
+                                    </Link>
+                                        <IconButton onClick={()=>{handleDeleteBenefit(benefit._id)}} color='error' aria-label="delete">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </>
+                                    )
+                                }
                             </CardContent>
                         </Card>
                     </Grid>

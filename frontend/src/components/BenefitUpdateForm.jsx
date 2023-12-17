@@ -12,6 +12,7 @@ export default function BenefitUpdateForm(id) {
         console.log(id);
         getBenefit(id.id).then((response) => {
             setBenefit(response);
+            console.log(benefit);
         });
     }, []);
 
@@ -84,6 +85,18 @@ export default function BenefitUpdateForm(id) {
                             autoComplete='off'
                             defaultValue={benefit.company}
                             {...register("company", {required: true})}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            margin="dense"
+                            label="Estado"
+                            variant="outlined"
+                            fullWidth
+                            name="status"
+                            autoComplete='off'
+                            defaultValue={benefit.status}
+                            {...register("status", {required: true})}
                         />
                     </Grid>
                     <Divider />
