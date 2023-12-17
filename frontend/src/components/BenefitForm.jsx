@@ -1,15 +1,32 @@
 import { Button, Divider, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { updateBenefit } from '../services/benefit.service';
+import { createBenefit } from '../services/benefit.service';
+import Swal from 'sweetalert2';
+import WithReactContent from 'sweetalert2-react-content';
 
 export default function BenefitForm() {
 
     const { register, handleSubmit, formState: {errors}, reset } = useForm();
 
+    const MySwal = WithReactContent(Swal);
+
     const onSubmit = async (data) => {
-        const res = await updateBenefit(data);
+        const res = await createBenefit(data);
         console.log(res);
-        reset();
+        if (res.state === 'Success') {
+            MySwal.fire({
+                title: "Beneficio creado",
+                icon: "success",
+            });
+            reset();
+        }
+        else {
+            MySwal.fire({
+                title: "No se pudo crear el beneficio",
+                icon: "error",
+            });
+        }
+
     };
 
     return (

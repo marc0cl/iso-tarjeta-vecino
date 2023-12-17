@@ -25,19 +25,19 @@ const router = createBrowserRouter([
         element: <App />,
       },
       {
-        path: '/benefits',
+        path: '/beneficios',
         element: <Benefits />,
       },
       {
-        path: '/benefits/:id',
+        path: '/beneficios/:id',
         element: <DetailsBenefit />,
       },
       {
-        path: '/benefits/create',
+        path: '/beneficios/crear',
         element: <CreateBenefit />,
       },
       {
-        path: '/benefits/edit/:id',
+        path: '/beneficios/editar/:id',
         element: <UpdateBenefit />,
       },
       {
