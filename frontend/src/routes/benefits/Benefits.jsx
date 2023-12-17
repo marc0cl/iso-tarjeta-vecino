@@ -32,23 +32,38 @@ const Beneficios = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 deleteBenefit(id).then((response) => {
-                    MySwal.fire("Deleted!", "Your file has been deleted.", "success");
+                    MySwal.fire({
+                        title: "Beneficio borrado",
+                        icon: "success",
+                    });
+
                     setBenefits(benefits.filter((benefit) => benefit._id !== id));
                 });
             }
         });
     }
 
+    const user = JSON.parse(localStorage.getItem('user')) || '';
+    console.log(user.roles[0].name);
+    const isAdmin = () => {
+        if (user.roles[0].name === 'admin') {
+
+            return true;
+        }
+    }
+
     return (
         <>
             {console.log(benefits[0])}
+            {isAdmin() && (
             <Link href="/beneficios/crear" underline="none">
                 <Button variant="contained" color="primary" style={{margin: '20px'}}>Crear beneficio</Button>
             </Link>
+            )}
             <h1>Listado de beneficios</h1>
             <Grid container spacing={1} style={{padding: '20px'}}>
-                {benefits?.map((benefit) => (
-                    <Grid item key={benefit._id} xs={2} md={2} alignItems="center">
+                {benefits?.filter(benefit => benefit.status === 'active').map((benefit) => (
+                    <Grid item key={benefit._id} xs={6} md={3} lg={2} alignItems="center">
                         <Card>
                             <CardContent>
                                 <h2 style={{margin: '0px'}}>Nombre: </h2> <p style={{margin: '0px', marginBottom: '0px'}}>{benefit.name}</p>
@@ -58,14 +73,19 @@ const Beneficios = () => {
                                         <InfoIcon />
                                     </IconButton>
                                 </Link>
-                                <Link href={`/beneficios/editar/${benefit._id}`}>
-                                    <IconButton color='info' aria-label="edit">
-                                        <EditIcon />
-                                    </IconButton>
-                                </Link>
-                                <IconButton onClick={()=>{handleDeleteBenefit(benefit._id)}} color='error' aria-label="delete">
-                                    <DeleteIcon />
-                                </IconButton>
+                                {isAdmin() && (
+                                    <>
+                                    <Link href={`/beneficios/editar/${benefit._id}`}>
+                                        <IconButton color='info' aria-label="edit">
+                                            <EditIcon />
+                                        </IconButton>
+                                    </Link>
+                                        <IconButton onClick={()=>{handleDeleteBenefit(benefit._id)}} color='error' aria-label="delete">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </>
+                                    )
+                                }
                             </CardContent>
                         </Card>
                     </Grid>

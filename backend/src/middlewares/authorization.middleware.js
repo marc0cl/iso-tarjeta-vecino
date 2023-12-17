@@ -66,38 +66,6 @@ async function isUser(req, res, next) {
         req,
         res,
         401,
-        "Se requiere un rol de user para realizar esta acción",
-    );
-  } catch (error) {
-    handleError(error, "authorization.middleware -> isUser");
-  }
-}
-
-
-async function isUser(req, res, next) {
-  try {
-    const user = await User.findOne({ email: req.email });
-
-    if (!user) {
-      return respondError(
-          req,
-          res,
-          404,
-          "Usuario no encontrado",
-      );
-    }
-
-    const roles = await Role.find({ _id: { $in: user.roles } });
-    for (let i = 0; i < roles.length; i++) {
-      if (roles[i].name === "user") {
-        next();
-        return;
-      }
-    }
-    return respondError(
-        req,
-        res,
-        401,
         "solo un usuario puede realizar esta acción",
     );
   } catch (error) {

@@ -24,6 +24,12 @@ const benefitBodySchema = Joi.object({
         "any.required": "La empresa es obligatoria.",
         "string.base": "La empresa debe ser de tipo string.",
     }),
+    status: Joi.string().valid("active", "inactive").messages({
+        "string.empty": "El estado no puede estar vacío.",
+        "any.required": "El estado es obligatorio.",
+        "string.base": "El estado debe ser de tipo string.",
+        "any.only": "El estado debe ser active o inactive.",
+    }),
 }).messages({
     "object.unknown": "No se permiten propiedades adicionales.",
 });
