@@ -21,12 +21,14 @@ const Beneficios = () => {
 
     function handleDeleteBenefit(id) {
         MySwal.fire({
-            title: "Quieres borrar este beneficio?",
+            title: "¿Estás seguro?",
+            text: "No podrás revertir la decisión!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Si, borrarlo"
+            confirmButtonText: "Si, borrar!",
+            cancelButtonText: "Cancelar",
         }).then((result) => {
             if (result.isConfirmed) {
                 deleteBenefit(id).then((response) => {
@@ -52,7 +54,8 @@ const Beneficios = () => {
 
     return (
         <>
-            <Link href="/benefits/create" underline="none">
+            {console.log(benefits[0])}
+            <Link href="/beneficios/crear" underline="none">
                 <Button variant="contained" color="primary" style={{margin: '20px'}}>Crear beneficio</Button>
             </Link>
             <h1>Listado de beneficios</h1>
@@ -63,14 +66,14 @@ const Beneficios = () => {
                             <CardContent>
                                 <h2 style={{margin: '0px'}}>Nombre: </h2> <p style={{margin: '0px', marginBottom: '0px'}}>{benefit.name}</p>
                                 <h2 style={{margin: '0px'}}>Empresa: </h2> <p style={{margin: '0px'}}>{benefit.company}</p>
-                                <Link href={`/benefits/${benefit._id}`}>
+                                <Link href={`/beneficios/${benefit._id}`}>
                                     <IconButton color='success' aria-label="info">
                                         <InfoIcon />
                                     </IconButton>
                                 </Link>
                                 {isAdmin() && (
                                     <>
-                                    <Link href={`/benefits/edit/${benefit._id}`}>
+                                    <Link href={`/beneficios/editar/${benefit._id}`}>
                                         <IconButton color='info' aria-label="edit">
                                             <EditIcon />
                                         </IconButton>
