@@ -35,10 +35,19 @@ const formIdSchema = Joi.object({
       }),
 });
 
+const updateAnswerSchema = Joi.object({
+    answer: Joi.string()
+    .allow('')  
+    .required()
+      .messages({
+        "string.base": "La respuesta debe ser de tipo string."
+      }),
+  });
 
 module.exports = {
     formSchema,
     questionSchema,
-    formIdSchema
+    formIdSchema,
+    updateAnswerSchema
 };
 
