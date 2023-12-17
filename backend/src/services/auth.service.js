@@ -25,6 +25,7 @@ async function login(user) {
 
     const userFound = await User.findOne({ email: email })
       .populate("roles")
+      .populate("form")
       .exec();
     if (!userFound) {
       return [null, null, "El usuario y/o contraseña son incorrectos"];
@@ -39,14 +40,15 @@ async function login(user) {
       return [null, null, "El usuario y/o contraseña son incorrectos"];
     }
 
+    console.log("User Found Before Token Generation:", userFound);
     const accessToken = jwt.sign(
-      { email: userFound.email, roles: userFound.roles },
+      { email: userFound.email, roles: userFound.roles, form: userFound.form },
       ACCESS_JWT_SECRET,
       {
         expiresIn: "1d",
       },
     );
-
+    console.log("Access Token:", accessToken);
     const refreshToken = jwt.sign(
       { email: userFound.email },
       REFRESH_JWT_SECRET,
@@ -82,12 +84,13 @@ async function refresh(cookies) {
           email: user.email,
         })
           .populate("roles")
+          .populate("form")
           .exec();
 
         if (!userFound) return [null, "No usuario no autorizado"];
 
         const accessToken = jwt.sign(
-          { email: userFound.email, roles: userFound.roles },
+          { email: userFound.email, roles: userFound.roles, form: userFound.form },
           ACCESS_JWT_SECRET,
           {
             expiresIn: "1d",
@@ -97,8 +100,9 @@ async function refresh(cookies) {
         return [accessToken, null];
       },
     );
-
-    return accessToken;
+    
+    return [accessToken, refreshToken, null];
+    
   } catch (error) {
     handleError(error, "auth.service -> refresh");
   }

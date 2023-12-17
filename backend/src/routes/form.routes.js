@@ -4,6 +4,10 @@
 const express = require("express");
 const router = express.Router();
 const formController = require("../controllers/form.controller.js");
+const multer = require("multer");
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 /** Middlewares de autorización */
 const authorizationMiddleware = require("../middlewares/authorization.middleware.js");
@@ -31,6 +35,9 @@ router.delete("/:formId/deleteQuestion/:questionId", formController.removeQuesti
 
 //ruta para responder la pregunta de un formulario
 router.put("/:formId/updateAnswer/:questionId",authorizationMiddleware.isUser, formController.updateAnswer);
+
+router.post("/:formId/add-image", upload.single("image"), formController.addImageToForm);
+
 
 module.exports = router;
 

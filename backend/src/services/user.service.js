@@ -376,6 +376,34 @@ async function unlinkFormFromUser(userId, formId) {
   }
 }
 
+async function getUserInfo(req) {
+  try {
+    const headers = req.headers.authorization.split(' ');
+
+    if (headers.length !== 2 || headers[0] !== 'Bearer') {
+      throw new Error("Formato de token inválido");
+    }
+
+    const token = headers[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+    const userEmail = decodedToken.email;
+    const user = await User.findOne({ email: userEmail });
+
+    if (!user) {
+      throw new Error("El usuario no existe");
+    }
+
+    console.log(user);
+
+    return { user, error: null };
+  } catch (error) {
+    handleError(error, "user.service -> getUserInfo");
+    return { user: null, error: "Error al obtener información del usuario" };
+  }
+}
+
+
 
 
 module.exports = {
@@ -391,5 +419,5 @@ module.exports = {
   unlinkBenefitFromUser,
   linkFormToUser,
   unlinkFormFromUser,
-
+  getUserInfo,
 };

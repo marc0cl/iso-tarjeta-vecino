@@ -268,6 +268,21 @@ async function unlinkFormFromUser(req, res) {
   }
 }
 
+async function getUserInfoController(req, res) {
+  const result = await UserService.getUserInfo(req);
+
+  if (!result[0]) {
+    // El usuario no existe o hay un error
+    return res.status(401).json({ error: result[1] || 'Unauthorized' });
+  }
+
+  // Devuelve la información del usuario
+  res.json(result[0]);
+}
+
+module.exports = {
+  getUserInfoController,
+};
 
 module.exports = {
   getUsers,
@@ -282,4 +297,5 @@ module.exports = {
   unlinkBenefitFromUser,
   linkFormToUser,
   unlinkFormFromUser,
+  getUserInfoController,
 };

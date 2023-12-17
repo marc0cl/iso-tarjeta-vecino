@@ -58,5 +58,7 @@ router.put("/:id/add/:idForm", usuarioController.linkFormToUser);
 // Ruta para desvincular un formulario de un usuario
 router.put("/:userId/rmv/:formId", usuarioController.unlinkFormFromUser);
 
+router.get('/user-info', usuarioController.getUserInfoController);
+
 // Exporta el enrutador
 module.exports = router;

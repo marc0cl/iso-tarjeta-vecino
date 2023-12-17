@@ -41,7 +41,7 @@ const Navbar = () => {
     };
 
     const { user } = useAuth();
-
+    console.log("Valor de user.form:", user.form); 
     console.log(user);
 
     return (
@@ -154,10 +154,9 @@ const Navbar = () => {
                                     <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Formularios</Button>
                                 </Link>)}
                             {user && user.roles.some(role => role.name === 'user') && (
-                                <Link to="/user-forms">
+                                <Link to={`/forms/${user.form}`}>
                                     <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Formulario</Button>
-                                </Link>
-                            )}
+                                </Link>)}
                             <Link to="/Novedades">
                                 <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Novedades</Button>
                             </Link>

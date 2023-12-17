@@ -11,6 +11,7 @@ const questionSchema = new mongoose.Schema({
         type: String,
         required: false
     }, // Espacio para la respuesta del usuario
+    
 });
 
 const formSchema = new mongoose.Schema({
@@ -22,6 +23,10 @@ const formSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+    },
+    image: {
+        data: Buffer,
+        contentType: String,
     }   
 });
 
