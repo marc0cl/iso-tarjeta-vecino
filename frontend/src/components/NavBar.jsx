@@ -3,13 +3,15 @@ import { AppBar, Avatar, Box, Button, Container, Divider, Grid, IconButton, List
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import { logout } from "../services/auth.service";
+import { useAuth } from "../context/AuthContext";
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard'];
 
 const Navbar = () => {
 
@@ -31,19 +33,20 @@ const Navbar = () => {
       setAnchorElUser(null);
     };
 
+    const navigate = useNavigate();
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+    const handleLogout = () => {
+        logout();
+        navigate('/auth');
     };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+
+    const { user } = useAuth();
+
+    console.log(user);
 
     return (
         <>
-        <AppBar position="static" sx={{backgroundColor: 'red', display: 'flex'}}>
+        <AppBar position="static" sx={{backgroundColor: 'red'}}>
         <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                 <h3 style={{margin: '5px'}}>TARJETA VECINO</h3>
         </Grid>
@@ -172,6 +175,9 @@ const Navbar = () => {
                         <Typography textAlign="center">{setting}</Typography>
                         </MenuItem>
                     ))}
+                    <MenuItem key={"logout"} onClick={handleCloseUserMenu}>
+                        <button onClick={handleLogout}>Cerrar sesion</button>
+                    </MenuItem>
                     </Menu>
                 </Box>
                 </Toolbar>

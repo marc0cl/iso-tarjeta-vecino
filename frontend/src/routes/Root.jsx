@@ -24,8 +24,6 @@ function PageRoot() {
 
   const { user } = useAuth();
 
-  console.log(user);
-
   return (
     <>
       <Navbar />
