@@ -12,7 +12,7 @@ const authorizationMiddleware = require("../middlewares/authorization.middleware
 router.post("/", formController.createForm);
 
 // Ruta para obtener una lista de todos los formularios
-router.get("/", formController.getForms);
+router.get("/",authorizationMiddleware.isAdmin, formController.getForms);
 
 // Ruta para obtener un formulario por su ID
 router.get("/:id", formController.getFormById);

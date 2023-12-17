@@ -19,6 +19,10 @@ const formSchema = new mongoose.Schema({
         required: true,
     },
     questions: [questionSchema],
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    }   
 });
 
 const Form = mongoose.model("Form", formSchema);

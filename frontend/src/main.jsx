@@ -10,6 +10,10 @@ import CreateBenefit from './routes/benefits/CreateBenefit.jsx';
 import DetailsBenefit from './routes/benefits/DetailsBenefit.jsx';
 import UpdateBenefit from './routes/benefits/UpdateBenefit.jsx';
 
+
+import Forms from './routes/forms/Forms.jsx';
+import DetailsForm from './routes/forms/DetailsForm.jsx';
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -35,6 +39,14 @@ const router = createBrowserRouter([
       {
         path: '/benefits/edit/:id',
         element: <UpdateBenefit />,
+      },
+      {
+        path: '/forms',
+        element: <Forms />,
+      },
+      {
+        path: '/forms/:id',
+        element: <DetailsForm />,
       }
     ],
   },
@@ -43,6 +55,7 @@ const router = createBrowserRouter([
     element: <Login />,
   },
 ]);
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <RouterProvider router={router} />

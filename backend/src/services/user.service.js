@@ -344,6 +344,9 @@ async function linkFormToUser(userId, formId) {
     user.form.push(form);
     await user.save();
 
+    form.user = userId;
+    await form.save();
+
     return [user, "Formulario asociado al usuario"];
   } catch (error) {
     handleError(error, "user.service -> linkFormToUser");
@@ -371,6 +374,8 @@ async function unlinkFormFromUser(userId, formId) {
   }
 }
 
+
+
 module.exports = {
   getUsers,
   createUser,
@@ -384,4 +389,5 @@ module.exports = {
   unlinkBenefitFromUser,
   linkFormToUser,
   unlinkFormFromUser,
+
 };

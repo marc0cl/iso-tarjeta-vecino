@@ -21,6 +21,7 @@ function PageRoot() {
   };
 
   const { user } = useAuth();
+  console.log('User:', user);
 
   return (
     <div>
@@ -31,6 +32,15 @@ function PageRoot() {
         <Link to="/benefits">
           <Button variant="contained">Beneficios</Button>
         </Link>
+        {user && user.roles.some(role => role.name === 'admin') && (
+          <Link to="/forms">
+            <Button variant="contained">Formularios</Button>
+          </Link>)}
+        {user && user.roles.some(role => role.name === 'user') && (
+          <Link to="/user-forms">
+            <Button variant="contained">Formulario</Button>
+          </Link>
+        )}
         <Button onClick={handleLogout}>Cerrar sesion</Button>
       </div>
       <Outlet />
