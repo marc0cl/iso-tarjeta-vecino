@@ -122,7 +122,7 @@ const FormUpdate = () => {
         </div>
       )}
 
-      <button onClick={handleUpdateForm}>Actualizar Formulario</button>
+      <button onClick={handleUpdateForm}>Enviar Formulario</button>
     </div>
   );
 };
