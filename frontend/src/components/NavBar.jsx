@@ -41,7 +41,7 @@ const Navbar = () => {
 
     const handleLogout = () => {
         logout();
-        navigate('/auth');
+        navigate('/');
     };
 
     const { user } = useAuth();

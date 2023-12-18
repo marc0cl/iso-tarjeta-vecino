@@ -4,6 +4,7 @@ import { logout } from '../services/auth.service';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import Navbar from '../components/NavBar';
 import Footer from '../components/Footer';
+import Landing from '../components/LandingPage.jsx';
 import { Button } from '@mui/material';
 
 function Root() {
@@ -19,19 +20,26 @@ function PageRoot() {
 
   const handleLogout = () => {
     logout();
-    navigate('/auth');
+    navigate('/');
   };
 
   const { user } = useAuth();
-  
 
-  return (
-    <>
-      <Navbar />
-      <Outlet />
-      <Footer />
-    </>
-  );
+    return (
+        <>
+            {user ? (
+                // Render Navbar and the rest of the page if the user is logged in
+                <>
+                    <Navbar />
+                    <Outlet />
+                    <Footer />
+                </>
+            ) : (
+                // Render a fallback landing component if the user is not logged in
+                <Landing />
+            )}
+        </>
+    );
 }
 
 export default Root;

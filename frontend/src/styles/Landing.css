@@ -1,0 +1,60 @@
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.welcome-section {
+    /* Añade estilos para la sección de bienvenida */
+    background-color: orange;
+    color: white;
+    padding: 50px;
+    font-size: 2rem;
+    flex: 1;
+}
+
+.login-section {
+    /* Añade estilos para la sección de inicio de sesión */
+    background-color: white;
+    padding: 50px;
+    flex: 1;
+}
+
+.login-section h2 {
+    margin-bottom: 20px;
+}
+
+.login-section form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-section input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login-section button {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login-section button[type="submit"] {
+    background-color: #f90;
+    color: white;
+}
+
+.login-section button[type="button"] {
+    background-color: #ddd;
+}
+
+.login-section a {
+    color: #f90;
+    text-decoration: none;
+}
