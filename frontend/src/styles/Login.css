@@ -1,0 +1,62 @@
+.login-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 2rem;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.login-container h2 {
+    color: #333; /* Cambia el color a uno más oscuro para que sea visible */
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: .5rem;
+    color: #333; /* Asegúrate de que el color del texto se vea contra el fondo */
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 1rem; /* Añade un margen para separar los campos de entrada */
+    border: 1px solid #ccc; /* Un borde más claro para los campos de entrada */
+    border-radius: 4px;
+}
+
+.error-message {
+    color: red; /* Mensajes de error en rojo u otro color que destaque */
+    font-size: 0.875rem;
+    display: block; /* O asegúrate de que sea un bloque para una correcta visualización */
+    margin-bottom: .5rem;
+}
+
+.submit-button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 1rem;
+    align-self: center;
+
+}
+
+.forgot-password {
+    margin-top: 1rem;
+    color: #0056b3; /* Asegúrate de que este color se vea y combine con el botón */
+}
+
+.forgot-password a {
+    color: inherit; /* Hereda el color de su elemento padre para mantener la consistencia */
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline; /* Subraya al pasar el mouse para indicar que es un enlace */
+}

@@ -4,21 +4,23 @@ import jwtDecode from 'jwt-decode';
 
 export const login = async ({ email, password }) => {
   try {
+    console.log("Email ", email);
+    console.log("Password ", password);
     const response = await axios.post('auth/login', {
       email,
       password,
     });
     const { status, data } = response;
     if (status === 200) {
-      const { email, roles } = await jwtDecode(data.data.accessToken);
+      // Suponiendo que 'accessToken' es la propiedad donde recibes tu token
+      const { email, roles } = jwtDecode(data.accessToken);
       localStorage.setItem('user', JSON.stringify({ email, roles }));
-      axios.defaults.headers.common[
-        'Authorization'
-      ] = `Bearer ${data.data.accessToken}`;
-      cookies.set('jwt-auth', data.data.accessToken, { path: '/' });
+      axios.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
+      // Suponiendo que estás utilizando cookies
+      new cookies().set('jwt-auth', data.accessToken, { path: '/' });
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 

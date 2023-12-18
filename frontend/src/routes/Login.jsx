@@ -15,7 +15,7 @@ function Login() {
 
   return (
     <div>
-      <h2>Inicia sesion!</h2>
+      <h2></h2>
       <LoginForm />
     </div>
   );
