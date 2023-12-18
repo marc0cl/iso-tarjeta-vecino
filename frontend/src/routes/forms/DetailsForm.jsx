@@ -23,13 +23,16 @@ const DetailsForm = () => {
       }
 
       
-    const imageUrl = formDetails.image.data.data;
-    const arrayBuffer = new Uint8Array(imageUrl).buffer;
-    const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
-    setbase64String(base64String);
-    //console.log(base64String);
-      //setImageUrl(imageUrl);
-      //setImageLoaded(true);
+      if (formDetails.image && formDetails.image.data && formDetails.image.data.data) {
+        const imageUrl = formDetails.image.data.data;
+        const arrayBuffer = new Uint8Array(imageUrl).buffer;
+        const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
+        setbase64String(base64String);
+        // setImageUrl(imageUrl);
+        // setImageLoaded(true);
+      } else {
+        console.warn('El formulario no tiene una imagen asociada.');
+      }
     } catch (error) {
       console.error('Error fetching form details:', error);
     }
@@ -49,14 +52,8 @@ const DetailsForm = () => {
           Usuario: {userDetails.firstName} {userDetails.lastName}
         </h2>
       )}
-      {/* Mostramos la imagen si existe */}
-      <div>
-        <h2>Imagen:</h2>
-        
-        <img alt="Imagen del formulario" src={`data:image/png;base64,${base64String}`}/>
-
-        
-      </div>
+      
+      
 
       <h2>Preguntas:</h2>
       {form.questions?.map((question, index) => (
@@ -65,6 +62,13 @@ const DetailsForm = () => {
           <p>Respuesta: {question.answer}</p>
         </div>
       ))}
+      <div>
+        <h2>Imagen:</h2>
+        
+        <img alt="Imagen del formulario" src={`data:image/png;base64,${base64String}`}/>
+
+        
+      </div>
     </div>
   );
 };

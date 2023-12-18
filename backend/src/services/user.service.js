@@ -10,6 +10,8 @@ const jwt = require('jsonwebtoken');
 const { request } = require("express");
 const { notificationChangeStatus } = require("./notification.service.js");
 
+const { createForm } = require('./form.service');
+
 
 /**
  * Obtiene todos los usuarios de la base de datos
@@ -72,6 +74,25 @@ async function createUser(user) {
       applicationStatus,
       roles: myRole,
     });
+    await newUser.save();
+
+  
+
+    const [newForm, formError] = await createForm({
+      title: "Formulario de postulacion", 
+      questions: [
+        { text: "Pregunta 1", answer: "" },
+        { text: "Pregunta 2", answer: "" },
+        { text: "Pregunta 3", answer: "" },
+        { text: "Pregunta 4", answer: "" },
+      ],
+      //user: newUser._id,
+    });
+
+    newForm.user = newUser._id;
+    await newForm.save();
+    
+    newUser.form.push(newForm._id);
     await newUser.save();
 
     return [newUser, null];
