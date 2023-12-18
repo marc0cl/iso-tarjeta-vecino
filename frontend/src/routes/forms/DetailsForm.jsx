@@ -39,7 +39,7 @@ const DetailsForm = () => {
       } else {
         console.warn('El formulario no tiene una imagen asociada.');
       }
-
+    console.log(formDetails.correo);
       
     } catch (error) {
       console.error('Error fetching form details:', error);

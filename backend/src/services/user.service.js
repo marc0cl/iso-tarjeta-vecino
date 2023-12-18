@@ -92,6 +92,7 @@ async function createUser(user) {
 
     newForm.user = newUser._id;
     newForm.estado = -1;
+    newForm.correo = newUser.email;
     await newForm.save();
     
     newUser.form.push(newForm._id);
