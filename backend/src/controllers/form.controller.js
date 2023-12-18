@@ -160,6 +160,22 @@ async function removeQuestionFromForm(req, res) {
     }
   }
 
+  async function addImageToForm(req, res) {
+    const formId = req.params.formId;
+    const image = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+    };
+
+    const [updatedForm, error] = await FormService.addImageToForm(formId, image);
+
+    if (error) {
+        return res.status(500).json({ error });
+    }
+
+    res.status(200).json(updatedForm);
+}
+
 module.exports = {
   getForms,
   createForm,
@@ -169,4 +185,5 @@ module.exports = {
   addQuestionToForm,
   removeQuestionFromForm,
   updateAnswer,
+  addImageToForm,
 };

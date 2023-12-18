@@ -6,7 +6,7 @@ function App() {
   
   return (
     <>
-      <Box sx={{padding:'20px 80px 10px'}}>
+      <Box sx={{padding:'20px 80px 10px', '@media (max-width: 600px)': {padding: '20px 40px 10px'}}}>
         <Grid container sx={{ backgroundColor: 'white'}}>
           <Grid item xs={12} md={6} sx={{ display: 'grid', alignItems: 'center', justifyContent: 'center'}}>
             <Grid sx={{padding: '30px 40px', maxWidth: '800px'}}>
@@ -19,7 +19,7 @@ function App() {
           </Grid>
         </Grid>
       </Box>
-      <Box sx={{padding:'10px 80px 20px'}}>
+      <Box sx={{padding:'10px 80px 20px', '@media (max-width: 600px)': {padding: '20px 40px 10px'}}}>
         <Grid container>
           <Grid item xs={6}>
             <h1 style={{margin: '20px', color: 'black'}}>Últimos beneficios agregados</h1>

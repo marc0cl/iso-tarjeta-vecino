@@ -10,6 +10,8 @@ const jwt = require('jsonwebtoken');
 const { request } = require("express");
 const { notificationChangeStatus } = require("./notification.service.js");
 
+const { createForm } = require('./form.service');
+
 
 /**
  * Obtiene todos los usuarios de la base de datos
@@ -74,6 +76,27 @@ async function createUser(user) {
     });
     await newUser.save();
 
+  
+
+    const [newForm, formError] = await createForm({
+      title: "Formulario de postulacion", 
+      questions: [
+        { text: "¿Has participado en eventos o actividades comunitarias en los últimos 6 meses?", answer: "" },
+        { text: "¿Has colaborado o ayudado a algún vecino en los últimos 3 meses? Si es así, ¿puedes compartir una breve descripción de la colaboración?", answer: "" },
+        { text: " ¿Qué tipo de descuentos locales te resultarían más útiles o interesantes? (Opciones: Comestibles, Servicios de Salud, Entretenimiento, Tiendas Locales, Otro - especificar)", answer: "" },
+        { text: "¿Tienes alguna propuesta o idea para mejorar la calidad de vida en nuestra comunidad? Si es así, compártela brevemente.", answer: "" },
+      ],
+      //user: newUser._id,
+      estado: -1,
+    });
+
+    newForm.user = newUser._id;
+    newForm.estado = -1;
+    await newForm.save();
+    
+    newUser.form.push(newForm._id);
+    await newUser.save();
+
     return [newUser, null];
   } catch (error) {
     handleError(error, "user.service -> createUser");
@@ -117,6 +140,26 @@ async function getUserByRut(rut) {
     return [user, null];
   } catch (error) {
     handleError(error, "user.service -> getUserByRut");
+  }
+}
+
+/**
+ * Obtiene un usuario por su correo electrónico de la base de datos
+ * @param {string} email Correo electrónico del usuario
+ * @returns {Promise} Promesa con el objeto de usuario o un mensaje de error
+ */
+async function getUserByEmail(email) {
+  try {
+    const user = await User.findOne({ email: email })
+        .select("-password")
+        .populate("roles")
+        .exec();
+
+    if (!user) return [null, "El usuario no existe"];
+
+    return [user, null];
+  } catch (error) {
+    handleError(error, "user.service -> getUserByEmail");
   }
 }
 
@@ -346,6 +389,9 @@ async function linkFormToUser(userId, formId) {
     user.form.push(form);
     await user.save();
 
+    form.user = userId;
+    await form.save();
+
     return [user, "Formulario asociado al usuario"];
   } catch (error) {
     handleError(error, "user.service -> linkFormToUser");
@@ -373,6 +419,11 @@ async function unlinkFormFromUser(userId, formId) {
   }
 }
 
+
+
+
+
+
 module.exports = {
   getUsers,
   createUser,
@@ -384,4 +435,7 @@ module.exports = {
   deleteUser,
   linkBenefitToUser,
   unlinkBenefitFromUser,
+  linkFormToUser,
+  unlinkFormFromUser,
+  getUserByEmail,
 };

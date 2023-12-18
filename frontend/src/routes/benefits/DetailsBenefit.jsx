@@ -66,7 +66,7 @@ const DetailsBenefit = () => {
         {isAuthenticated && (
             <Button onClick={()=>{handleLinkAccount(benefit._id)}} variant="contained">Vincular a cuenta</Button>
         )}
-        
+
         </>
     );
 }

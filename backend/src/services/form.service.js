@@ -43,10 +43,10 @@ async function getFormById(id) {
 
 async function updateForm(id, data) {
   try {
-    const { title, questions } = data;
+    const { title, questions, estado } = data;
     const updatedForm = await Form.findByIdAndUpdate(
       id,
-      { title, questions },
+      { title, questions, estado },
       { new: true }
     );
     if (!updatedForm) {
@@ -170,6 +170,22 @@ async function removeQuestionFromForm(formId, questionId) {
   }
 }
 
+async function addImageToForm(formId, image) {
+  try {
+      // Lógica para agregar la imagen al formulario
+      const updatedForm = await Form.findByIdAndUpdate(
+          formId,
+          { $set: { image: image } }, // Asegúrate de asignar la imagen al campo correcto
+          { new: true }
+      );
+
+      return [updatedForm, null];
+  } catch (error) {
+      console.error('Error al agregar imagen al formulario:', error);
+      return [null, 'Error al agregar imagen al formulario'];
+  }
+}
+
 module.exports = {
   createForm,
   getForms,
@@ -179,4 +195,5 @@ module.exports = {
   addQuestionToForm,
   removeQuestionFromForm,
   updateAnswer,
+  addImageToForm,
 };

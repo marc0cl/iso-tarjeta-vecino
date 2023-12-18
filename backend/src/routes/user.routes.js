@@ -21,6 +21,7 @@ router.use(authenticationMiddleware);
 router.get("/", usuarioController.getUsers);
 router.post("/", authorizationMiddleware.isAdmin, usuarioController.createUser);
 router.get("/id/:id", usuarioController.getUserById);
+router.get("/mail/:email", usuarioController.getUserByEmail);
 router.get("/rut/:rut", usuarioController.getUserByRut);
 
 router.put(
@@ -57,6 +58,7 @@ router.put("/:id/add/:idForm", usuarioController.linkFormToUser);
 
 // Ruta para desvincular un formulario de un usuario
 router.put("/:userId/rmv/:formId", usuarioController.unlinkFormFromUser);
+
 
 // Exporta el enrutador
 module.exports = router;
