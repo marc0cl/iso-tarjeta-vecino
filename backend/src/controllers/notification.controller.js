@@ -32,7 +32,7 @@ const sendAutoMail = (data) => {
 }
 
 async function sendMail(req, res){
-    const {email, nombre, beneficio} = req.body; 
+    const {email, asunto, mensaje} = req.body; 
     const token = MAIL_TOKEN;
     const mail = 'miguel.castillo1901@alumnos.ubiobio.cl'
     const transporter = nodemailer.createTransport({
@@ -47,12 +47,12 @@ async function sendMail(req, res){
     var data = {
         from: `Tarjeta Vecino`,
         to: email,
-        subject: "Nuevo beneficio",
+        subject: `${asunto}`,
         //text: `Hola ${user.username}, desde hoy tienes disponible el nuevo beneficio ${benefit.name}`,
         html:`<html>
             <body>
-                <p>Hola ${nombre},<br> 
-                desde hoy tienes disponible el nuevo beneficio ${beneficio}</p>
+                <p>Hola vecino,<br> 
+                ${beneficio}</p>
             </body>
             </html>`
     };

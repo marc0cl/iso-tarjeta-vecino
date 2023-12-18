@@ -38,39 +38,45 @@ export default function NotificationForm(emails) {
 
     return (
         <>
-        <Typography align='center' variant="h4" gutterBottom>
-            Crear beneficio
+        <Typography align='center' variant="h4" color="black" gutterBottom>
+            Mensaje a enviar
         </Typography>
-        <form id="caja" onSubmit={handleSubmit(onSubmit)}>
+        <form 
+            id="caja" 
+            onSubmit={handleSubmit(onSubmit)} 
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}
+        >
                 <Grid
                 container
                 direction="column"
                 justifyContent="center"
                 alignItems="center"
+                sx={{display: 'block', width: '100%', height: 600, backgroundColor: 'white', maxWidth: 540, padding:'20px' }}
                 >
                     <Grid item>
                         <TextField
                             margin="dense"
-                            label="nombre"
+                            label="Asunto"
                             variant="outlined"
                             fullWidth
-                            name="nombre"
+                            name="asunto"
                             autoComplete='off'
-                            {...register("nombre", {required: true})}
+                            {...register("asunto", {required: true})}
                         />
                     </Grid>
                     <Grid item>
                         <TextField
                             margin="dense"
-                            label="beneficio"
+                            label="Mensaje"
                             variant="outlined"
                             fullWidth
-                            name="beneficio"
+                            multiline
+                            rows={8}
+                            name="mensaje"
                             autoComplete='off'
-                            {...register("beneficio", {required: true})}
+                            {...register("mensaje", {required: true})}
                         />
                     </Grid>
-                    <Divider />
                     <Button
                         id="terminar_registro"
                         color="success"
@@ -78,8 +84,9 @@ export default function NotificationForm(emails) {
                         variant="contained"
                         margin="dense"
                         type="submit"
+                        sx={{marginTop: '10px'}}
                     >
-                        Terminar Registro
+                        Enviar
                     </Button>
                 </Grid>
             </form>

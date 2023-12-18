@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import { Box, Button, Divider, Grid, List, ListItem, ListItemButton, ListItemText, Typography } from "@mui/material";
 import NotificationForm from "../../components/NotificationForm";
 import { getUsers } from "../../services/user.service";
 import { useEffect, useState } from "react";
@@ -30,21 +30,27 @@ const Notification = () => {
 
     return(
         <>
-        <Grid container sx={{alignItems:'center'}}>
-            <Grid item xs={12} md={6} >
-                <h1>Lista de Usuarios</h1>
+        <Grid container sx={{padding:'20px 80px 10px', '@media (max-width: 600px)': {padding: '20px 40px 10px'}}}>
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography align='center' variant="h4" color="black" gutterBottom>
+                    Lista de Usuarios
+                </Typography>
                 <Box
-                    sx={{ width: '100%', height: 400, maxWidth: 360, backgroundColor:'white' }}
+                    sx={{ width: '100%', height: 600, maxWidth: 540, backgroundColor: 'white' }}
                 >
-                    <List>
+                    <List sx={{padding: '20px'}}>
+                        <ListItem disablePadding>
+                            <ListItemText primary="RUT USUARIO" secondary="NOMBRE USUARIO" sx={{color: 'black', borderColor: 'black', border: '1px solid black' , padding: '5px'}}/>
+                        </ListItem>
                         {users?.map((user) => (
                         <>
                             {user.firstName && user.roles[0].name === 'user' ? (
                             <ListItem disablePadding key={user._id}>
-                                <ListItemText primary={user.firstName} sx={{color: 'black'}}/>
+                                <ListItemText primary={user.rut} secondary={user.firstName + ' ' + user.lastName} sx={{color: 'black', borderColor: 'black', border: '1px solid black', padding: '5px'}}/>
                                 <Button
                                     variant="outlined"
                                     onClick={() => select(user)}
+                                    sx={{marginLeft: '10px'}}
                                 >
                                     Selecionar
                                 </Button>
@@ -55,10 +61,11 @@ const Notification = () => {
                         <Divider />
                         {selected.map((user) => (
                             <ListItem disablePadding key={user._id}>
-                                <ListItemText primary={user.firstName} sx={{color: 'black'}}/>
+                                <ListItemText primary={user.rut} secondary={user.firstName + ' ' + user.lastName} sx={{color: 'black', borderColor: 'black', border: '1px solid black', padding: '5px'}}/>
                                 <Button
                                     variant="outlined"
                                     onClick={() => quitar(user)}
+                                    sx={{color: 'red', borderColor: 'red', border: '1px solid red', marginLeft: '10px'}}
                                 >
                                     Quitar
                                 </Button>
