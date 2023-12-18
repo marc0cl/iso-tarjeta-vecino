@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
-const { MAIL_TOKEN } = require('../config/configEnv')
+const { MAIL_TOKEN } = require('../config/configEnv');
+const { respondSuccess } = require('../utils/resHandler');
 
 const sendAutoMail = (data) => {
 
@@ -52,7 +53,7 @@ async function sendMail(req, res){
         html:`<html>
             <body>
                 <p>Hola vecino,<br> 
-                ${beneficio}</p>
+                ${mensaje}</p>
             </body>
             </html>`
     };
@@ -60,7 +61,7 @@ async function sendMail(req, res){
         if(error){
             return res.status(400).send({message:'Error al enviar el correo'})
         }
-        res.status(200).json({message: 'Correo enviado correctamente'})
+        respondSuccess(req, res, 201, 'Correo enviado correctamente');
     })
     transporter.verify(function (error, success) {
         if (error) {
