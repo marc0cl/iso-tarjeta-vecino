@@ -42,6 +42,12 @@ const Navbar = () => {
 
     const { user } = useAuth();
 
+    const isAdmin = () => {
+        if (user.roles[0].name === 'admin') {
+            return true;
+        }
+    }
+
     console.log(user);
 
     return (
@@ -170,13 +176,20 @@ const Navbar = () => {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                     >
-                    {settings.map((setting) => (
-                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                        <Typography textAlign="center">{setting}</Typography>
+                    {isAdmin() ? (
+                        <MenuItem key={"notifications"} onClick={handleCloseUserMenu}>
+                            <Link to="/notificaciones">
+                                <Typography>Notificaciones</Typography>
+                            </Link>
                         </MenuItem>
-                    ))}
+                    ) : (
+                        // Código para el caso "else"
+                        <></>
+                    )}
                     <MenuItem key={"logout"} onClick={handleCloseUserMenu}>
-                        <button onClick={handleLogout}>Cerrar sesion</button>
+                        <Link onClick={handleLogout}>
+                            <Typography>Cerrar Sesión</Typography>
+                        </Link>
                     </MenuItem>
                     </Menu>
                 </Box>
@@ -188,3 +201,9 @@ const Navbar = () => {
 }
 
 export default Navbar;
+
+/*{settings.map((setting) => (
+    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+    <Typography textAlign="center">{setting}</Typography>
+    </MenuItem>
+))}*/

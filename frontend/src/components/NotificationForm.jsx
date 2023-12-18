@@ -6,8 +6,6 @@ import { sendMail } from '../services/notification.service';
 
 export default function NotificationForm(emails) {
 
-    console.log(emails.emails);
-
     const { register, handleSubmit, formState: {errors}, reset } = useForm();
 
     const MySwal = WithReactContent(Swal);
@@ -17,7 +15,6 @@ export default function NotificationForm(emails) {
     const onSubmit = async (data) => {
         data.email = emails.emails;
         const res = await sendMail(data);
-        console.log(res);
         if (res.state === 'Success') {
             MySwal.fire({
                 title: "Correo enviado correctamente",
