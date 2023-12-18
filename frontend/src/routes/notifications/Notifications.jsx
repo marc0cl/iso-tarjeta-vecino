@@ -2,8 +2,6 @@ import { Box, Button, Divider, Grid, List, ListItem, ListItemButton, ListItemTex
 import NotificationForm from "../../components/NotificationForm";
 import { getUsers } from "../../services/user.service";
 import { useEffect, useState } from "react";
-import { FixedSizeList } from 'react-window';
-import { set } from "react-hook-form";
 
 const Notification = () => {
 
