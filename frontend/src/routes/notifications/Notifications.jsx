@@ -53,7 +53,7 @@ const Notification = () => {
     return(
         <>
         <Grid container sx={{padding:'20px 80px 10px', '@media (max-width: 600px)': {padding: '20px 40px 10px'}}}>
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography align='center' variant="h4" color="black" gutterBottom>
                     Lista de Usuarios
                 </Typography>
@@ -108,7 +108,20 @@ const Notification = () => {
                                 )
                             ))
                         )}
-                        <Divider />
+                    </List>
+                </Box>
+            </Grid>
+            <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Typography align='center' variant="h4" color="black" gutterBottom>
+                    Usuarios Seleccionados
+                </Typography>
+                <Box
+                    sx={{ width: '100%', maxHeight: 550, maxWidth: 540, backgroundColor: 'white', overflowY: 'auto'}}
+                >
+                    <List sx={{padding: '10px 20px 20px'}}>
+                        <ListItem disablePadding>
+                            <ListItemText primary="RUT USUARIO" secondary="NOMBRE USUARIO" sx={{color: 'black', borderColor: 'black', border: '1px solid black' , padding: '5px'}}/>
+                        </ListItem>
                         {selected.map((user) => (
                             <ListItem disablePadding key={user._id}>
                                 <ListItemText primary={user.rut} secondary={user.firstName + ' ' + user.lastName} sx={{color: 'black', borderColor: 'black', border: '1px solid black', padding: '5px'}}/>
@@ -123,8 +136,8 @@ const Notification = () => {
                         ))} 
                     </List>
                 </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
+            </Grid>              
+            <Grid item xs={12} md={4}>
                 <NotificationForm emails={emails}/>
             </Grid>
         </Grid>

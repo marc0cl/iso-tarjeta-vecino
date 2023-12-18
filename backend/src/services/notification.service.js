@@ -14,16 +14,14 @@ async function notificationNewBenefit(benefit) {
                     from: `Tarjeta Vecino`,
                     to: user.email,
                     subject: "Nuevo beneficio",
-                    //text: `Hola ${user.username}, desde hoy tienes disponible el nuevo beneficio ${benefit.name}`,
                     html:`<html>
                         <body>
-                            <p>Hola ${user.username},<br> 
+                            <p>Hola ${user.firstName} ${user.lastName},<br> 
                             desde hoy tienes disponible el nuevo beneficio ${benefit.name}</p>
                         </body>
                         </html>`
                 };
-                /* Aqui va todo lo del correo*/
-                sendautoMail(mailOptions);   
+                sendAutoMail(mailOptions);   
             }
         });
     } catch (error) {
@@ -37,15 +35,33 @@ async function notificationChangeStatus(user) {
             from: `Tarjeta Vecino`,
             to: user.email,
             subject: "Cambio en estado de tramite",
-            //text: `Hola ${user.username}, tu solicitud de TARJETA VECINO ha cambiado al estado ${user.applicationStatus}`,
             html:`<html>
                 <body>
-                    <p>Hola ${user.username},<br> 
+                    <p>Hola ${user.firstName} ${user.lastName},<br> 
                     tu solicitud de TARJETA VECINO ha cambiado al estado ${user.applicationStatus}</p>
                 </body>
                 </html>`
         };
-        /* Aqui va todo lo del correo*/
+        sendAutoMail(mailOptions);
+    } catch (error) {
+        handleError(error, "notification.service -> notificationChangeStatus");
+    }
+}
+
+async function notificationNewUser(user) {
+    try {
+        const mailOptions = {
+            from: `Tarjeta Vecino`,
+            to: user.email,
+            subject: "Bienvedido a Tarjeta Vecino",
+            html:`<html>
+                <body>
+                    <p>Hola ${user.firstName} ${user.lastName}.<br> 
+                    Queremos darte la bienvenida al portal TARJETA VECINO!<br> 
+                    Puedes consultar los beneficios dispononibles en nuestra web.</p>
+                </body>
+                </html>`
+        };
         sendAutoMail(mailOptions);
     } catch (error) {
         handleError(error, "notification.service -> notificationChangeStatus");
@@ -55,4 +71,5 @@ async function notificationChangeStatus(user) {
 module.exports = {
     notificationNewBenefit,
     notificationChangeStatus,
+    notificationNewUser
     };

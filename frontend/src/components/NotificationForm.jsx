@@ -6,11 +6,11 @@ import { sendMail } from '../services/notification.service';
 
 export default function NotificationForm(emails) {
 
+    console.log(emails.emails);
+
     const { register, handleSubmit, formState: {errors}, reset } = useForm();
 
     const MySwal = WithReactContent(Swal);
-
-    const defaultEmails = ['miguee.cass@gmail.com', 'miguel.castillo1901@alumnos.ubiobio.cl'];
 
     const onSubmit = async (data) => {
         data.email = emails.emails;
@@ -30,8 +30,6 @@ export default function NotificationForm(emails) {
         }
 
     };
-
-    
 
     return (
         <>

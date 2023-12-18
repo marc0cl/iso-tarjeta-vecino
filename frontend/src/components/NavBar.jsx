@@ -48,8 +48,6 @@ const Navbar = () => {
         }
     }
 
-    console.log(user);
-
     return (
         <>
         <AppBar position="static" sx={{backgroundColor: 'red'}}>
@@ -117,7 +115,7 @@ const Navbar = () => {
                     </Link>
                 </MenuItem>
                 <MenuItem onClick={handleCloseNavMenu}>
-                    <Link to="/Novedades">
+                    <Link to="/novedades">
                         <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Novedades</Button>
                     </Link>
                 </MenuItem>
@@ -149,7 +147,7 @@ const Navbar = () => {
                     <Link to="/Beneficios">
                         <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Beneficios</Button>
                     </Link>
-                    <Link to="/Novedades">
+                    <Link to="/novedades">
                         <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Novedades</Button>
                     </Link>
                 </Box>

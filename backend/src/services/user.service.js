@@ -8,7 +8,7 @@ const { handleError } = require("../utils/errorHandler");
 const cron = require("node-cron");
 const jwt = require('jsonwebtoken');
 const { request } = require("express");
-const { notificationChangeStatus } = require("./notification.service.js");
+const { notificationChangeStatus, notificationNewUser } = require("./notification.service.js");
 
 
 /**
@@ -73,6 +73,7 @@ async function createUser(user) {
       roles: myRole,
     });
     await newUser.save();
+    await notificationNewUser(newUser);
 
     return [newUser, null];
   } catch (error) {
