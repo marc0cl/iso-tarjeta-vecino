@@ -121,6 +121,26 @@ async function getUserByRut(rut) {
 }
 
 /**
+ * Obtiene un usuario por su correo electrónico de la base de datos
+ * @param {string} email Correo electrónico del usuario
+ * @returns {Promise} Promesa con el objeto de usuario o un mensaje de error
+ */
+async function getUserByEmail(email) {
+  try {
+    const user = await User.findOne({ email: email })
+        .select("-password")
+        .populate("roles")
+        .exec();
+
+    if (!user) return [null, "El usuario no existe"];
+
+    return [user, null];
+  } catch (error) {
+    handleError(error, "user.service -> getUserByEmail");
+  }
+}
+
+/**
  * Actualiza un usuario por su id en la base de datos
  * @param {string} id Id del usuario
  * @param {Object} user Objeto de usuario
@@ -376,32 +396,7 @@ async function unlinkFormFromUser(userId, formId) {
   }
 }
 
-async function getUserInfo(req) {
-  try {
-    const headers = req.headers.authorization.split(' ');
 
-    if (headers.length !== 2 || headers[0] !== 'Bearer') {
-      throw new Error("Formato de token inválido");
-    }
-
-    const token = headers[1];
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-
-    const userEmail = decodedToken.email;
-    const user = await User.findOne({ email: userEmail });
-
-    if (!user) {
-      throw new Error("El usuario no existe");
-    }
-
-    console.log(user);
-
-    return { user, error: null };
-  } catch (error) {
-    handleError(error, "user.service -> getUserInfo");
-    return { user: null, error: "Error al obtener información del usuario" };
-  }
-}
 
 
 
@@ -419,5 +414,5 @@ module.exports = {
   unlinkBenefitFromUser,
   linkFormToUser,
   unlinkFormFromUser,
-  getUserInfo,
+  getUserByEmail,
 };

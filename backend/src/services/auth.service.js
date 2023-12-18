@@ -88,7 +88,7 @@ async function refresh(cookies) {
         if (!userFound) return [null, "No usuario no autorizado"];
 
         const accessToken = jwt.sign(
-          { email: userFound.email, roles: userFound.roles, form: userFound.form },
+          { email: userFound.email, roles: userFound.roles},
           ACCESS_JWT_SECRET,
           {
             expiresIn: "1d",

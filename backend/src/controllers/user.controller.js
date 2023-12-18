@@ -268,21 +268,26 @@ async function unlinkFormFromUser(req, res) {
   }
 }
 
-async function getUserInfoController(req, res) {
-  const result = await UserService.getUserInfo(req);
 
-  if (!result[0]) {
-    // El usuario no existe o hay un error
-    return res.status(401).json({ error: result[1] || 'Unauthorized' });
+async function getUserByEmail(req, res) {
+  try {
+    const { email } = req.params; // Suponiendo que el correo está en los parámetros de la URL
+    const [user, error] = await UserService.getUserByEmail(email);
+
+    if (error) {
+      // Manejar el error (por ejemplo, enviar una respuesta de error)
+      return res.status(404).json({ error: error });
+    }
+
+    // Enviar el usuario como respuesta
+    return res.status(200).json({ user: user });
+  } catch (error) {
+    // Manejar otros errores inesperados
+    console.error(error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
-
-  // Devuelve la información del usuario
-  res.json(result[0]);
 }
 
-module.exports = {
-  getUserInfoController,
-};
 
 module.exports = {
   getUsers,
@@ -297,5 +302,5 @@ module.exports = {
   unlinkBenefitFromUser,
   linkFormToUser,
   unlinkFormFromUser,
-  getUserInfoController,
+  getUserByEmail,
 };

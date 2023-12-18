@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AppBar, Avatar, Box, Button, Container, Divider, Grid, IconButton, ListItemIcon, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
@@ -9,7 +9,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { logout } from "../services/auth.service";
 import { useAuth } from "../context/AuthContext";
-import { getUserInfo } from '../services/user.service';
+import { getUserByEmail } from '../services/user.service';
+
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard'];
@@ -18,6 +19,8 @@ const Navbar = () => {
 
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [loadedUser, setLoadedUser] = React.useState(null);
+    const [formId, setFormId] = React.useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -42,9 +45,25 @@ const Navbar = () => {
     };
 
     const { user } = useAuth();
-    //console.log("Valor de user.form:", user.form); 
-    //console.log(user);
-
+    useEffect(() => {
+        // Cuando el componente se monta, obtén la información del usuario por su correo electrónico
+        if (user && user.email) {
+            getUserByEmail(user.email)
+                .then((loadedUser) => {
+                    const formId = loadedUser.user.form && loadedUser.user.form.length > 0 ? loadedUser.user.form[0] : null;
+                     console.log(formId);
+                    setLoadedUser(loadedUser);
+                    setFormId(formId);
+                })
+                .catch((error) => {
+                    console.error('Error al obtener el usuario:', error.message);
+                    // Puedes manejar el error de alguna manera, por ejemplo, mostrar un mensaje al usuario
+                });
+        }
+    }, [user]);
+    
+ 
+    
     return (
         <>
             <AppBar position="static" sx={{ backgroundColor: 'red' }}>
@@ -155,7 +174,7 @@ const Navbar = () => {
                                     <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Formularios</Button>
                                 </Link>)}
                             {user && user.roles.some(role => role.name === 'user') && (
-                                <Link to={`/forms/${user.form}`}>
+                                <Link to={`/forms/${formId}`}>
                                     <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Formulario</Button>
                                 </Link>)}
                             <Link to="/Novedades">
