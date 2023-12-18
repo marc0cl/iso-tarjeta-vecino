@@ -8,6 +8,7 @@ const DetailsForm = () => {
   const [userDetails, setUserDetails] = useState({});
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
+  const [base64String, setbase64String] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -25,9 +26,10 @@ const DetailsForm = () => {
     const imageUrl = formDetails.image.data.data;
     const arrayBuffer = new Uint8Array(imageUrl).buffer;
     const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
-    console.log(base64String);
+    setbase64String(base64String);
+    //console.log(base64String);
       //setImageUrl(imageUrl);
-      setImageLoaded(true);
+      //setImageLoaded(true);
     } catch (error) {
       console.error('Error fetching form details:', error);
     }
@@ -47,15 +49,12 @@ const DetailsForm = () => {
           Usuario: {userDetails.firstName} {userDetails.lastName}
         </h2>
       )}
-
       {/* Mostramos la imagen si existe */}
       <div>
         <h2>Imagen:</h2>
         
-          <img
-            src={imageUrl}
-            alt="Imagen del formulario"
-          />
+        <img alt="Imagen del formulario" src={`data:image/png;base64,${base64String}`}/>
+
         
       </div>
 
