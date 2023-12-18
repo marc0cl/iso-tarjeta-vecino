@@ -38,7 +38,7 @@ export default function NotificationForm(emails) {
 
     return (
         <>
-        <Typography align='center' variant="h4" color="black" gutterBottom>
+        <Typography align='center' variant="h4" color="black" gutterBottom sx={{'@media (max-width: 600px)': {paddingTop: '20px'}}}>
             Mensaje a enviar
         </Typography>
         <form 
@@ -51,7 +51,7 @@ export default function NotificationForm(emails) {
                 direction="column"
                 justifyContent="center"
                 alignItems="center"
-                sx={{display: 'block', width: '100%', height: 600, backgroundColor: 'white', maxWidth: 540, padding:'20px' }}
+                sx={{display: 'block', width: '100%', maxHeight: 600, backgroundColor: 'white', maxWidth: 540, padding:'20px' }}
                 >
                     <Grid item>
                         <TextField

@@ -31,12 +31,12 @@ const Notification = () => {
     return(
         <>
         <Grid container sx={{padding:'20px 80px 10px', '@media (max-width: 600px)': {padding: '20px 40px 10px'}}}>
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography align='center' variant="h4" color="black" gutterBottom>
                     Lista de Usuarios
                 </Typography>
                 <Box
-                    sx={{ width: '100%', height: 600, maxWidth: 540, backgroundColor: 'white' }}
+                    sx={{ width: '100%', maxHeight: 600, maxWidth: 540, backgroundColor: 'white', overflowY: 'auto'}}
                 >
                     <List sx={{padding: '20px'}}>
                         <ListItem disablePadding>
