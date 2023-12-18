@@ -43,10 +43,10 @@ async function getFormById(id) {
 
 async function updateForm(id, data) {
   try {
-    const { title, questions } = data;
+    const { title, questions, estado } = data;
     const updatedForm = await Form.findByIdAndUpdate(
       id,
-      { title, questions },
+      { title, questions, estado },
       { new: true }
     );
     if (!updatedForm) {

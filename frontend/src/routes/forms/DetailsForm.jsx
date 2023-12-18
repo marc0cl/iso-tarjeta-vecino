@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getForm, getUserById } from '../../services/form.service';
+import { getForm, getUserById, updateForm } from '../../services/form.service';
 
 const DetailsForm = () => {
   const { id } = useParams();
@@ -9,6 +9,7 @@ const DetailsForm = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [base64String, setbase64String] = useState(null);
+  const [formResponses, setFormResponses] = useState({});
 
   const fetchData = async () => {
     try {
@@ -33,6 +34,8 @@ const DetailsForm = () => {
       } else {
         console.warn('El formulario no tiene una imagen asociada.');
       }
+
+      
     } catch (error) {
       console.error('Error fetching form details:', error);
     }
@@ -42,8 +45,30 @@ const DetailsForm = () => {
     fetchData();
   }, [id]);
 
+  const handleUpdateForm = async (newEstado) => {
+    try {
+      
+      console.log("Data to send:", { title: form.title, estado: newEstado});
+
+      await updateForm(id, {
+        
+        estado: newEstado
+      
+      });
+
+      
+
+      setFormResponses({});
+      console.log('Formulario actualizado con éxito');
+      
+    } catch (error) {
+      console.error('Error al actualizar el formulario:', error);
+    }
+  };
+
+
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <h1>{form.title}</h1>
 
       {/* Verificamos si hay detalles del usuario antes de mostrar el nombre y apellido */}
@@ -69,6 +94,11 @@ const DetailsForm = () => {
 
         
       </div>
+      {/* Botones de Aprobar y Rechazar */}
+      <div style={{ marginTop: '20px' }}>
+                <button onClick={() => handleUpdateForm(1)}>Aprobar</button>
+                <button onClick={() => handleUpdateForm(0)}>Rechazar</button>
+            </div>
     </div>
   );
 };

@@ -40,6 +40,8 @@ const Forms = () => {
         });
     }
 
+    
+
     return (
         <>
             {/* Agrega el enlace para crear un nuevo formulario */}
@@ -59,20 +61,11 @@ const Forms = () => {
                                 <p style={{ margin: '0px', marginBottom: '0px' }}>{form.title}</p>
                                 {/* Agrega enlace a los detalles */}
                                 <Link component={RouterLink} to={`/forms/${form._id}`}>
-                                    <IconButton color="success" aria-label="info">
+                                    <IconButton color={form.estado === 1 ? 'success' : form.estado === 0 ? 'error' : 'warning'} aria-label="info">
                                         <InfoIcon />
                                     </IconButton>
                                 </Link>
-                                {/* Agrega enlace a la edición */}
-                                <Link component={RouterLink} to={`/forms/edit/${form._id}`}>
-                                    <IconButton color="info" aria-label="edit">
-                                        <EditIcon />
-                                    </IconButton>
-                                </Link>
-                                {/* Implementa la lógica para eliminar el formulario */}
-                                <IconButton onClick={() => handleDeleteForm(form._id)} color="error" aria-label="delete">
-                                    <DeleteIcon />
-                                </IconButton>
+                                
                             </CardContent>
                         </Card>
                     </Grid>

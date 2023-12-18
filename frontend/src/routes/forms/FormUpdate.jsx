@@ -83,7 +83,7 @@ const FormUpdate = () => {
   };
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <h1>{form.title}</h1>
 
       {userDetails && (

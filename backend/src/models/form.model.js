@@ -27,6 +27,10 @@ const formSchema = new mongoose.Schema({
     image: {
         data: Buffer,
         contentType: String,
+    },
+    estado:{
+        type: Number,
+        required: false
     }   
 });
 

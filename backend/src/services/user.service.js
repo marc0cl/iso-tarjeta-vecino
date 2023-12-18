@@ -87,9 +87,11 @@ async function createUser(user) {
         { text: "Pregunta 4", answer: "" },
       ],
       //user: newUser._id,
+      estado: -1,
     });
 
     newForm.user = newUser._id;
+    newForm.estado = -1;
     await newForm.save();
     
     newUser.form.push(newForm._id);
