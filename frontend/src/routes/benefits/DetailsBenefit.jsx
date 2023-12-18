@@ -62,9 +62,11 @@ const DetailsBenefit = () => {
         <p>Empresa: {benefit.company}</p>
         <p>Descripción: {benefit.description}</p>
         <p>Descuento: {benefit.discount}</p>
+        
         {isAuthenticated && (
             <Button onClick={()=>{handleLinkAccount(benefit._id)}} variant="contained">Vincular a cuenta</Button>
         )}
+
         </>
     );
 }
