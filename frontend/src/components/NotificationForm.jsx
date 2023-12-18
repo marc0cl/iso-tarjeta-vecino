@@ -12,12 +12,9 @@ export default function NotificationForm(emails) {
 
     const MySwal = WithReactContent(Swal);
 
-    const defaultEmails = ['miguee.cass@gmail.com', 'miguel.castillo1901@alumnos.ubiobio.cl'];
-
     const onSubmit = async (data) => {
         data.email = emails.emails;
         const res = await sendMail(data);
-        console.log(res);
         if (res.state === 'Success') {
             MySwal.fire({
                 title: "Correo enviado correctamente",
@@ -33,8 +30,6 @@ export default function NotificationForm(emails) {
         }
 
     };
-
-    
 
     return (
         <>
