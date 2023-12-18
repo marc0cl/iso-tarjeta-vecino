@@ -1,22 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { getUserByEmail } from '../../services/user.service.js'; // Asegúrate de que la ruta de importación sea correcta
+import Cookies from 'universal-cookie';
+import jwtDecode from 'jwt-decode';
+import { getUserByEmail } from '../../services/user.service';
 
-const UserProfile = ({ userEmail }) => {
+const UserProfile = () => {
     const [user, setUser] = useState(null);
     const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const [userData, userError] = await getUserByEmail(userEmail);
-            if (userData) {
-                setUser(userData);
-            } else {
-                setError(userError || 'No se pudo cargar la información del usuario.');
+            const cookies = new Cookies();
+            const accessToken = cookies.get('jwt-auth');
+
+            if (!accessToken) {
+                setError('No se encontró el token de acceso.');
+                return;
+            }
+
+            try {
+                const decoded = jwtDecode(accessToken);
+                const response = await getUserByEmail(decoded.email);
+
+                if (response.data) {
+                    setUser(response.data);  // Asumiendo que la respuesta es { data: objetoDelUsuario }
+                } else {
+                    setError(response.error || 'No se pudo cargar la información del usuario.');
+                }
+            } catch (error) {
+                setError('Error al procesar los datos del usuario.');
+                console.error(error);
             }
         };
 
         fetchUserData();
-    }, [userEmail]);
+    }, []);
 
     if (error) {
         return <div>Error: {error}</div>;

@@ -25,12 +25,12 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/profile',
-        element: <Profile/>
-      },
-      {
         path: '/',
         element: <App />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />
       },
       {
         path: '/notificaciones',

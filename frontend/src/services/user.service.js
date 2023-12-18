@@ -21,7 +21,7 @@ export const linkBenefitToUser = async (id) => {
 export const getUserByEmail = async (email) => {
     try {
         const { data } = await axios.get(`/users/mail/${email}`);
-        console.log(data);
+        console.log("Data is: ", data);
         return [data, null];
     } catch (error) {
         console.error("Error fetching user data:", error);

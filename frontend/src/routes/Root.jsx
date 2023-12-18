@@ -35,27 +35,3 @@ function PageRoot() {
 }
 
 export default Root;
-
-/*
-  <p>Estas logeado como: {user.email}</p>
-  <button onClick={handleLogout}>Cerrar sesion</button>
-  <div>
-      <div>
-        <Link to="/">
-          <Button variant="contained">Home</Button>
-        </Link>
-        <Link to="/benefits">
-          <Button variant="contained">Beneficios</Button>
-        </Link>
-        {user && user.roles.some(role => role.name === 'admin') && (
-          <Link to="/forms">
-            <Button variant="contained">Formularios</Button>
-          </Link>)}
-        {user && user.roles.some(role => role.name === 'user') && (
-          <Link to="/user-forms">
-            <Button variant="contained">Formulario</Button>
-          </Link>
-        )}
-        <Button onClick={handleLogout}>Cerrar sesion</Button>
-      </div>
-*/ 

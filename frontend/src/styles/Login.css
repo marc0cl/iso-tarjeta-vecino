@@ -19,12 +19,18 @@
     color: #333;
 }
 
+.input-group input:not(:focus) {
+    background: #fff;
+    color: #333;
+}
+
 .input-group input {
     width: 100%;
     padding: 10px;
     margin-bottom: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .error-message {
@@ -41,10 +47,10 @@
     padding: 10px;
     border-radius: 4px;
     cursor: pointer;
-    width: 100%;
-    margin-bottom: 1rem;
-    align-self: center;
-
+    width: auto;
+    display: block;
+    margin: 1rem auto;
+    text-align: center;
 }
 
 .forgot-password {

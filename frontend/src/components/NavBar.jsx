@@ -54,6 +54,7 @@ const Navbar = () => {
 
     useEffect(() => {
         // Cuando el componente se monta, obtén la información del usuario por su correo electrónico
+        console.log("User and Email to be logged:",user,user.email);
         if (user && user.email) {
             getUserByEmail(user.email)
                 .then((loadedUser) => {
@@ -68,12 +69,12 @@ const Navbar = () => {
                 });
         }
     }, [user]);
-    
+
     return (
         <>
             <AppBar position="static" sx={{ backgroundColor: 'red' }}>
                 <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    
+
                     <h3 style={{ margin: '5px' }}>TARJETA VECINO</h3>
                 </Grid>
                 <Container maxWidth="xl">
@@ -183,14 +184,12 @@ const Navbar = () => {
                                 <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Novedades</Button>
                             </Link>
                         </Box>
-
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                     <Avatar alt="Remy Sharp" />
                                 </IconButton>
                             </Tooltip>
-                            {isAdmin() ? (
                             <Menu
                                 sx={{ mt: '45px' }}
                                 id="menu-appbar"
@@ -207,49 +206,31 @@ const Navbar = () => {
                                 open={Boolean(anchorElUser)}
                                 onClose={handleCloseUserMenu}
                             >
-                                    <MenuItem onClick={handleCloseUserMenu}>
-                                        <Link to="/notificaciones">
-                                            <Typography>Notificaciones</Typography>
-                                        </Link>
-                                    </MenuItem>
-                                    <MenuItem onClick={handleCloseNavMenu}>
-                                        <Link to="/forms">
-                                            <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Formularios</Button>
-                                        </Link>
-                                    </MenuItem>
-                                    <MenuItem key={"logout"} onClick={handleCloseUserMenu}>
-                                        <button onClick={handleLogout}>Cerrar sesion</button>
-                                    </MenuItem>
+                                <MenuItem onClick={handleCloseUserMenu}>
+                                    <Link to="/profile" style={{ textDecoration: 'none' }}>
+                                        <Typography textAlign="center">Mi perfil</Typography>
+                                    </Link>
+                                </MenuItem>
+                                {isAdmin() && (
+                                    <>
+                                        <MenuItem onClick={handleCloseUserMenu}>
+                                            <Link to="/notificaciones" style={{ textDecoration: 'none' }}>
+                                                <Typography textAlign="center">Notificaciones</Typography>
+                                            </Link>
+                                        </MenuItem>
+                                        <MenuItem onClick={handleCloseUserMenu}>
+                                            <Link to="/forms" style={{ textDecoration: 'none' }}>
+                                                <Typography textAlign="center">Formularios</Typography>
+                                            </Link>
+                                        </MenuItem>
+                                    </>
+                                )}
+                                <MenuItem key={"logout"} onClick={handleLogout}>
+                                    <Typography textAlign="center">Cerrar sesión</Typography>
+                                </MenuItem>
                             </Menu>
-                            ) : (
-                                <Menu
-                                sx={{ mt: '45px' }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
-                                    <MenuItem onClick={handleCloseNavMenu}>
-                                        <Link to={`/forms/${formId}/edit`}>
-                                            <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Envía tu formulario</Button>
-                                        </Link>
-                                    </MenuItem>
-                                    <MenuItem key={"logout"} onClick={handleCloseUserMenu}>
-                                        <button onClick={handleLogout}>Cerrar sesion</button>
-                                    </MenuItem>
-                            </Menu>
-                            )}
-                                
                         </Box>
+
                     </Toolbar>
                 </Container>
             </AppBar>

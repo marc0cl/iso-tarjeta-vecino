@@ -1,6 +1,6 @@
 import axios from './root.service';
-import cookies from 'js-cookie';
-import jwtDecode from 'jwt-decode';
+import Cookies from 'js-cookie';
+import jwtDecode from "jwt-decode";  // Importa la librería con mayúscula para evitar conflictos de nombres
 
 export const login = async ({ email, password }) => {
   try {
@@ -16,10 +16,11 @@ export const login = async ({ email, password }) => {
       localStorage.setItem('user', JSON.stringify({ email, roles }));
       axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
-      const cookies = new Cookies();
-      cookies.set('jwt-auth', accessToken, { path: '/' });
+      // Usa directamente Cookies.set sin new
+      Cookies.set('jwt-auth', accessToken, { path: '/' });
     }
   } catch (error) {
+    console.error(error);
     throw error;
   }
 };
@@ -27,8 +28,8 @@ export const login = async ({ email, password }) => {
 export const logout = () => {
   localStorage.removeItem('user');
   delete axios.defaults.headers.common['Authorization'];
-  cookies.remove('jwt');
-  cookies.remove('jwt-auth');
+  // Usa directamente Cookies.remove
+  Cookies.remove('jwt-auth', { path: '/' }); // Asegúrate de proveer el mismo path que al setear la cookie
 };
 
 export const test = async () => {
@@ -39,6 +40,6 @@ export const test = async () => {
       console.log(data.data);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
