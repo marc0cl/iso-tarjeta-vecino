@@ -132,9 +132,16 @@ const Navbar = () => {
                                     </Link>
                                 </MenuItem>
                                 <MenuItem onClick={handleCloseNavMenu}>
+                                    {user && user.roles.some(role => role.name === 'admin') && (
                                     <Link to="/forms">
                                         <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Formularios</Button>
-                                    </Link>
+                                    </Link>)}
+                                </MenuItem>
+                                <MenuItem onClick={handleCloseNavMenu}>
+                                    {user && user.roles.some(role => role.name === 'user') && (
+                                    <Link to={`/forms/${formId}/edit`}>
+                                        <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Envía tu formulario</Button>
+                                    </Link>)}
                                 </MenuItem>
                                 <MenuItem onClick={handleCloseNavMenu}>
                                     <Link to="/Novedades">
@@ -174,9 +181,11 @@ const Navbar = () => {
                                     <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Formularios</Button>
                                 </Link>)}
                             {user && user.roles.some(role => role.name === 'user') && (
-                                <Link to={`/forms/${formId}`}>
-                                    <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Formulario</Button>
-                                </Link>)}
+                                <Link to={`/forms/${formId}/edit`}>
+                                <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>
+                                  Envía tu formulario
+                                </Button>
+                              </Link>)}
                             <Link to="/Novedades">
                                 <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Novedades</Button>
                             </Link>

@@ -10,6 +10,7 @@ const questionSchema = Joi.object({
             "any.required": "El texto de la pregunta es obligatorio.",
             "string.base": "El texto de la pregunta debe ser de tipo string.",
         }),
+    answer: Joi.string().allow(null).optional(),
 });
 
 const formSchema = Joi.object({

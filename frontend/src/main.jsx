@@ -14,6 +14,7 @@ import Notification from './routes/notifications/Notifications.jsx';
 
 import Forms from './routes/forms/Forms.jsx';
 import DetailsForm from './routes/forms/DetailsForm.jsx';
+import FormUpdate from './routes/forms/FormUpdate.jsx';
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: '/forms/:id',
         element: <DetailsForm />,
+      },
+      {
+        path: '/forms/:id/edit',
+        element: <FormUpdate  />,
       }
     ],
   },

@@ -48,6 +48,14 @@ const DetailsForm = () => {
         </h2>
       )}
 
+      
+      <h2>Preguntas:</h2>
+      {form.questions?.map((question, index) => (
+        <div key={index}>
+          <p>Pregunta {index + 1}: {question.text}</p>
+          <p>Respuesta: {question.answer}</p>
+        </div>
+      ))}
       {/* Mostramos la imagen si existe */}
       <div>
       <h2>Imagen:</h2>
@@ -59,13 +67,6 @@ const DetailsForm = () => {
          />
         
       )}</div>
-      <h2>Preguntas:</h2>
-      {form.questions?.map((question, index) => (
-        <div key={index}>
-          <p>Pregunta {index + 1}: {question.text}</p>
-          <p>Respuesta: {question.answer}</p>
-        </div>
-      ))}
     </div>
   );
 };
