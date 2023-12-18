@@ -51,7 +51,7 @@ const Navbar = () => {
             getUserByEmail(user.email)
                 .then((loadedUser) => {
                     const formId = loadedUser.user.form && loadedUser.user.form.length > 0 ? loadedUser.user.form[0] : null;
-                     console.log(formId);
+                     //console.log(formId);
                     setLoadedUser(loadedUser);
                     setFormId(formId);
                 })

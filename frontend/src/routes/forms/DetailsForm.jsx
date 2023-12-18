@@ -6,34 +6,34 @@ const DetailsForm = () => {
   const { id } = useParams();
   const [form, setForm] = useState({});
   const [userDetails, setUserDetails] = useState({});
-  const [imageData, setImageData] = useState(null); 
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const formDetails = await getForm(id);
+      setForm(formDetails);
+
+      // Verificamos si hay un usuario asociado al formulario
+      if (formDetails.user) {
+        // Obtenemos los detalles del usuario
+        const user = await getUserById(formDetails.user);
+        setUserDetails(user);
+      }
+
+      
+    const imageUrl = formDetails.image.data.data;
+    const arrayBuffer = new Uint8Array(imageUrl).buffer;
+    const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
+    console.log(base64String);
+      //setImageUrl(imageUrl);
+      setImageLoaded(true);
+    } catch (error) {
+      console.error('Error fetching form details:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const formDetails = await getForm(id);
-        setForm(formDetails);
-
-        // Verificamos si hay un usuario asociado al formulario
-        if (formDetails.user) {
-          // Obtenemos los detalles del usuario
-          const user = await getUserById(formDetails.user);
-          setUserDetails(user);
-        }
-        if (formDetails.image) {
-          setForm(formDetails);
-        }
-
-        setImageData(imageData);
-        console.log('Cadena Base64 de la imagen:', formDetails.image.data);
-        const imageData = formDetails.image.data.data.toString('base64');
-        setImageLoaded(true);
-      } catch (error) {
-        console.error('Error fetching form details:', error);
-      }
-    };
-    
     fetchData();
   }, [id]);
 
@@ -48,7 +48,17 @@ const DetailsForm = () => {
         </h2>
       )}
 
-      
+      {/* Mostramos la imagen si existe */}
+      <div>
+        <h2>Imagen:</h2>
+        
+          <img
+            src={imageUrl}
+            alt="Imagen del formulario"
+          />
+        
+      </div>
+
       <h2>Preguntas:</h2>
       {form.questions?.map((question, index) => (
         <div key={index}>
@@ -56,17 +66,6 @@ const DetailsForm = () => {
           <p>Respuesta: {question.answer}</p>
         </div>
       ))}
-      {/* Mostramos la imagen si existe */}
-      <div>
-      <h2>Imagen:</h2>
-      {imageLoaded && form.image && (
-           <img
-           width='300' height='300' 
-           src={`data:${form.image.contentType};base64,${form.image.data}`}
-           alt="Imagen del formulario"
-         />
-        
-      )}</div>
     </div>
   );
 };
