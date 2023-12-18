@@ -6,12 +6,10 @@ import InfoIcon from '@mui/icons-material/Info';
 
 const BenefitPopular = () => { 
 
-    const [benefits, setBenefits] = useState([]);
     const [popular, setPopular] = useState([]);
 
     useEffect(() => {
         getBenefits().then((response) => {
-            setBenefits(response);
             const lastFourBenefits = response.slice(Math.max(response.length - 4, 0));
             setPopular(lastFourBenefits);
         });

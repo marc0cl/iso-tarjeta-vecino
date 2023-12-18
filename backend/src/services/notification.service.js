@@ -1,6 +1,6 @@
 const { handleError } = require("../utils/errorHandler.js");
 const User = require("../models/user.model.js");
-const { sendMail } = require("../controllers/notification.controller.js");
+const { sendAutoMail } = require("../controllers/notification.controller.js");
 
 async function notificationNewBenefit(benefit) {
     try {
@@ -23,7 +23,7 @@ async function notificationNewBenefit(benefit) {
                         </html>`
                 };
                 /* Aqui va todo lo del correo*/
-                sendMail(mailOptions);   
+                sendautoMail(mailOptions);   
             }
         });
     } catch (error) {
@@ -46,7 +46,7 @@ async function notificationChangeStatus(user) {
                 </html>`
         };
         /* Aqui va todo lo del correo*/
-        sendMail(mailOptions);
+        sendAutoMail(mailOptions);
     } catch (error) {
         handleError(error, "notification.service -> notificationChangeStatus");
     }
