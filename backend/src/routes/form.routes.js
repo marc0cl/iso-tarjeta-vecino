@@ -4,6 +4,10 @@
 const express = require("express");
 const router = express.Router();
 const formController = require("../controllers/form.controller.js");
+const multer = require("multer");
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 /** Middlewares de autorización */
 const authorizationMiddleware = require("../middlewares/authorization.middleware.js");
@@ -12,7 +16,7 @@ const authorizationMiddleware = require("../middlewares/authorization.middleware
 router.post("/", formController.createForm);
 
 // Ruta para obtener una lista de todos los formularios
-router.get("/", formController.getForms);
+router.get("/",authorizationMiddleware.isAdmin, formController.getForms);
 
 // Ruta para obtener un formulario por su ID
 router.get("/:id", formController.getFormById);
@@ -31,6 +35,9 @@ router.delete("/:formId/deleteQuestion/:questionId", formController.removeQuesti
 
 //ruta para responder la pregunta de un formulario
 router.put("/:formId/updateAnswer/:questionId",authorizationMiddleware.isUser, formController.updateAnswer);
+
+router.post("/:formId/add-image", upload.single("image"), formController.addImageToForm);
+
 
 module.exports = router;
 
