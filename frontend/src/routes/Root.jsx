@@ -5,7 +5,9 @@ import { AuthProvider, useAuth } from '../context/AuthContext';
 import Navbar from '../components/NavBar';
 import Footer from '../components/Footer';
 import Landing from '../components/LandingPage.jsx';
+import '../styles/Landing.css'
 import { Button } from '@mui/material';
+import LoginForm from "../components/LoginForm.jsx";
 
 function Root() {
   return (
@@ -35,8 +37,7 @@ function PageRoot() {
                     <Footer />
                 </>
             ) : (
-                // Render a fallback landing component if the user is not logged in
-                <Landing />
+                <Landing/>
             )}
         </>
     );

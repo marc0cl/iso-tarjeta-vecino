@@ -19,21 +19,22 @@ const UserProfile = () => {
 
             try {
                 const decoded = jwtDecode(accessToken);
+
                 const response = await getUserByEmail(decoded.email);
 
-                if (response.data) {
-                    setUser(response.data);  // Asumiendo que la respuesta es { data: objetoDelUsuario }
+                if (response[0] && response[0].user) {
+                    setUser(response[0].user);
                 } else {
-                    setError(response.error || 'No se pudo cargar la información del usuario.');
+                    setError('No se pudo cargar la información del usuario.');
                 }
             } catch (error) {
                 setError('Error al procesar los datos del usuario.');
-                console.error(error);
             }
         };
 
         fetchUserData();
     }, []);
+
 
     if (error) {
         return <div>Error: {error}</div>;

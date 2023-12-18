@@ -1,16 +1,19 @@
 .login-container {
     max-width: 400px;
-    margin: auto;
+    margin: 0 auto; /* Centrado horizontal */
     padding: 2rem;
-    background: #fff;
+    background: #fff; /* Cambiar si es necesario para coincidir con el diseño */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     text-align: center;
+    position: absolute;
+    top: 50%; /* Centrado vertical */
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .login-container h2 {
-    color: #333;
-    margin-bottom: 1.5rem;
+    color: #333; /* Cambiar si es necesario para coincidir con el diseño */
 }
 
 .input-group label {
@@ -41,15 +44,14 @@
 }
 
 .submit-button {
-    background-color: #0056b3;
+    background-color: red; /* Azul del botón */
     color: white;
     border: none;
     padding: 10px;
     border-radius: 4px;
     cursor: pointer;
-    width: auto;
     display: block;
-    margin: 1rem auto;
+    margin: 1rem auto; /* Asegura que el botón esté centrado horizontalmente */
     text-align: center;
 }
 

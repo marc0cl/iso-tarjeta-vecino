@@ -58,3 +58,12 @@
     color: #f90;
     text-decoration: none;
 }
+
+.landing-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 100px); /* Ajusta 100px al tamaño de tu footer */
+    padding-top: 2rem; /* Añade un poco de espacio en la parte superior */
+    background: #f5f5f5; /* o cualquier color de fondo que desees */
+}

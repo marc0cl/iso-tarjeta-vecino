@@ -1,34 +1,62 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { AppBar, Box, Container, Toolbar, Typography, Grid } from "@mui/material";
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import MenuIcon from '@mui/icons-material/Menu';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import LoginForm from "./LoginForm.jsx";
+import "../styles/Landing.css"
 
-export default function LoginPage() {
-    const navigate = useNavigate();
-
-    const handleLogin = (event) => {
-        event.preventDefault();
-        // Aquí agregarías la lógica para el inicio de sesión
-    };
-
-    const navigateToRegister = () => {
-        navigate('/register'); // Suponiendo que tienes una ruta '/register' para el registro
-    };
-
+const MainLayout = ({ children }) => {
     return (
-        <div className="login-page">
-            <div className="welcome-section">
-                <h1>WELCOME</h1>
-                {/* Puedes agregar más elementos gráficos aquí */}
+        <>
+            <AppBar position="static" sx={{ backgroundColor: 'red' }}>
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters>
+                        <AccountBalanceIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            sx={{
+                                mr: 2,
+                                display: { xs: 'none', md: 'flex' },
+                                fontFamily: 'monospace',
+                                fontWeight: 700,
+                                letterSpacing: '.2rem',
+                                color: 'inherit',
+                                textDecoration: 'none',
+                            }}
+                        >
+                            MUNICIPALIDAD
+                        </Typography>
+                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                            <MenuIcon />
+                        </Box>
+                        {/* Agregar aquí los enlaces de la barra de navegación si es necesario */}
+                    </Toolbar>
+                </Container>
+            </AppBar>
+
+            {/* Aquí se renderiza el contenido principal pasado como children */}
+            <div className="landing-container">
+                <LoginForm />
             </div>
-            <div className="login-section">
-                <h2>SIGN IN</h2>
-                <form onSubmit={handleLogin}>
-                    <input type="text" placeholder="Username" required />
-                    <input type="password" placeholder="Password" required />
-                    <button type="submit">Login</button>
-                    <button type="button" onClick={navigateToRegister}>Register</button>
-                    <a href="/forgot-password">Forgot password?</a>
-                </form>
-            </div>
-        </div>
+
+            <Box component="footer" sx={{ backgroundColor: 'red', width: '100%', position: 'fixed', bottom: 0 }}>
+                <Grid container alignItems="center" justifyContent="space-between" paddingX={2} paddingY={1}>
+                    <Typography variant="h6" sx={{ color: 'white' }}>
+                        2023© Municipalidad
+                    </Typography>
+                    <Box>
+                        <InstagramIcon sx={{ color: 'white', fontSize: '20px', marginLeft: '10px' }} />
+                        <FacebookIcon sx={{ color: 'white', fontSize: '20px', marginLeft: '10px' }} />
+                        <TwitterIcon sx={{ color: 'white', fontSize: '20px', marginLeft: '10px' }} />
+                    </Box>
+                </Grid>
+            </Box>
+        </>
     );
-}
+};
+
+export default MainLayout;
