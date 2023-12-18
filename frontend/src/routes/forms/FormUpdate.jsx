@@ -71,7 +71,7 @@ const FormUpdate = () => {
         timer: 2000, // Ajusta el tiempo de espera según tus preferencias
       });
       // Puedes realizar acciones adicionales después de la actualización si es necesario
-
+      setFormResponses({});
       console.log('Formulario actualizado con éxito');
       setTimeout(() => {
         navigate('/');
