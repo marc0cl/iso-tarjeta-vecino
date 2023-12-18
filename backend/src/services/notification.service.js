@@ -58,7 +58,7 @@ async function notificationNewUser(user) {
                 <body>
                     <p>Hola ${user.firstName} ${user.lastName}.<br> 
                     Queremos darte la bienvenida al portal TARJETA VECINO!<br> 
-                    Puedes consultar los beneficios dispononibles en nuestra web.</p>
+                    Debes rellenar tu formulario iniciando sesión en la web para postular a la tarjeta vecino.</p>
                 </body>
                 </html>`
         };
@@ -68,8 +68,60 @@ async function notificationNewUser(user) {
     }
 }
 
+async function changeStateForm(id, estado) {
+
+    console.log(id, estado)
+    try {
+        console.log("entro a try")
+        const user = await User.findOne({form: id })
+        .select("-password")
+        .populate("roles")
+        .exec();
+
+        console.log(user)
+
+        if (!user) {
+        return [null, "Usuario no encontrado"];
+        }
+
+        if(estado == "0"){
+            const mailOptions = {
+                from: `Tarjeta Vecino`,
+                to: user.email,
+                subject: "Cambio en estado de tramite",
+                html:`<html>
+                    <body>
+                        <p>Hola ${user.firstName} ${user.lastName}.<br> 
+                        Tu formulario ha sido RECHAZADO<br> 
+                        Puedes iniciar una apelación en nuestra web.</p>
+                    </body>
+                    </html>`
+            };
+            sendAutoMail(mailOptions);
+        } else if(estado == "1"){
+            const mailOptions = {
+                from: `Tarjeta Vecino`,
+                to: user.email,
+                subject: "Cambio en estado de tramite",
+                html:`<html>
+                    <body>
+                        <p>Hola ${user.firstName} ${user.lastName}.<br> 
+                        Tu formulario ha sido ACEPTADO<br> 
+                        Debes acercarte a la muninipalidad para pedir tu tarjeta.</p>
+                    </body>
+                    </html>`
+            };
+            sendAutoMail(mailOptions);
+        }
+    } catch (error) {
+        handleError(error, "notification.service -> notificationChangeStatus");
+    }
+}
+
+
 module.exports = {
     notificationNewBenefit,
     notificationChangeStatus,
-    notificationNewUser
+    notificationNewUser,
+    changeStateForm
     };

@@ -125,7 +125,6 @@ const Navbar = () => {
                                     display: { xs: 'block', md: 'none' },
                                 }}
                             >
-
                                 <MenuItem onClick={handleCloseNavMenu}>
                                     <Link to="/">
                                         <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Inicio</Button>
@@ -136,6 +135,18 @@ const Navbar = () => {
                                         <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Beneficios</Button>
                                     </Link>
                                 </MenuItem>
+                                {user && user.roles.some(role => role.name === 'admin') && (
+                                <MenuItem onClick={handleCloseNavMenu}>  
+                                    <Link to="/forms">
+                                        <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Formularios</Button>
+                                    </Link>
+                                </MenuItem>)}
+                                {user && user.roles.some(role => role.name === 'user') && (
+                                <MenuItem onClick={handleCloseNavMenu}>
+                                    <Link to={`/forms/${formId}/edit`}>
+                                        <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Envía tu formulario</Button>
+                                    </Link>
+                                </MenuItem>)}
                                 <MenuItem onClick={handleCloseNavMenu}>
                                     <Link to="/Novedades">
                                         <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Novedades</Button>
@@ -207,9 +218,9 @@ const Navbar = () => {
                                 open={Boolean(anchorElUser)}
                                 onClose={handleCloseUserMenu}
                             >
-                                    <MenuItem onClick={handleCloseUserMenu}>
+                                    <MenuItem onClick={handleCloseNavMenu}>
                                         <Link to="/notificaciones">
-                                            <Typography>Notificaciones</Typography>
+                                            <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Notificaciones</Button>
                                         </Link>
                                     </MenuItem>
                                     <MenuItem onClick={handleCloseNavMenu}>
@@ -218,7 +229,7 @@ const Navbar = () => {
                                         </Link>
                                     </MenuItem>
                                     <MenuItem key={"logout"} onClick={handleCloseUserMenu}>
-                                        <button onClick={handleLogout}>Cerrar sesion</button>
+                                        <Button onClick={handleLogout} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Cerrar Sesión</Button>
                                     </MenuItem>
                             </Menu>
                             ) : (
@@ -244,7 +255,7 @@ const Navbar = () => {
                                         </Link>
                                     </MenuItem>
                                     <MenuItem key={"logout"} onClick={handleCloseUserMenu}>
-                                        <button onClick={handleLogout}>Cerrar sesion</button>
+                                        <Button onClick={handleLogout} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Cerrar Sesión</Button>
                                     </MenuItem>
                             </Menu>
                             )}
