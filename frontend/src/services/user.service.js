@@ -9,3 +9,13 @@ export const linkBenefitToUser = async (id) => {
         return [null, error.response.data];
     }
 }
+
+export const getUserInfo = async () => {
+    try {
+      const response = await axios.get('/api/user-info'); // Ruta correspondiente a tu backend
+      return response.data;
+    } catch (error) {
+      console.error('Error en getUserInfo:', error);
+      throw error;
+    }
+  };

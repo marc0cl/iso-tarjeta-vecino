@@ -9,6 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import { logout } from "../services/auth.service";
 import { useAuth } from "../context/AuthContext";
+import { getUserInfo } from '../services/user.service';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard'];
@@ -41,8 +42,8 @@ const Navbar = () => {
     };
 
     const { user } = useAuth();
-    console.log("Valor de user.form:", user.form); 
-    console.log(user);
+    //console.log("Valor de user.form:", user.form); 
+    //console.log(user);
 
     return (
         <>

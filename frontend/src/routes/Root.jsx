@@ -23,7 +23,7 @@ function PageRoot() {
   };
 
   const { user } = useAuth();
-  console.log('User:', user);
+  
 
   return (
     <>

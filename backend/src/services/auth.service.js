@@ -25,7 +25,6 @@ async function login(user) {
 
     const userFound = await User.findOne({ email: email })
       .populate("roles")
-      .populate("form")
       .exec();
     if (!userFound) {
       return [null, null, "El usuario y/o contraseña son incorrectos"];
@@ -42,7 +41,7 @@ async function login(user) {
 
     console.log("User Found Before Token Generation:", userFound);
     const accessToken = jwt.sign(
-      { email: userFound.email, roles: userFound.roles, form: userFound.form },
+      { email: userFound.email, roles: userFound.roles},
       ACCESS_JWT_SECRET,
       {
         expiresIn: "1d",
@@ -84,7 +83,6 @@ async function refresh(cookies) {
           email: user.email,
         })
           .populate("roles")
-          .populate("form")
           .exec();
 
         if (!userFound) return [null, "No usuario no autorizado"];
