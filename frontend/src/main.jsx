@@ -10,6 +10,7 @@ import CreateBenefit from './routes/benefits/CreateBenefit.jsx';
 import DetailsBenefit from './routes/benefits/DetailsBenefit.jsx';
 import UpdateBenefit from './routes/benefits/UpdateBenefit.jsx';
 import Notification from './routes/notifications/Notifications.jsx';
+import Profile from './routes/profile/Profile.jsx';
 
 
 import Forms from './routes/forms/Forms.jsx';
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: '/profile',
+        element: <Profile/>
+      },
       {
         path: '/',
         element: <App />,
