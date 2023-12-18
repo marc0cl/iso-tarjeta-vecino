@@ -84,18 +84,18 @@ const FormUpdate = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-      <h1>{form.title}</h1>
+      <h1 style={{ color: 'black' }}>{form.title}</h1>
 
       {userDetails && (
-        <h2>
+        <h2 style={{ color: 'red' }}>
           Usuario: {userDetails.firstName} {userDetails.lastName}
         </h2>
       )}
 
-      <h2>Preguntas:</h2>
+      <h2 style={{ color: 'black' }}>Preguntas:</h2>
       {form.questions?.map((question, index) => (
-        <div key={index}>
-          <p>Pregunta {index + 1}: {question.text}</p>
+        <div key={index} style={{ backgroundColor: 'white', padding: '10px',  width: '100%', textAlign: 'center' }}>
+          <p style={{ color: 'black', fontWeight: 'bold' }}>Pregunta {index + 1}: {question.text}</p>
           <input
             type="text"
             value={formResponses[question._id] || ''}
@@ -111,13 +111,13 @@ const FormUpdate = () => {
 
       {/* Campo para subir la imagen */}
       <div>
-        <h2>Subir Imagen:</h2>
+        <h2 style={{ color: 'red' }}>Sube un documento que acredite tu domicilio, ej: boleta de luz:</h2>
         <input type="file" accept="image/*" onChange={handleImageChange} />
       </div>
 
       {imageLoaded && (
         <div>
-          <h2>Imagen Actual:</h2>
+          <h2 style={{ color: 'red' }}>Imagen Actual:</h2>
           <img width="300" height="300" src={`data:${form.image.contentType};base64,${imageData}`} alt="Imagen del formulario" />
         </div>
       )}

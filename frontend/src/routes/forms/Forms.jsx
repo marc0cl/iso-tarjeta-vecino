@@ -44,13 +44,13 @@ const Forms = () => {
 
     return (
         <>
-            {/* Agrega el enlace para crear un nuevo formulario */}
+            {/* Agrega el enlace para crear un nuevo formulario 
             <Link component={RouterLink} to="/forms/create" underline="none">
                 <Button variant="contained" color="primary" style={{ margin: '20px' }}>
                     Crear formulario
                 </Button>
-            </Link>
-            <h1>Listado de formularios</h1>
+            </Link>*/}
+            <h1 style={{ color: 'black' }}>Listado de formularios</h1>
             <Grid container spacing={1} style={{ padding: '20px' }}>
                 {forms?.map((form) => (
                     <Grid item key={form._id} xs={2} md={2} alignItems="center">

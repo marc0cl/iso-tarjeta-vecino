@@ -81,10 +81,10 @@ async function createUser(user) {
     const [newForm, formError] = await createForm({
       title: "Formulario de postulacion", 
       questions: [
-        { text: "Pregunta 1", answer: "" },
-        { text: "Pregunta 2", answer: "" },
-        { text: "Pregunta 3", answer: "" },
-        { text: "Pregunta 4", answer: "" },
+        { text: "¿Has participado en eventos o actividades comunitarias en los últimos 6 meses?", answer: "" },
+        { text: "¿Has colaborado o ayudado a algún vecino en los últimos 3 meses? Si es así, ¿puedes compartir una breve descripción de la colaboración?", answer: "" },
+        { text: " ¿Qué tipo de descuentos locales te resultarían más útiles o interesantes? (Opciones: Comestibles, Servicios de Salud, Entretenimiento, Tiendas Locales, Otro - especificar)", answer: "" },
+        { text: "¿Tienes alguna propuesta o idea para mejorar la calidad de vida en nuestra comunidad? Si es así, compártela brevemente.", answer: "" },
       ],
       //user: newUser._id,
       estado: -1,
