@@ -52,3 +52,15 @@
 .status-other {
     color: yellow;
 }
+
+.profile-container .status-aprobado {
+    color: green;
+}
+
+.profile-container .status-rechazado {
+    color: red;
+}
+
+.profile-container .status-otro {
+    color: #7e7e16;
+}
