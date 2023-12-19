@@ -40,7 +40,7 @@ const userBodySchema = Joi.object({
         "string.base": "El apellido debe ser de tipo string.",
     }),
     gender: Joi.string().required().valid("Hombre", "Mujer",
-        "APACHE HELICOPTER AH64-E", "other").messages({
+        "APACHE HELICOPTER AH64-E", "Otro").messages({
         "string.empty": "El género no puede estar vacío.",
         "any.required": "El género es obligatorio.",
         "string.base": "El género debe ser de tipo string.",
