@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     ], documentImage: {
         type: String,
     }, applicationStatus: {
-        type: String, enum: ["aprobado", "rechazado", "apelacion"],
+        type: String, enum: ["Aprobado", "Rechazado", "Apelacion"],
     }, benefits: [{
         benefit: {
           type: mongoose.Schema.Types.ObjectId,

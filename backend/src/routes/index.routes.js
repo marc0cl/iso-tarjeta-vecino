@@ -33,5 +33,3 @@ router.use("/notifications", authenticationMiddleware, notificationRoutes);
 
 // Exporta el enrutador
 module.exports = router;
-
-
