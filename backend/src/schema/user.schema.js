@@ -39,7 +39,7 @@ const userBodySchema = Joi.object({
         "any.required": "El apellido es obligatorio.",
         "string.base": "El apellido debe ser de tipo string.",
     }),
-    gender: Joi.string().required().valid("male", "female",
+    gender: Joi.string().required().valid("Hombre", "Mujer",
         "APACHE HELICOPTER AH64-E", "other").messages({
         "string.empty": "El género no puede estar vacío.",
         "any.required": "El género es obligatorio.",
@@ -68,7 +68,7 @@ const userBodySchema = Joi.object({
             "any.only": "El rol proporcionado no es válido.",
         }),
     documentImage: Joi.string().optional(),
-    applicationStatus: Joi.string().valid("aprobado", "rechazado", "apelacion").messages({
+    applicationStatus: Joi.string().valid("Aprobado", "Rechazado", "Apelacion", "Pendiente").messages({
         "string.base": "El estado de la solicitud debe ser de tipo string.",
         "any.only": "El estado de la solicitud proporcionado no es válido.",
     }),
