@@ -6,8 +6,12 @@ const Benefit = require("../models/benefit.model.js");
 const Form = require("../models/form.model.js");
 const { handleError } = require("../utils/errorHandler");
 const cron = require("node-cron");
+const jwt = require('jsonwebtoken');
 const { request } = require("express");
-const { notificationChangeStatus } = require("./notification.service.js");
+const { notificationChangeStatus, notificationNewUser } = require("./notification.service.js");
+
+const { createForm } = require('./form.service');
+
 
 /**
  * Obtiene todos los usuarios de la base de datos
@@ -35,7 +39,7 @@ async function getUsers() {
 async function createUser(user) {
   try {
     const {
-      username,
+      rut,
       password,
       firstName,
       lastName,
@@ -57,7 +61,7 @@ async function createUser(user) {
     const myRole = rolesFound.map((role) => role._id);
 
     const newUser = new User({
-      username,
+      rut,
       password: await User.encryptPassword(password),
       firstName,
       lastName,
@@ -70,6 +74,29 @@ async function createUser(user) {
       applicationStatus,
       roles: myRole,
     });
+    await newUser.save();
+    await notificationNewUser(newUser);
+
+  
+
+    const [newForm, formError] = await createForm({
+      title: "Formulario de postulacion", 
+      questions: [
+        { text: "¿Has participado en eventos o actividades comunitarias en los últimos 6 meses?", answer: "" },
+        { text: "¿Has colaborado o ayudado a algún vecino en los últimos 3 meses? Si es así, ¿puedes compartir una breve descripción de la colaboración?", answer: "" },
+        { text: " ¿Qué tipo de descuentos locales te resultarían más útiles o interesantes? (Opciones: Comestibles, Servicios de Salud, Entretenimiento, Tiendas Locales, Otro - especificar)", answer: "" },
+        { text: "¿Tienes alguna propuesta o idea para mejorar la calidad de vida en nuestra comunidad? Si es así, compártela brevemente.", answer: "" },
+      ],
+      //user: newUser._id,
+      estado: -1,
+    });
+
+    newForm.user = newUser._id;
+    newForm.estado = -1;
+    newForm.correo = newUser.email;
+    await newForm.save();
+    
+    newUser.form.push(newForm._id);
     await newUser.save();
 
     return [newUser, null];
@@ -100,12 +127,12 @@ async function getUserById(id) {
 
 /**
  * Obtiene un usuario por su id de la base de datos
- * @param {string} username nombre del usuario
+ * @param {string} rut nombre del usuario
  * @returns {Promise} Promesa con el objeto de usuario
  */
-async function getUserByUsername(username) {
+async function getUserByRut(rut) {
   try {
-    const user = await User.findOne({ username: username })
+    const user = await User.findOne({ rut: rut })
         .select("-password")
         .populate("roles")
         .exec();
@@ -114,46 +141,81 @@ async function getUserByUsername(username) {
 
     return [user, null];
   } catch (error) {
-    handleError(error, "user.service -> getUserByUsername");
+    handleError(error, "user.service -> getUserByRut");
   }
 }
 
 /**
- * Actualiza un usuario por su id en la base de datos
- * @param {string} id Id del usuario
- * @param {Object} user Objeto de usuario
- * @returns {Promise} Promesa con el objeto de usuario actualizado
+ * Obtiene un usuario por su correo electrónico de la base de datos
+ * @param {string} email Correo electrónico del usuario
+ * @returns {Promise} Promesa con el objeto de usuario o un mensaje de error
+ */
+async function getUserByEmail(email) {
+  try {
+    const user = await User.findOne({ email: email })
+        .select("-password")
+        .populate("roles")
+        .exec();
+
+    if (!user) return [null, "El usuario no existe"];
+
+    return [user, null];
+  } catch (error) {
+    handleError(error, "user.service -> getUserByEmail");
+  }
+}
+
+/**
+
+ Actualiza un usuario por su id en la base de datos
+ @param {string} id Id del usuario
+ @param {Object} user Objeto de usuario
+ @returns {Promise} Promesa con el objeto de usuario actualizado
  */
 async function updateUserById(id, user) {
   try {
     const userFound = await User.findById(id);
     if (!userFound) return [null, "El usuario no existe"];
 
-    const { username, email, password, newPassword, roles } = user;
-
-    const matchPassword = await User.comparePassword(
+    // Desestructura los campos necesarios de 'user', incluyendo los nuevos campos
+    const {
+      rut,
+      email,
       password,
-      userFound.password,
-    );
+      newPassword,
+      roles,
+      firstName,
+      lastName,
+      gender,
+      location,
+      residenceCertificate,
+      userType,
+      documentImage,
+      applicationStatus
+    } = user;
 
+
+    const matchPassword = await User.comparePassword(password, userFound.password);
     if (!matchPassword) {
       return [null, "La contraseña no coincide"];
     }
 
-    const rolesFound = await Role.find({ name: { $in: roles } });
-    if (rolesFound.length === 0) return [null, "El rol no existe"];
-
-    const myRole = rolesFound.map((role) => role._id);
-
+    // Actualiza el usuario
     const userUpdated = await User.findByIdAndUpdate(
-      id,
-      {
-        username,
-        email,
-        password: await User.encryptPassword(newPassword || password),
-        roles: myRole,
-      },
-      { new: true },
+        id,
+        {
+          rut,
+          password: newPassword ? await User.encryptPassword(newPassword) : userFound.password,
+          firstName,
+          lastName,
+          gender,
+          email,
+          location,
+          residenceCertificate,
+          documentImage,
+          applicationStatus
+        },
+        { new: true }
     );
 
     return [userUpdated, null];
@@ -164,16 +226,16 @@ async function updateUserById(id, user) {
 
 /**
  * Actualiza un usuario por su id en la base de datos
- * @param {string} username Id del usuario
+ * @param {string} rut Id del usuario
  * @param {Object} user Objeto de usuario
  * @returns {Promise} Promesa con el objeto de usuario actualizado
  */
-async function updateUserByUsername(username, user) {
+async function updateUserByRut(rut, user) {
   try {
-    const userFound = await User.findOne({ username: username });
+    const userFound = await User.findOne({ rut: rut });
     if (!userFound) return [null, "El usuario no existe"];
 
-    const { username: newUsername, email, password, newPassword, roles } = user;
+    const { rut: newRut, email, password, newPassword, roles } = user;
 
     const matchPassword = await User.comparePassword(
         password,
@@ -190,9 +252,9 @@ async function updateUserByUsername(username, user) {
     const myRole = rolesFound.map((role) => role._id);
 
     const userUpdated = await User.findOneAndUpdate(
-        { username: username },
+        { rut: rut },
         {
-          username: newUsername || username,
+          rut: newRut || rut,
           email,
           password: await User.encryptPassword(newPassword || password),
           roles: myRole,
@@ -202,19 +264,19 @@ async function updateUserByUsername(username, user) {
 
     return [userUpdated, null];
   } catch (error) {
-    handleError(error, "user.service -> updateUserByUsername");
+    handleError(error, "user.service -> updateUserByRut");
   }
 }
 
 /**
- * Actualiza un estado de usuario por su username en la base de datos
- * @param {string} username Id del usuario
+ * Actualiza un estado de usuario por su rut en la base de datos
+ * @param {string} rut Id del usuario
  * @param {Object} user Objeto de usuario
  * @returns {Promise} Promesa con el objeto de usuario actualizado
  */
-async function updateApplicationStatusByUsername(username, user) {
+async function updateApplicationStatusByRut(rut, user) {
   try {
-    const userFound = await User.findOne({ username: username });
+    const userFound = await User.findOne({ rut: rut });
     if (!userFound) return [null, "El usuario no existe"];
 
     const { password, applicationStatus } = user;
@@ -225,16 +287,16 @@ async function updateApplicationStatusByUsername(username, user) {
     }
 
     const userUpdated = await User.findOneAndUpdate(
-        { username: username },
+        { rut: rut },
         { applicationStatus },
         { new: true },
     );
 
-    await notificationChangeStatus(userUpdated);
+    notificationChangeStatus(userUpdated);
 
     return [userUpdated, null];
   } catch (error) {
-    handleError(error, "user.service -> updateApplicationStatusByUsername");
+    handleError(error, "user.service -> updateApplicationStatusByRut");
   }
 }
 
@@ -251,16 +313,29 @@ async function deleteUser(id) {
   }
 }
 
-async function linkBenefitToUser(userId, benefitId) {
+async function linkBenefitToUser(req, benefitId) {
   try {
-    const user = await User.findById(userId);
+    const headers = req.headers.authorization.split(' ');
+    if (headers.length !== 2 || headers[0] !== 'Bearer') {
+      return null;
+    }
+    const token = headers[1];
+    const decodedToken = jwt.verify(token, 'secreto1');
+    const userEmail = decodedToken.email;
+    const user = await User.findOne({ email: userEmail })
     if (!user) return [null, "El usuario no existe"];
 
     const benefit = await Benefit.findById(benefitId);
     if (!benefit) return [null, "El beneficio no existe"];
 
-    const benefitFound = user.benefits.find((b) => b._id == benefitId);
-    if (benefitFound) return [null, "El beneficio ya está vinculado al usuario"];
+    if (benefit.status !== 'active') return [null, "El beneficio no está activo"];
+
+    console.log(user);
+    console.log(benefit);
+
+  const benefitFound = user.benefits.find((b) => b._id == benefitId);
+  if (benefitFound) return [null, "El beneficio ya está vinculado al usuario"];
+
 
     const NdeBeneficios = user.benefits.length;
     if (NdeBeneficios == 5) return [null, "No se pueden asociar más de 5 beneficios al mes"];
@@ -268,29 +343,56 @@ async function linkBenefitToUser(userId, benefitId) {
     user.benefits.push(benefit);
     await user.save();
 
-    return [user, "Beneficio asociado al usuario, recuerde que el beneficio vence en 1 mes"];
+    return [user, null];
   } catch (error) {
     handleError(error, "user.service -> linkBenefitToUser");
   }
 }
 
-cron.schedule("0 0 * * *", async () => {
+async function unlinkBenefitFromUser(req, benefitId) {
   try {
-    // Calcula la fecha hace un mes
+    const headers = req.headers.authorization.split(' ');
+    if (headers.length !== 2 || headers[0] !== 'Bearer') {
+      return null;
+    }
+    const token = headers[1];
+    const decodedToken = jwt.verify(token, 'secreto1');
+    const userEmail = decodedToken.email;
+    const user = await User.findOne({ email: userEmail })
+    if (!user) return [null, "El usuario no existe"];
+
+    const benefitIndex = user.benefits.findIndex((b) => b._id == benefitId);
+
+    if (benefitIndex !== -1) {
+      user.benefits.splice(benefitIndex, 1);
+      await user.save();
+      return [user, null];
+    } else {
+      return [null, "El beneficio no existe para este usuario"];
+    }
+  } catch (error) {
+    handleError(error, "user.service -> unlinkBenefitFromUser");
+  }
+}
+
+cron.schedule('0 0 1 * *', async () => {
+  try {
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-    // Encuentra y elimina los beneficios creados hace más de un mes
-    const result = await Benefit.deleteMany({ createdAt: { $lt: oneMonthAgo } });
+    const users = await User.find({ 'benefits.linkedAt': { $lt: oneMonthAgo } });
 
-    console.log(`Se eliminaron ${result.deletedCount} beneficios vencidos.`);
+    for (let user of users) {
+      user.benefits = user.benefits.filter(benefit => benefit.linkedAt > oneMonthAgo);
+      await user.save();
+    }
   } catch (error) {
     console.error(error);
   }
 });
 
 async function linkFormToUser(userId, formId) {
-  
+
   try {
     const user = await User.findById(userId);
     if (!user) return [null, "El usuario no existe"];
@@ -303,6 +405,9 @@ async function linkFormToUser(userId, formId) {
 
     user.form.push(form);
     await user.save();
+
+    form.user = userId;
+    await form.save();
 
     return [user, "Formulario asociado al usuario"];
   } catch (error) {
@@ -336,18 +441,18 @@ async function unlinkFormFromUser(userId, formId) {
 
 
 
-
-
 module.exports = {
   getUsers,
   createUser,
   getUserById,
-  getUserByUsername,
+  getUserByRut,
   updateUserById,
-  updateUserByUsername,
-  updateApplicationStatusByUsername,
+  updateUserByRut,
+  updateApplicationStatusByRut,
   deleteUser,
   linkBenefitToUser,
+  unlinkBenefitFromUser,
   linkFormToUser,
   unlinkFormFromUser,
+  getUserByEmail,
 };

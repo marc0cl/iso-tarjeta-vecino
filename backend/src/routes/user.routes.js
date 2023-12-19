@@ -14,24 +14,23 @@ const authenticationMiddleware = require("../middlewares/authentication.middlewa
 /** Instancia del enrutador */
 const router = express.Router();
 
-// Define el middleware de autenticación para todas las rutas
-router.use(authenticationMiddleware);
 
 // Define las rutas para los usuarios
-router.get("/", usuarioController.getUsers);
-router.post("/", authorizationMiddleware.isAdmin, usuarioController.createUser);
-router.get("/id/:id", usuarioController.getUserById);
-router.get("/username/:username", usuarioController.getUserByUsername);
+router.get("/", authenticationMiddleware,usuarioController.getUsers);
+router.post("/", usuarioController.createUser);
+router.get("/id/:id", authenticationMiddleware,usuarioController.getUserById);
+router.get("/mail/:email", authenticationMiddleware, usuarioController.getUserByEmail);
+router.get("/rut/:rut", authenticationMiddleware, usuarioController.getUserByRut);
 
 router.put(
-  "/id/:id",
-  authorizationMiddleware.isAdmin,
-  usuarioController.updateUserById,
+    "/id/:id",
+    usuarioController.updateUserById,
 );
+
 router.put(
-    "/username/:username",
+    "/rut/:rut",
     authorizationMiddleware.isAdmin,
-    usuarioController.updateUserByUsername,
+    usuarioController.updateUserByRut,
 );
 router.put(
     "/username/application/:username",
@@ -39,18 +38,25 @@ router.put(
     usuarioController.updateApplicationStatus,
 );
 router.delete(
-  "/:id",
-  authorizationMiddleware.isAdmin,
-  usuarioController.deleteUser,
+    "/:id",
+    authorizationMiddleware.isAdmin,
+    usuarioController.deleteUser,
 );
 router.put(
-  "/:id/:idBenefit", usuarioController.linkBenefitToUser);
+    "/link/:benefitId",
+    authorizationMiddleware.isUser,
+    usuarioController.linkBenefitToUser);
 
+router.put(
+    "/unlink/:benefitId",
+    authorizationMiddleware.isUser,
+    usuarioController.unlinkBenefitFromUser);
 // Ruta para vincular un formulario a un usuario
 router.put("/:id/add/:idForm", usuarioController.linkFormToUser);
 
 // Ruta para desvincular un formulario de un usuario
 router.put("/:userId/rmv/:formId", usuarioController.unlinkFormFromUser);
+
 
 // Exporta el enrutador
 module.exports = router;

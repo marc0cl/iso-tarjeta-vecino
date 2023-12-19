@@ -1,6 +1,6 @@
 const { handleError } = require("../utils/errorHandler.js");
 const User = require("../models/user.model.js");
-const { sendMail } = require("../controllers/notification.controller.js");
+const { sendAutoMail } = require("../controllers/notification.controller.js");
 
 async function notificationNewBenefit(benefit) {
     try {
@@ -14,10 +14,14 @@ async function notificationNewBenefit(benefit) {
                     from: `Tarjeta Vecino`,
                     to: user.email,
                     subject: "Nuevo beneficio",
-                    text: `Hola ${user.username}, desde hoy tienes disponible el nuevo beneficio ${benefit.name}`,
+                    html:`<html>
+                        <body>
+                            <p>Hola ${user.firstName} ${user.lastName},<br> 
+                            desde hoy tienes disponible el nuevo beneficio ${benefit.name}</p>
+                        </body>
+                        </html>`
                 };
-                /* Aqui va todo lo del correo*/
-                sendMail(mailOptions);   
+                sendAutoMail(mailOptions);   
             }
         });
     } catch (error) {
@@ -31,16 +35,93 @@ async function notificationChangeStatus(user) {
             from: `Tarjeta Vecino`,
             to: user.email,
             subject: "Cambio en estado de tramite",
-            text: `Hola ${user.username}, tu solicitud de TARJETA VECINO ha cambiado al estado ${user.applicationStatus}`,
+            html:`<html>
+                <body>
+                    <p>Hola ${user.firstName} ${user.lastName},<br> 
+                    tu solicitud de TARJETA VECINO ha cambiado al estado ${user.applicationStatus}</p>
+                </body>
+                </html>`
         };
-        /* Aqui va todo lo del correo*/
-        sendMail(mailOptions);
+        sendAutoMail(mailOptions);
     } catch (error) {
         handleError(error, "notification.service -> notificationChangeStatus");
     }
 }
 
+async function notificationNewUser(user) {
+    try {
+        const mailOptions = {
+            from: `Tarjeta Vecino`,
+            to: user.email,
+            subject: "Bienvedido a Tarjeta Vecino",
+            html:`<html>
+                <body>
+                    <p>Hola ${user.firstName} ${user.lastName}.<br> 
+                    Queremos darte la bienvenida al portal TARJETA VECINO!<br> 
+                    Debes rellenar tu formulario iniciando sesión en la web para postular a la tarjeta vecino.</p>
+                </body>
+                </html>`
+        };
+        sendAutoMail(mailOptions);
+    } catch (error) {
+        handleError(error, "notification.service -> notificationChangeStatus");
+    }
+}
+
+async function changeStateForm(id, estado) {
+
+    console.log(id, estado)
+    try {
+        console.log("entro a try")
+        const user = await User.findOne({form: id })
+        .select("-password")
+        .populate("roles")
+        .exec();
+
+        console.log(user)
+
+        if (!user) {
+        return [null, "Usuario no encontrado"];
+        }
+
+        if(estado == "0"){
+            const mailOptions = {
+                from: `Tarjeta Vecino`,
+                to: user.email,
+                subject: "Cambio en estado de tramite",
+                html:`<html>
+                    <body>
+                        <p>Hola ${user.firstName} ${user.lastName}.<br> 
+                        Tu formulario ha sido RECHAZADO<br> 
+                        Puedes iniciar una apelación en nuestra web.</p>
+                    </body>
+                    </html>`
+            };
+            sendAutoMail(mailOptions);
+        } else if(estado == "1"){
+            const mailOptions = {
+                from: `Tarjeta Vecino`,
+                to: user.email,
+                subject: "Cambio en estado de tramite",
+                html:`<html>
+                    <body>
+                        <p>Hola ${user.firstName} ${user.lastName}.<br> 
+                        Tu formulario ha sido ACEPTADO<br> 
+                        Debes acercarte a la muninipalidad para pedir tu tarjeta.</p>
+                    </body>
+                    </html>`
+            };
+            sendAutoMail(mailOptions);
+        }
+    } catch (error) {
+        handleError(error, "notification.service -> notificationChangeStatus");
+    }
+}
+
+
 module.exports = {
     notificationNewBenefit,
     notificationChangeStatus,
+    notificationNewUser,
+    changeStateForm
     };

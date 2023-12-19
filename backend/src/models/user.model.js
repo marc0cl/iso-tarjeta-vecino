@@ -4,20 +4,20 @@ const bcrypt = require("bcryptjs");
 
 // Crea el esquema de la coleccion 'User'
 const userSchema = new mongoose.Schema({
-    username: {
+    rut: {
         type: String, required: true,
     }, password: {
         type: String, required: true,
     }, firstName: {
-        type: String, required: true, default: "",
+        type: String, required: true,
     }, lastName: {
-        type: String, required: true, default: "",
+        type: String, required: true,
     }, gender: {
-        type: String, required: true, default: "",
+        type: String, required: true,
     }, email: {
-        type: String, required: true, default: "", unique: true,
+        type: String, required: true, unique: true,
     }, location: {
-        type: String, required: true, default: "",
+        type: String, required: true,
     }, residenceCertificate: {
         type: String,
     }, roles: [
@@ -25,16 +25,20 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role",
         },
-    ]
-    , documentImage: {
-     type: String,
-    },
-     applicationStatus: {
-        type: String, enum: ["aprobado", "rechazado", "apelacion"],
+    ], documentImage: {
+        type: String,
+    }, applicationStatus: {
+        type: String, enum: ["Aprobado", "Rechazado", "Apelacion"],
     }, benefits: [{
-        type: mongoose.Schema.Types.ObjectId, ref: "Benefit",
-    }],
-    form: [
+        benefit: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Benefit'
+        },
+        linkedAt: {
+          type: Date,
+          default: Date.now
+        }
+      }], form: [
         {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Form",
@@ -42,6 +46,7 @@ const userSchema = new mongoose.Schema({
     ],
 }, {
     versionKey: false,
+    timestamps: true,
 });
 
 /** Encripta la contraseña del usuario (si aún es necesario) */

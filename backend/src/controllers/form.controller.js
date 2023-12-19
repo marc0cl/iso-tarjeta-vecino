@@ -2,7 +2,10 @@
 
 const Form = require("../models/form.model");
 const FormService = require("../services/form.service");
-const { formSchema, formIdSchema } = require("../schema/form.schema");
+const { formSchema,
+  questionSchema,
+  formIdSchema,
+  updateAnswerSchema,} = require("../schema/form.schema");
 const { respondSuccess, respondError } = require("../utils/resHandler");
 const { handleError } = require("../utils/errorHandler");
 //const {updateUser} = require("../controller.");
@@ -76,6 +79,35 @@ async function updateForm(req, res) {
   }
 }
 
+async function updateAnswer(req, res) {
+  try {
+    const { params, body } = req;
+    const { formId, questionId } = params;
+    const { answer } = body;
+
+ 
+  //console.log("Cuerpo de la solicitud:", body);
+
+    const { error: validationError } = updateAnswerSchema.validate(body);
+
+    if (validationError) {
+      return respondError(req, res, 400, validationError.message);
+    }
+
+    const [updatedForm, error] = await FormService.updateAnswer(formId, questionId, answer);
+
+    if (error) {
+      return respondError(req, res, 404, error);
+    }
+
+    respondSuccess(req, res, 200, updatedForm);
+  } catch (error) {
+    handleError(error, "form.controller -> updateAnswer");
+    respondError(req, res, 400, error.message);
+  }
+}
+
+
 async function deleteForm(req, res) {
   try {
     const { params } = req;
@@ -128,6 +160,22 @@ async function removeQuestionFromForm(req, res) {
     }
   }
 
+  async function addImageToForm(req, res) {
+    const formId = req.params.formId;
+    const image = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+    };
+
+    const [updatedForm, error] = await FormService.addImageToForm(formId, image);
+
+    if (error) {
+        return res.status(500).json({ error });
+    }
+
+    res.status(200).json(updatedForm);
+}
+
 module.exports = {
   getForms,
   createForm,
@@ -136,4 +184,6 @@ module.exports = {
   deleteForm,
   addQuestionToForm,
   removeQuestionFromForm,
+  updateAnswer,
+  addImageToForm,
 };
