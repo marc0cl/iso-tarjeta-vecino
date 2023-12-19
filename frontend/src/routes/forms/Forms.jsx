@@ -49,7 +49,6 @@ const Forms = () => {
                             <CardContent>
                                 {/* Personaliza la presentación según la estructura de tu formulario */}
                                 <h2 style={{ margin: '0px' }}>{form.title}</h2>
-                                <p style={{ margin: '0px', marginBottom: '0px' }}>{form.title}</p>
                                 {/* Agrega enlace a los detalles */}
                                 <Link component={RouterLink} to={`/forms/${form._id}`}>
                                     <IconButton color={form.estado === 1 ? 'success' : form.estado === 0 ? 'error' : 'warning'} aria-label="info">
