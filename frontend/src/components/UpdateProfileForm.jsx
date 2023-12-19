@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import "../styles/UpdateProfile.css"
+import { updateUser } from '../services/user.service.js';
 
 const UpdateProfileForm = ({ user, onCancel, onUpdate }) => {
     const [formData, setFormData] = useState({
@@ -21,10 +21,19 @@ const UpdateProfileForm = ({ user, onCancel, onUpdate }) => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        onUpdate(formData);
+        console.log(user);
+        console.log("DATOS ", formData);
+        const [data, error] = await updateUser(user._id, formData); // Asumiendo que user.id es el ID del usuario
+        if (error) {
+            console.error("Error al actualizar:", error);
+            // Puedes manejar los errores de manera más detallada aquí
+        } else {
+            onUpdate(data);
+        }
     };
+
 
     return (
         <div className="update-profile-form">
@@ -35,9 +44,9 @@ const UpdateProfileForm = ({ user, onCancel, onUpdate }) => {
                 <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} required />
                 <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} required />
                 <select name="gender" value={formData.gender} onChange={handleInputChange} required>
-                    <option value="male">Masculino</option>
-                    <option value="female">Femenino</option>
-                    <option value="other">Otro</option>
+                    <option value="Hombre">Masculino</option>
+                    <option value="Mujer">Femenino</option>
+                    <option value="Otro">Otro</option>
                 </select>
                 <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
                 <input type="text" name="location" value={formData.location} onChange={handleInputChange} required />

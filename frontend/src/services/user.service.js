@@ -37,3 +37,13 @@ export const createUser = async (userData) => {
         return [null, error.response ? error.response.data : error];
     }
 };
+
+export const updateUser = async (id, userData) => {
+    try {
+        const { data } = await axios.put(`users/id/${id}`, userData);
+        return [data, null];
+    } catch (error) {
+        console.error("Error updating user:", error);
+        return [null, error.response ? error.response.data : error];
+    }
+};
