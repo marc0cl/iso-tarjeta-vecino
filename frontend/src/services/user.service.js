@@ -30,7 +30,7 @@ export const getUserByEmail = async (email) => {
 
 export const createUser = async (userData) => {
     try {
-        const { data } = await axios.post('users/', userData); // AsegÃºrate de que la URL sea correcta
+        const { data } = await axios.post('users/', userData);
         return [data, null];
     } catch (error) {
         console.error("Error creating user:", error);

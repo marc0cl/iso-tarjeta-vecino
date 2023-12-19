@@ -6,7 +6,6 @@
 }
 
 .welcome-section {
-    /* Añade estilos para la sección de bienvenida */
     background-color: orange;
     color: white;
     padding: 50px;
@@ -15,7 +14,6 @@
 }
 
 .login-section {
-    /* Añade estilos para la sección de inicio de sesión */
     background-color: white;
     padding: 50px;
     flex: 1;
@@ -63,7 +61,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(100vh - 100px); /* Ajusta 100px al tamaño de tu footer */
-    padding-top: 2rem; /* Añade un poco de espacio en la parte superior */
-    background: #f5f5f5; /* o cualquier color de fondo que desees */
+    min-height: calc(100vh - 100px);
+    padding-top: 2rem;
+    background: #f5f5f5;
 }
