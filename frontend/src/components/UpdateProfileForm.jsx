@@ -50,17 +50,6 @@ const UpdateProfileForm = ({ user, onCancel, onUpdate }) => {
                 </select>
                 <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
                 <input type="text" name="location" value={formData.location} onChange={handleInputChange} required />
-                <select name="roles" value={formData.roles[0]} onChange={handleInputChange} required>
-                    <option value="user">Usuario</option>
-                    <option value="admin">Administrador</option>
-                </select>
-                {user.roles.includes('admin') && (
-                    <select name="applicationStatus" value={formData.applicationStatus} onChange={handleInputChange} required>
-                        <option value="aprobado">Aprobado</option>
-                        <option value="rechazado">Rechazado</option>
-                        <option value="pendiente">Pendiente</option>
-                    </select>
-                )}
                 <input type="submit" value="Actualizar perfil" />
                 <button type="button" onClick={onCancel}>Cancelar</button>
             </form>
