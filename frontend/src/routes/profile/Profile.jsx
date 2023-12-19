@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import jwtDecode from 'jwt-decode';
 import { getUserByEmail } from '../../services/user.service';
+import "../../styles/Profile.css"
 
 const UserProfile = () => {
     const [user, setUser] = useState(null);
@@ -35,6 +36,16 @@ const UserProfile = () => {
         fetchUserData();
     }, []);
 
+    const getApplicationStatusStyle = (status) => {
+        switch (status) {
+            case 'aprobado':
+                return { color: 'green' };
+            case 'rechazado':
+                return { color: 'red' };
+            default:
+                return { color: 'yellow' };
+        }
+    };
 
     if (error) {
         return <div>Error: {error}</div>;
@@ -44,15 +55,26 @@ const UserProfile = () => {
         return <div>Cargando...</div>;
     }
 
+    const fullName = `${user.firstName} ${user.lastName}`;
+
     return (
-        <div>
-            <h1>Perfil del Usuario</h1>
-            <p>RUT: {user.rut}</p>
-            <p>Nombre: {user.firstName} {user.lastName}</p>
-            <p>Género: {user.gender}</p>
-            <p>Email: {user.email}</p>
-            <p>Ubicación: {user.location}</p>
-            {/* Renderizar más información del usuario según sea necesario */}
+        <div className="profile-container">
+            <h1 className="profile-header">Perfil del Usuario</h1>
+            <div className="profile-content">
+                <div className="info-section">
+                    <h2>Información Pública</h2>
+                    <p><strong>Nombre Completo:</strong> {fullName}</p>
+                    <p><strong>Género:</strong> {user.gender}</p>
+                    <p className={getApplicationStatusStyle(user.applicationStatus)}>
+                        <strong>Estado de Aplicación:</strong> {user.applicationStatus}
+                    </p>
+                </div>
+                <div className="info-section">
+                    <h2>Información Privada</h2>
+                    <p><strong>Email:</strong> {user.email}</p>
+                    <p><strong>Ubicación:</strong> {user.location}</p>
+                </div>
+            </div>
         </div>
     );
 };
