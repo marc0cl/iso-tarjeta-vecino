@@ -4,10 +4,7 @@ import { logout } from '../services/auth.service';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import Navbar from '../components/NavBar';
 import Footer from '../components/Footer';
-import Landing from '../components/LandingPage.jsx';
-import '../styles/Landing.css'
 import { Button } from '@mui/material';
-import LoginForm from "../components/LoginForm.jsx";
 
 function Root() {
   return (
@@ -22,25 +19,43 @@ function PageRoot() {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate('/auth');
   };
 
   const { user } = useAuth();
+  
 
-    return (
-        <>
-            {user ? (
-                // Render Navbar and the rest of the page if the user is logged in
-                <>
-                    <Navbar />
-                    <Outlet />
-                    <Footer />
-                </>
-            ) : (
-                <Landing/>
-            )}
-        </>
-    );
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+      <Footer />
+    </>
+  );
 }
 
 export default Root;
+
+/*
+  <p>Estas logeado como: {user.email}</p>
+  <button onClick={handleLogout}>Cerrar sesion</button>
+  <div>
+      <div>
+        <Link to="/">
+          <Button variant="contained">Home</Button>
+        </Link>
+        <Link to="/benefits">
+          <Button variant="contained">Beneficios</Button>
+        </Link>
+        {user && user.roles.some(role => role.name === 'admin') && (
+          <Link to="/forms">
+            <Button variant="contained">Formularios</Button>
+          </Link>)}
+        {user && user.roles.some(role => role.name === 'user') && (
+          <Link to="/user-forms">
+            <Button variant="contained">Formulario</Button>
+          </Link>
+        )}
+        <Button onClick={handleLogout}>Cerrar sesion</Button>
+      </div>
+*/ 

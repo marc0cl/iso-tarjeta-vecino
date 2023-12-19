@@ -13,6 +13,12 @@ export function AuthProvider({ children }) {
   const user = JSON.parse(localStorage.getItem('user')) || '';
   const isAuthenticated = user ? true : false;
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/auth');
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
     <AuthContext.Provider value={{ isAuthenticated, user }}>
       {children}
