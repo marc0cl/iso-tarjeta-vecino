@@ -1,6 +1,6 @@
 import axios from './root.service';
-import cookies from 'js-cookie';
-import jwtDecode from 'jwt-decode';
+import Cookies from 'js-cookie';
+import jwtDecode from "jwt-decode";  // Importa la librería con mayúscula para evitar conflictos de nombres
 
 export const login = async ({ email, password }) => {
   try {
@@ -9,24 +9,27 @@ export const login = async ({ email, password }) => {
       password,
     });
     const { status, data } = response;
+    console.log(response);
     if (status === 200) {
-      const { email, roles } = await jwtDecode(data.data.accessToken);
+      const { accessToken } = data.data;
+      const { email, roles } = jwtDecode(accessToken);
       localStorage.setItem('user', JSON.stringify({ email, roles }));
-      axios.defaults.headers.common[
-        'Authorization'
-      ] = `Bearer ${data.data.accessToken}`;
-      cookies.set('jwt-auth', data.data.accessToken, { path: '/' });
+      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+
+      // Usa directamente Cookies.set sin new
+      Cookies.set('jwt-auth', accessToken, { path: '/' });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw error;
   }
 };
 
 export const logout = () => {
   localStorage.removeItem('user');
   delete axios.defaults.headers.common['Authorization'];
-  cookies.remove('jwt');
-  cookies.remove('jwt-auth');
+  // Usa directamente Cookies.remove
+  Cookies.remove('jwt-auth', { path: '/' }); // Asegúrate de proveer el mismo path que al setear la cookie
 };
 
 export const test = async () => {
@@ -37,6 +40,6 @@ export const test = async () => {
       console.log(data.data);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
