@@ -10,7 +10,7 @@ const { validate: validateRut } = require("@validatecl/rut");
  */
 const userBodySchema = Joi.object({
     rut: Joi.string()
-        .required()
+        .optional()
         .custom((value, helpers) => {
             if (!validateRut(value)) {
                 return helpers.error("string.invalidRut", { value });
@@ -23,44 +23,48 @@ const userBodySchema = Joi.object({
             "string.base": "El rut debe ser de tipo string.",
             "string.invalidRut": "El RUT proporcionado no es válido.",
     }),
-    password: Joi.string().required().min(5).messages({
+    password: Joi.string().optional().min(5).messages({
         "string.empty": "La contraseña no puede estar vacía.",
         "any.required": "La contraseña es obligatoria.",
         "string.base": "La contraseña debe ser de tipo string.",
         "string.min": "La contraseña debe tener al menos 5 caracteres.",
     }),
-    firstName: Joi.string().required().messages({
+    newPassword: Joi.string().optional().min(5).messages({
+        "string.empty": "La contraseña no puede estar vacía.",
+        "any.required": "La contraseña es obligatoria.",
+        "string.base": "La contraseña debe ser de tipo string.",
+        "string.min": "La contraseña debe tener al menos 5 caracteres.",
+    }),
+    firstName: Joi.string().optional().messages({
         "string.empty": "El nombre no puede estar vacío.",
         "any.required": "El nombre es obligatorio.",
         "string.base": "El nombre debe ser de tipo string.",
     }),
-    lastName: Joi.string().required().messages({
+    lastName: Joi.string().optional().messages({
         "string.empty": "El apellido no puede estar vacío.",
         "any.required": "El apellido es obligatorio.",
         "string.base": "El apellido debe ser de tipo string.",
     }),
-    gender: Joi.string().required().valid("Hombre", "Mujer",
-        "APACHE HELICOPTER AH64-E", "Otro").messages({
+    gender: Joi.string().optional().messages({
         "string.empty": "El género no puede estar vacío.",
         "any.required": "El género es obligatorio.",
         "string.base": "El género debe ser de tipo string.",
         "any.only": "El género proporcionado no es válido.",
     }),
-    email: Joi.string().email().required().messages({
+    email: Joi.string().email().optional().messages({
         "string.empty": "El email no puede estar vacío.",
         "any.required": "El email es obligatorio.",
         "string.base": "El email debe ser de tipo string.",
         "string.email": "El email debe tener un formato válido.",
     }),
-    location: Joi.string().required().messages({
+    location: Joi.string().optional().messages({
         "string.empty": "La ubicación no puede estar vacía.",
         "any.required": "La ubicación es obligatoria.",
         "string.base": "La ubicación debe ser de tipo string.",
     }),
     residenceCertificate: Joi.string().optional(),
     roles: Joi.array()
-        .items(Joi.string().valid(...ROLES))
-        .required()
+        .optional()
         .messages({
             "array.base": "El rol debe ser de tipo array.",
             "any.required": "El rol es obligatorio.",
@@ -68,7 +72,7 @@ const userBodySchema = Joi.object({
             "any.only": "El rol proporcionado no es válido.",
         }),
     documentImage: Joi.string().optional(),
-    applicationStatus: Joi.string().valid("Aprobado", "Rechazado", "Apelacion", "Pendiente").messages({
+    applicationStatus: Joi.string().messages({
         "string.base": "El estado de la solicitud debe ser de tipo string.",
         "any.only": "El estado de la solicitud proporcionado no es válido.",
     }),

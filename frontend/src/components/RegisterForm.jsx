@@ -50,9 +50,9 @@ function RegisterForm() {
                     <label htmlFor="gender">Género</label>
                     <select id="gender" {...register('gender', { required: 'El género es requerido' })}>
                         <option value="">Seleccione...</option>
-                        <option value="female">Femenino</option>
-                        <option value="male">Masculino</option>
-                        <option value="other">Otro</option>
+                        <option value="Mujer">Femenino</option>
+                        <option value="Hombre">Masculino</option>
+                        <option value="Otro">Otro</option>
                     </select>
                     {errors.gender && <span className="error-message">{errors.gender.message}</span>}
                 </div>

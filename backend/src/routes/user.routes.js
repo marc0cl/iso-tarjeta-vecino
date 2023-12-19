@@ -24,9 +24,9 @@ router.get("/rut/:rut", authenticationMiddleware, usuarioController.getUserByRut
 
 router.put(
     "/id/:id",
-    authorizationMiddleware.isAdmin,
     usuarioController.updateUserById,
 );
+
 router.put(
     "/rut/:rut",
     authorizationMiddleware.isAdmin,

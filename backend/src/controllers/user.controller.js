@@ -98,9 +98,16 @@ async function getUserByRut(req, res) {
  * @param {Object} req - Objeto de petición
  * @param {Object} res - Objeto de respuesta
  */
+/**
+
+ Actualiza un usuario por su id
+ @param {Object} req - Objeto de petición
+ @param {Object} res - Objeto de respuesta
+ */
 async function updateUserById(req, res) {
   try {
     const { params, body } = req;
+
     const { error: paramsError } = userIdSchema.validate(params);
     if (paramsError) return respondError(req, res, 400, paramsError.message);
 
@@ -113,7 +120,7 @@ async function updateUserById(req, res) {
 
     respondSuccess(req, res, 200, user);
   } catch (error) {
-    handleError(error, "user.controller -> updateUser");
+    handleError(error, "user.controller -> updateUserById");
     respondError(req, res, 500, "No se pudo actualizar el usuario");
   }
 }

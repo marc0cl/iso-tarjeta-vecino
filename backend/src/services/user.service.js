@@ -166,41 +166,56 @@ async function getUserByEmail(email) {
 }
 
 /**
- * Actualiza un usuario por su id en la base de datos
- * @param {string} id Id del usuario
- * @param {Object} user Objeto de usuario
- * @returns {Promise} Promesa con el objeto de usuario actualizado
+
+ Actualiza un usuario por su id en la base de datos
+ @param {string} id Id del usuario
+ @param {Object} user Objeto de usuario
+ @returns {Promise} Promesa con el objeto de usuario actualizado
  */
 async function updateUserById(id, user) {
   try {
     const userFound = await User.findById(id);
     if (!userFound) return [null, "El usuario no existe"];
 
-    const { rut, email, password, newPassword, roles } = user;
-
-    const matchPassword = await User.comparePassword(
+    // Desestructura los campos necesarios de 'user', incluyendo los nuevos campos
+    const {
+      rut,
+      email,
       password,
-      userFound.password,
-    );
+      newPassword,
+      roles,
+      firstName,
+      lastName,
+      gender,
+      location,
+      residenceCertificate,
+      userType,
+      documentImage,
+      applicationStatus
+    } = user;
 
+
+    const matchPassword = await User.comparePassword(password, userFound.password);
     if (!matchPassword) {
       return [null, "La contraseña no coincide"];
     }
 
-    const rolesFound = await Role.find({ name: { $in: roles } });
-    if (rolesFound.length === 0) return [null, "El rol no existe"];
-
-    const myRole = rolesFound.map((role) => role._id);
-
+    // Actualiza el usuario
     const userUpdated = await User.findByIdAndUpdate(
-      id,
-      {
-        rut,
-        email,
-        password: await User.encryptPassword(newPassword || password),
-        roles: myRole,
-      },
-      { new: true },
+        id,
+        {
+          rut,
+          password: newPassword ? await User.encryptPassword(newPassword) : userFound.password,
+          firstName,
+          lastName,
+          gender,
+          email,
+          location,
+          residenceCertificate,
+          documentImage,
+          applicationStatus
+        },
+        { new: true }
     );
 
     return [userUpdated, null];
