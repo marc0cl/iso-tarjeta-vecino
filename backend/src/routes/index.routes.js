@@ -14,20 +14,24 @@ const formRoutes = require("./form.routes.js");
 
 const notificationRoutes = require("./notifications.routes.js");
 
+/** Middleware de autenticación */
+const authenticationMiddleware = require("../middlewares/authentication.middleware.js");
 
 /** Instancia del enrutador */
 const router = express.Router();
 
 // Define las rutas para los usuarios /api/usuarios
-router.use("/users", userRoutes);
+router.use("/users", authenticationMiddleware, userRoutes);
 // Define las rutas para la autenticación /api/auth
 router.use("/auth", authRoutes);
 
-router.use("/benefits", benefitRoutes);
+router.use("/benefits", authenticationMiddleware, benefitRoutes);
 
-router.use("/forms", formRoutes);
+router.use("/forms", authenticationMiddleware, formRoutes);
 
-router.use("/notifications", notificationRoutes);
+router.use("/notifications", authenticationMiddleware, notificationRoutes);
 
 // Exporta el enrutador
 module.exports = router;
+
+
