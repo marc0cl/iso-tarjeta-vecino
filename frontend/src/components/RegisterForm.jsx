@@ -17,9 +17,7 @@ function RegisterForm() {
         createUser(data)
             .then((response) => {
                 console.log(response);
-                // Verifica si la respuesta es exitosa
                 if (response[0].state === 'Success') {
-                    console.log("SALIO BIEEEEEEEEEEEEEEEEEN");
                     navigate('/profile');
                 }
             })

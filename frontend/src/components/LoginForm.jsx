@@ -14,7 +14,7 @@ function LoginForm() {
 
     const onSubmit = (data) => {
         login(data).then(() => {
-            navigate('/profile');
+            navigate('/');
         }).catch(error => {
             console.error(error);
         });

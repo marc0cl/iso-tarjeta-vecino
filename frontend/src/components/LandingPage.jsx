@@ -33,12 +33,10 @@ const MainLayout = ({ children }) => {
                         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                             <MenuIcon />
                         </Box>
-                        {/* Agregar aquí los enlaces de la barra de navegación si es necesario */}
                     </Toolbar>
                 </Container>
             </AppBar>
 
-            {/* Aquí se renderiza el contenido principal pasado como children */}
             <div className="landing-container">
                 <LoginForm />
             </div>
