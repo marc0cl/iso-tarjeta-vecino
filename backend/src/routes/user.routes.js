@@ -14,20 +14,18 @@ const authenticationMiddleware = require("../middlewares/authentication.middlewa
 /** Instancia del enrutador */
 const router = express.Router();
 
-// Define el middleware de autenticación para todas las rutas
-router.use(authenticationMiddleware);
 
 // Define las rutas para los usuarios
-router.get("/", authorizationMiddleware.isAdmin, usuarioController.getUsers);
-router.post("/", authorizationMiddleware.isAdmin, usuarioController.createUser);
-router.get("/id/:id", usuarioController.getUserById);
-router.get("/mail/:email", usuarioController.getUserByEmail);
-router.get("/rut/:rut", usuarioController.getUserByRut);
+router.get("/", authenticationMiddleware,usuarioController.getUsers);
+router.post("/", usuarioController.createUser);
+router.get("/id/:id", authenticationMiddleware,usuarioController.getUserById);
+router.get("/mail/:email", authenticationMiddleware, usuarioController.getUserByEmail);
+router.get("/rut/:rut", authenticationMiddleware, usuarioController.getUserByRut);
 
 router.put(
-  "/id/:id",
-  authorizationMiddleware.isAdmin,
-  usuarioController.updateUserById,
+    "/id/:id",
+    authorizationMiddleware.isAdmin,
+    usuarioController.updateUserById,
 );
 router.put(
     "/rut/:rut",
@@ -40,19 +38,19 @@ router.put(
     usuarioController.updateApplicationStatus,
 );
 router.delete(
-  "/:id",
-  authorizationMiddleware.isAdmin,
-  usuarioController.deleteUser,
+    "/:id",
+    authorizationMiddleware.isAdmin,
+    usuarioController.deleteUser,
 );
 router.put(
-  "/link/:benefitId",
-  authorizationMiddleware.isUser,
-  usuarioController.linkBenefitToUser);
+    "/link/:benefitId",
+    authorizationMiddleware.isUser,
+    usuarioController.linkBenefitToUser);
 
 router.put(
-  "/unlink/:benefitId",
-  authorizationMiddleware.isUser,
-  usuarioController.unlinkBenefitFromUser);
+    "/unlink/:benefitId",
+    authorizationMiddleware.isUser,
+    usuarioController.unlinkBenefitFromUser);
 // Ruta para vincular un formulario a un usuario
 router.put("/:id/add/:idForm", usuarioController.linkFormToUser);
 

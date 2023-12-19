@@ -8,14 +8,14 @@ function Login() {
     return (
       <>
         <h2>Ya estas logeado!</h2>
-        <button onClick={() => navigate('/')}>Ir a home</button>
+        <button onClick={() => navigate('/profile')}>Ir al perfil</button>
       </>
     );
   }
 
   return (
     <div>
-      <h2>Inicia sesion!</h2>
+      <h2></h2>
       <LoginForm />
     </div>
   );
