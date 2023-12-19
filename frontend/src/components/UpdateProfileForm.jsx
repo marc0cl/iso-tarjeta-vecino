@@ -25,7 +25,7 @@ const UpdateProfileForm = ({ user, onCancel, onUpdate }) => {
         event.preventDefault();
         console.log(user);
         console.log("DATOS ", formData);
-        const [data, error] = await updateUser(user._id, formData); // Asumiendo que user.id es el ID del usuario
+        const [data, error] = await updateUser(user._id, formData);
         if (error) {
             console.error("Error al actualizar:", error);
             // Puedes manejar los errores de manera más detallada aquí
