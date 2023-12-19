@@ -22,6 +22,7 @@ const formSchema = Joi.object({
             "string.base": "El título del formulario debe ser de tipo string.",
         }),
     questions: Joi.array().items(questionSchema),
+    correo: Joi.string(),
     estado: Joi.number() // Agrega esta línea para permitir el campo estado
     
         .valid(0, 1) // Puedes ajustar estos valores según tus necesidades

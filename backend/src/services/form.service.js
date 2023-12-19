@@ -2,6 +2,7 @@
 
 const Form = require("../models/form.model");
 const { handleError } = require("../utils/errorHandler");
+const { changeStateForm } = require("./notification.service");
 
 async function createForm(data) {
   try {
@@ -49,6 +50,11 @@ async function updateForm(id, data) {
       { title, questions, estado },
       { new: true }
     );
+    console.log(estado)
+    if(estado == "0" || estado == "1"){
+      console.log("entro")
+      changeStateForm(id, estado)
+    }
     if (!updatedForm) {
       return [null, "Formulario no encontrado"];
     }

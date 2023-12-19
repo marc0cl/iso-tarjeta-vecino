@@ -13,7 +13,7 @@ export const getForms = async () => {
 export const getForm = async (id) => {
     try {
         const { data } = await axios.get(`/forms/${id}`);
-        return data.data;  // Asegúrate de que estás retornando correctamente el formulario y sus detalles, incluido el usuario.
+        return data.data;  
     } catch (error) {
         return [null, error.response.data];
     }

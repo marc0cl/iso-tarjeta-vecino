@@ -25,8 +25,8 @@ const UserProfile = () => {
 
                 const response = await getUserByEmail(decoded.email);
 
-                if (response[0] && response[0].user) {
-                    setUser(response[0].user);
+                if (response && response.user) {
+                    setUser(response.user);
                 } else {
                     setError('No se pudo cargar la información del usuario.');
                 }

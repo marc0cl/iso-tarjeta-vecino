@@ -31,6 +31,10 @@ const formSchema = new mongoose.Schema({
     estado:{
         type: Number,
         required: false
+    },
+    correo:{
+        type: String,
+        required: false
     }   
 });
 

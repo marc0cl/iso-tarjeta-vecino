@@ -126,7 +126,6 @@ const Navbar = () => {
                                     display: { xs: 'block', md: 'none' },
                                 }}
                             >
-
                                 <MenuItem onClick={handleCloseNavMenu}>
                                     <Link to="/">
                                         <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Inicio</Button>

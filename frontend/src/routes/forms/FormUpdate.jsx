@@ -98,7 +98,7 @@ const FormUpdate = () => {
           <p style={{ color: 'black', fontWeight: 'bold' }}>Pregunta {index + 1}: {question.text}</p>
           <input
             type="text"
-            value={formResponses[question._id] || ''}
+            placeholder='Escribe aquí tu respuesta'
             onChange={(e) => {
               setFormResponses({
                 ...formResponses,
@@ -122,7 +122,7 @@ const FormUpdate = () => {
         </div>
       )}
 
-      <button onClick={handleUpdateForm}>Actualizar Formulario</button>
+      <button onClick={handleUpdateForm}>Enviar Formulario</button>
     </div>
   );
 };
