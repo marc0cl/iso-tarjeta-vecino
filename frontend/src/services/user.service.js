@@ -20,7 +20,7 @@ export const linkBenefitToUser = async (id) => {
 
   export const getUserByEmail = async (email) => {
     try {
-      const response = await axios.get(`/users/mail/${email}`); // Adjust the route based on your backend
+      const response = await axios.get(`/users/mail/${email}`); 
       return response.data;
     } catch (error) {
       console.error('Error in getUserByEmail:', error);

@@ -98,7 +98,7 @@ const FormUpdate = () => {
           <p style={{ color: 'black', fontWeight: 'bold' }}>Pregunta {index + 1}: {question.text}</p>
           <input
             type="text"
-            
+            placeholder='Escribe aquí tu respuesta'
             onChange={(e) => {
               setFormResponses({
                 ...formResponses,

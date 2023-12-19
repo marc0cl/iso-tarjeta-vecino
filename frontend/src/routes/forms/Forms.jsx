@@ -31,11 +31,7 @@ const Forms = () => {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Aquí deberías implementar la lógica para eliminar el formulario
-                // deleteForm(id).then((response) => {
-                //     MySwal.fire('Deleted!', 'Your file has been deleted.', 'success');
-                //     setForms(forms.filter((form) => form._id !== id));
-                // });
+          
             }
         });
     }
@@ -44,12 +40,7 @@ const Forms = () => {
 
     return (
         <>
-            {/* Agrega el enlace para crear un nuevo formulario 
-            <Link component={RouterLink} to="/forms/create" underline="none">
-                <Button variant="contained" color="primary" style={{ margin: '20px' }}>
-                    Crear formulario
-                </Button>
-            </Link>*/}
+        
             <h1 style={{ color: 'black' }}>Listado de formularios</h1>
             <Grid container spacing={1} style={{ padding: '20px' }}>
                 {forms?.map((form) => (
