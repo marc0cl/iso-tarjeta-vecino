@@ -2,6 +2,7 @@ import { Box, Button, Divider, Grid, List, ListItem, ListItemButton, ListItemTex
 import NotificationForm from "../../components/NotificationForm";
 import { getUsers } from "../../services/user.service";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 const Notification = () => {
 
@@ -34,6 +35,14 @@ const Notification = () => {
         const { name, value } = event.target;
         setBuscador(value);
       };
+
+      const { user } = useAuth();
+
+      const isAdmin = () => {
+          if (user.roles[0].name === 'admin') {
+              return true;
+          }
+      }  
 
     useEffect(() => {
         if (buscador.trim() !== "") {
@@ -71,6 +80,7 @@ const Notification = () => {
                 <Box
                     sx={{ width: '100%', maxHeight: 550, maxWidth: 540, backgroundColor: 'white', overflowY: 'auto'}}
                 >
+                    {isAdmin() && (
                     <List sx={{padding: '10px 20px 20px'}}>
                         <ListItem disablePadding>
                             <ListItemText primary="RUT USUARIO" secondary="NOMBRE USUARIO" sx={{color: 'black', borderColor: 'black', border: '1px solid black' , padding: '5px'}}/>
@@ -107,6 +117,7 @@ const Notification = () => {
                             ))
                         )}
                     </List>
+                    )}
                 </Box>
             </Grid>
             <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
