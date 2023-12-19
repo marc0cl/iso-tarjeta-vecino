@@ -17,6 +17,7 @@ import Novedades from './routes/Novedades.jsx';
 import Forms from './routes/forms/Forms.jsx';
 import DetailsForm from './routes/forms/DetailsForm.jsx';
 import FormUpdate from './routes/forms/FormUpdate.jsx';
+import Register from './routes/Register.jsx';
 
 const router = createBrowserRouter([
   {
@@ -74,9 +75,13 @@ const router = createBrowserRouter([
     path: '/auth',
     element: <Login />,
   },
+  {
+    path: '/register',
+    element: <Register />,
+  },
 ]);
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <RouterProvider router={router} />
+    <RouterProvider router={router} />
 );

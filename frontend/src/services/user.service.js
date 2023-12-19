@@ -20,10 +20,20 @@ export const linkBenefitToUser = async (id) => {
 
 export const getUserByEmail = async (email) => {
     try {
-      const response = await axios.get(`/users/mail/${email}`); 
-      return response.data;
+        const response = await axios.get(`/users/mail/${email}`);
+        return response.data;
     } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error('Error in getUserByEmail:', error);
+        throw error;
+    }
+};
+
+export const createUser = async (userData) => {
+    try {
+        const { data } = await axios.post('users/', userData); // AsegÃºrate de que la URL sea correcta
+        return [data, null];
+    } catch (error) {
+        console.error("Error creating user:", error);
         return [null, error.response ? error.response.data : error];
     }
 };

@@ -4,7 +4,6 @@ import "../styles/UpdateProfile.css"
 
 const UpdateProfileForm = ({ user, onCancel, onUpdate }) => {
     const [formData, setFormData] = useState({
-        // Inicializa el estado del formulario con los datos del usuario
         rut: user.rut,
         password: '',
         newPassword: '',
@@ -30,7 +29,6 @@ const UpdateProfileForm = ({ user, onCancel, onUpdate }) => {
     return (
         <div className="update-profile-form">
             <form onSubmit={handleSubmit}>
-                {/* Agrega aquí más campos si son necesarios */}
                 <input type="text" name="rut" value={formData.rut} onChange={handleInputChange} required />
                 <input type="password" name="password" placeholder="Contraseña actual" onChange={handleInputChange} required />
                 <input type="password" name="newPassword" placeholder="Nueva contraseña" onChange={handleInputChange} />
@@ -46,14 +44,12 @@ const UpdateProfileForm = ({ user, onCancel, onUpdate }) => {
                 <select name="roles" value={formData.roles[0]} onChange={handleInputChange} required>
                     <option value="user">Usuario</option>
                     <option value="admin">Administrador</option>
-                    {/* Añade más roles según sean necesarios */}
                 </select>
                 {user.roles.includes('admin') && (
                     <select name="applicationStatus" value={formData.applicationStatus} onChange={handleInputChange} required>
                         <option value="aprobado">Aprobado</option>
                         <option value="rechazado">Rechazado</option>
                         <option value="pendiente">Pendiente</option>
-                        {/* Añade más estados según sean necesarios */}
                     </select>
                 )}
                 <input type="submit" value="Actualizar perfil" />
