@@ -30,7 +30,6 @@ function PageRoot() {
     return (
         <>
             {user ? (
-                // Render Navbar and the rest of the page if the user is logged in
                 <>
                     <Navbar />
                     <Outlet />

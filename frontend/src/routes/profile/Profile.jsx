@@ -39,15 +39,14 @@ const UserProfile = () => {
     }, []);
 
     const handleEditClick = () => {
-        setEditing(true); // Cambia a la vista de edición
+        setEditing(true);
     };
 
     const handleCancelEdit = () => {
-        setEditing(false); // Vuelve a la vista del perfil
+        setEditing(false);
     };
 
     if (editing) {
-        // Si se está editando, muestra el formulario
         return <UpdateProfileForm user={user} onCancel={handleCancelEdit} />;
     }
 
