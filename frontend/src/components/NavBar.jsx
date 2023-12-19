@@ -41,7 +41,7 @@ const Navbar = () => {
 
     const handleLogout = () => {
         logout();
-        navigate('/auth');
+        navigate('/');
     };
 
     const { user } = useAuth();
@@ -54,11 +54,12 @@ const Navbar = () => {
 
     useEffect(() => {
         // Cuando el componente se monta, obtén la información del usuario por su correo electrónico
+        console.log("User and Email to be logged:",user,user.email);
         if (user && user.email) {
             getUserByEmail(user.email)
                 .then((loadedUser) => {
                     const formId = loadedUser.user.form && loadedUser.user.form.length > 0 ? loadedUser.user.form[0] : null;
-                    //console.log(formId);
+                     //console.log(formId);
                     setLoadedUser(loadedUser);
                     setFormId(formId);
                 })
@@ -135,18 +136,6 @@ const Navbar = () => {
                                         <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Beneficios</Button>
                                     </Link>
                                 </MenuItem>
-                                {user && user.roles.some(role => role.name === 'admin') && (
-                                    <MenuItem onClick={handleCloseNavMenu}>
-                                        <Link to="/forms">
-                                            <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Formularios</Button>
-                                        </Link>
-                                    </MenuItem>)}
-                                {user && user.roles.some(role => role.name === 'user') && (
-                                    <MenuItem onClick={handleCloseNavMenu}>
-                                        <Link to={`/forms/${formId}/edit`}>
-                                            <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Envía tu formulario</Button>
-                                        </Link>
-                                    </MenuItem>)}
                                 <MenuItem onClick={handleCloseNavMenu}>
                                     <Link to="/Novedades">
                                         <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Novedades</Button>
@@ -186,91 +175,61 @@ const Navbar = () => {
                                 </Link>)}
                             {user && user.roles.some(role => role.name === 'user') && (
                                 <Link to={`/forms/${formId}/edit`}>
-                                    <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>
-                                        Envía tu formulario
-                                    </Button>
-                                </Link>)}
+                                <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>
+                                  Envía tu formulario
+                                </Button>
+                              </Link>)}
                             <Link to="/Novedades">
                                 <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'white', textTransform: 'none' }}>Novedades</Button>
                             </Link>
                         </Box>
-
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                     <Avatar alt="Remy Sharp" />
                                 </IconButton>
                             </Tooltip>
-                            {isAdmin() ? (
-                                <Menu
-                                    sx={{ mt: '45px' }}
-                                    id="menu-appbar"
-                                    anchorEl={anchorElUser}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(anchorElUser)}
-                                    onClose={handleCloseUserMenu}
-                                >
-                                    <MenuItem onClick={handleCloseUserMenu}>
-                                        <Link to="/profile" style={{ textDecoration: 'none' }}>
-                                            <Typography textAlign="center">Mi perfil</Typography>
-                                        </Link>
-                                    </MenuItem>
-                                    <MenuItem onClick={handleCloseNavMenu}>
-                                        <Link to="/notificaciones">
-                                            <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Notificaciones</Button>
-                                        </Link>
-                                    </MenuItem>
-                                    <MenuItem onClick={handleCloseNavMenu}>
-                                        <Link to="/forms">
-                                            <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Formularios</Button>
-                                        </Link>
-                                    </MenuItem>
-                                    <MenuItem key={"logout"} onClick={handleCloseUserMenu}>
-                                        <Button onClick={handleLogout} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Cerrar Sesión</Button>
-                                    </MenuItem>
-                                </Menu>
-                            ) : (
-                                <Menu
-                                    sx={{ mt: '45px' }}
-                                    id="menu-appbar"
-                                    anchorEl={anchorElUser}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(anchorElUser)}
-                                    onClose={handleCloseUserMenu}
-                                >
-                                    <MenuItem onClick={handleCloseUserMenu}>
-                                        <Link to="/profile" style={{ textDecoration: 'none' }}>
-                                            <Typography textAlign="center">Mi perfil</Typography>
-                                        </Link>
-                                    </MenuItem>
-                                    <MenuItem onClick={handleCloseNavMenu}>
-                                        <Link to={`/forms/${formId}/edit`}>
-                                            <Button onClick={handleCloseNavMenu} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Envía tu formulario</Button>
-                                        </Link>
-                                    </MenuItem>
-                                    <MenuItem key={"logout"} onClick={handleCloseUserMenu}>
-                                        <Button onClick={handleLogout} sx={{ padding: '0px 20px', color: 'black', textTransform: 'none' }}>Cerrar Sesión</Button>
-                                    </MenuItem>
-                                </Menu>
-                            )}
-
+                            <Menu
+                                sx={{ mt: '45px' }}
+                                id="menu-appbar"
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorElUser)}
+                                onClose={handleCloseUserMenu}
+                            >
+                                <MenuItem onClick={handleCloseUserMenu}>
+                                    <Link to="/profile" style={{ textDecoration: 'none' }}>
+                                        <Typography textAlign="center">Mi perfil</Typography>
+                                    </Link>
+                                </MenuItem>
+                                {isAdmin() && (
+                                    <>
+                                        <MenuItem onClick={handleCloseUserMenu}>
+                                            <Link to="/notificaciones" style={{ textDecoration: 'none' }}>
+                                                <Typography textAlign="center">Notificaciones</Typography>
+                                            </Link>
+                                        </MenuItem>
+                                        <MenuItem onClick={handleCloseUserMenu}>
+                                            <Link to="/forms" style={{ textDecoration: 'none' }}>
+                                                <Typography textAlign="center">Formularios</Typography>
+                                            </Link>
+                                        </MenuItem>
+                                    </>
+                                )}
+                                <MenuItem key={"logout"} onClick={handleLogout}>
+                                    <Typography textAlign="center">Cerrar sesión</Typography>
+                                </MenuItem>
+                            </Menu>
                         </Box>
+
                     </Toolbar>
                 </Container>
             </AppBar>
@@ -279,3 +238,9 @@ const Navbar = () => {
 }
 
 export default Navbar;
+
+/*{settings.map((setting) => (
+    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+    <Typography textAlign="center">{setting}</Typography>
+    </MenuItem>
+))}*/
