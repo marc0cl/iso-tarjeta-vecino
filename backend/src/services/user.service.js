@@ -200,28 +200,18 @@ async function updateUserById(id, user) {
       return [null, "La contraseña no coincide"];
     }
 
-    // Encuentra los roles si se han proporcionado
-    let myRole = userFound.roles;
-    if (roles) {
-      const rolesFound = await Role.find({ name: { $in: roles } });
-      if (rolesFound.length === 0) return [null, "El rol no existe"];
-      myRole = rolesFound.map((role) => role._id);
-    }
-
     // Actualiza el usuario
     const userUpdated = await User.findByIdAndUpdate(
         id,
         {
           rut,
-          email,
           password: newPassword ? await User.encryptPassword(newPassword) : userFound.password,
-          roles: myRole,
           firstName,
           lastName,
           gender,
+          email,
           location,
           residenceCertificate,
-          userType,
           documentImage,
           applicationStatus
         },
