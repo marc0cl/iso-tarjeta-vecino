@@ -29,11 +29,11 @@ const userBodySchema = Joi.object({
         "string.base": "La contraseña debe ser de tipo string.",
         "string.min": "La contraseña debe tener al menos 5 caracteres.",
     }),
-    newPassword: Joi.string().optional().min(5).messages({
-        "string.empty": "La contraseña no puede estar vacía.",
-        "any.required": "La contraseña es obligatoria.",
-        "string.base": "La contraseña debe ser de tipo string.",
-        "string.min": "La contraseña debe tener al menos 5 caracteres.",
+    newPassword: Joi.string().optional().allow('').min(5).messages({
+        "string.empty": "La nueva contraseña no puede estar vacía.",
+        "any.required": "La nueva contraseña es obligatoria.",
+        "string.base": "La nueva contraseña debe ser de tipo string.",
+        "string.min": "La nueva contraseña debe tener al menos 5 caracteres.",
     }),
     firstName: Joi.string().optional().messages({
         "string.empty": "El nombre no puede estar vacío.",
