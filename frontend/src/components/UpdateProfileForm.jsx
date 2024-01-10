@@ -29,11 +29,11 @@ const UpdateProfileForm = ({ user, onCancel, onUpdate }) => {
         const [data, error] = await updateUser(user._id, formData);
         if (error) {
             console.error("Error al actualizar:", error);
-            setSuccessMessage(""); // Limpiar mensaje de éxito en caso de error
+            setSuccessMessage("");
         } else {
-            setSuccessMessage("Perfil actualizado con éxito"); // Establecer mensaje de éxito
+            setSuccessMessage("Perfil actualizado con éxito");
             if (typeof onUpdate === 'function') {
-                onUpdate(data); // Llama a onUpdate solo si es una función
+                onUpdate(data);
             }
         }
     };
